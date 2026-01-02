@@ -44,7 +44,7 @@ const startServer = async () => {
       console.error("App error:", err);
     });
 
-    // await initializeDb();
+    await initializeDb();
 
     console.log(`Starting server on port ${port}...`);
     server.listen(port, "0.0.0.0", async () => {
