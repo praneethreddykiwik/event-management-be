@@ -13,14 +13,7 @@ function getRedisClient() {
   // const redisUrl = process.env.REDIS_URL;
   const redisUrl =
     "rediss://master.cache-cluster-on-support.3xkamd.aps1.cache.amazonaws.com:6379";
-  console.log("anv variables", {
-    redisUrl,
-    SESSION_SECRET: "super-secret",
-    SESSION_COOKIE_NAME: "emdb.sid",
-    // SESSION_COOKIE_NAME: process.env.SESSION_COOKIE_NAME,
-    SESSION_SAMESITE: "none",
-    // SESSION_SAMESITE: process.env.SESSION_SAMESITE,
-  });
+
   if (!redisUrl) throw new Error("REDIS_URL is missing");
 
   const isTls = true;
