@@ -7,7 +7,7 @@ info:
 servers:
   - url: http://localhost:4000/v1
     description: Local
-  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com
+  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com/v1
     description: Dev
 
 tags:
