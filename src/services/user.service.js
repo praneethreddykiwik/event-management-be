@@ -76,9 +76,30 @@ const getUsersService = async (query, providePasswordHash) => {
 
   return users;
 };
+const updateUserService = async (payload) => {
+  const db = getDb();
+
+  const response = await db.one(
+    `
+      update users
+      set
+        username = $(username),
+        email = $(email),
+        role = $(role),
+        status = $(status)
+      where uid = $(uid)
+      returning
+        uid, username, email, role, status
+    `,
+    payload
+  );
+
+  return response;
+};
 
 module.exports = {
   createUserService,
   getUsersService,
   deleteEventService,
+  updateUserService,
 };

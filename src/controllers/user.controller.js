@@ -1,6 +1,6 @@
 const { dummyUsersemail } = require("../../database");
 const { successRes, errorRes } = require("../models/response.model");
-const userServices = require("../services/user.service");
+const updateUserServices = require("../services/user.service")
 
 const getUsersCtrl = async (req, res) => {
   try {
@@ -61,7 +61,7 @@ const getMeCtrl = (req, res) => {
   return res.status(200).json(successRes("Current user", req.session.user));
 };
 
-const updateEventManagerCtrl = (req, res) => {
+const updateUserCtrl = (req, res) => {
   try {
     const { managerId, mobile, status } = req.body;
     const updatedManager = {
@@ -76,4 +76,4 @@ const updateEventManagerCtrl = (req, res) => {
   }
 };
 
-module.exports = { getUsersCtrl, getUserById, createUser, loginUser, getMeCtrl, updateEventManagerCtrl };
+module.exports = { getUsersCtrl, getUserById, createUser, loginUser, getMeCtrl, updateUserCtrl };

@@ -52,7 +52,7 @@ const loginValidation = (req, res, next) => {
   next();
 };
 
-const updateEventManagerVal = (req, res, next) => {
+const updateUserVal = (req, res, next) => {
   const { managerId, mobile, status } = req.body;
 
   if (!managerId) {
@@ -66,7 +66,7 @@ const updateEventManagerVal = (req, res, next) => {
   if (status && !["Active", "Inactive"].includes(status)) {
     return res.status(400).json(errorRes("Invalid status"));
   }
-  
+
   next();
 };
 
@@ -76,5 +76,5 @@ module.exports = {
   authRegisterVal,
   deleteEventVal,
   loginValidation,
-  updateEventManagerVal
+  updateUserVal,
 };
