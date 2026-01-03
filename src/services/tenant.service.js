@@ -41,9 +41,36 @@ const createTenantService = async (req) => {
 
   return response;
 };
+const createTenantServices = async (req) => {
+  const { tenantId, name, updatedBy } = req.body;
+
+  const db = getDb();
+
+  const response = await db.one(
+    `
+      INSERT INTO "emdb-schema".tenants 
+        (tenant_id, name, updated_by)
+      VALUES 
+        ($(tenantId), $(name), $(updatedBy))
+      RETURNING 
+        uid, 
+        tenant_id, 
+        name, 
+        status, 
+        created_at, 
+        updated_at, 
+        updated_by
+    `,
+    { tenantId, name, updatedBy }
+  );
+
+  return response;
+};
+
 
 module.exports = {
   fetchAllTenantsService,
   createTenantService,
   getTenantByIdService,
+  createTenantServices
 };
