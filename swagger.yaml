@@ -7,7 +7,7 @@ info:
 servers:
   - url: http://localhost:4000/v1
     description: Local
-  - url: https://kf3kgwa3ba.ap-south-1.awsapprunner.com
+  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com
     description: Dev
 
 tags:
@@ -380,7 +380,6 @@ paths:
                   message:
                     type: string
                     example: managerId is required
-
 
   /users/{uid}:
     get:
