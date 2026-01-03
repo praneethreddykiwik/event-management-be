@@ -10,9 +10,9 @@ const client = new SecretsManagerClient({
   region: "ap-south-1",
 });
 
-const loadSecrets = async () => {
+const loadSecretsSM = async () => {
   const secret_name = process.env.SECRET_NAME;
-  console.log("loadSecrets Start", { secret_name });
+  console.log("loadSecretsSM From SM Start", { secret_name });
 
   try {
     const command = new GetSecretValueCommand({
@@ -22,22 +22,29 @@ const loadSecrets = async () => {
     const response = await client.send(command);
 
     if (!response.SecretString) {
-      console.log("loadSecrets Failed", response);
-      throw new Error("SecretString is empty");
+      console.log("loadSecretsSM Failed; SecretString not exists", response);
+      // throw new Error("SecretString is empty");
     }
 
-    console.log("loadSecrets Success");
+    console.log("loadSecretsSM From SM Success");
     return JSON.parse(response.SecretString);
   } catch (error) {
-    console.error("loadSecrets Error", error);
+    console.error("loadSecretsSM From SM Error", error);
     // For a list of exceptions thrown, see
     // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-    throw error;
+    // throw error;
   }
 };
 
 // move this to AWS credential manager
-const loadLocalSecrets = () => {
+const loadEnvSecrets = () => {
+  try {
+    const secretManagement = loadSecretsSM();
+    console.log("secretManagement secrets success", secretManagement);
+  } catch (error) {
+    console.log("secretManagement secrets Error", error);
+  }
+
   return {
     DB_HOST: process.env.DB_HOST,
     DB_PORT: process.env.DB_PORT,
@@ -48,6 +55,6 @@ const loadLocalSecrets = () => {
 };
 
 module.exports = {
-  loadSecrets,
-  loadLocalSecrets,
+  loadSecretsSM,
+  loadEnvSecrets,
 };

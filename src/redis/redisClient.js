@@ -10,15 +10,15 @@ let client;
 function getRedisClient() {
   if (client) return client;
 
-  // const redisUrl = process.env.REDIS_URL;
-  const redisUrl =
-    "rediss://master.cache-cluster-on-support.3xkamd.aps1.cache.amazonaws.com:6379";
+  const redisUrl = process.env.REDIS_URL;
+  // const redisUrl =
+  //   "rediss://master.cache-cluster-on-support.3xkamd.aps1.cache.amazonaws.com:6379";
 
   if (!redisUrl) throw new Error("REDIS_URL is missing");
 
-  const isTls = true;
-  // const isTls =
-  //   process.env.REDIS_TLS === "true" || redisUrl.startsWith("rediss://");
+  // const isTls = true;
+  const isTls =
+    process.env.REDIS_TLS === "true" || redisUrl.startsWith("rediss://");
 
   client = createClient({
     url: redisUrl,

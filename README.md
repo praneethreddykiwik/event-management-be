@@ -9,3 +9,6 @@ Fe deployment
 new relic
 modify db.js to class based component or closure
 cookie structure modification
+
+move secrets from env to secret manager
+iam roles for the team

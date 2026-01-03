@@ -20,14 +20,13 @@ async function buildSessionMiddleware() {
   const redisClient = await connectRedis();
 
   const isProd = process.env.NODE_ENV === "production";
-  console.log("session middleware", isProd);
 
   return session({
     store: new RedisStore({ client: redisClient }),
     name: "emdb.sid",
-    // name: process.env.SESSION_COOKIE_NAME || "emdb.sid",
-    secret: "super-secret",
-    // secret: process.env.SESSION_SECRET,
+    name: process.env.SESSION_COOKIE_NAME || "emdb.sid",
+    // secret: "super-secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
 
@@ -40,8 +39,8 @@ async function buildSessionMiddleware() {
 
       // If FE and BE are on different domains: use "none".
       // If same site: use "lax".
-      // sameSite: process.env.SESSION_SAMESITE || (isProd ? "none" : "lax"),
-      sameSite: "none",
+      sameSite: process.env.SESSION_SAMESITE || (isProd ? "none" : "lax"),
+      // sameSite: "none",
 
       maxAge: Number(process.env.SESSION_MAX_AGE_MS || 86400000), // 1 day
     },
