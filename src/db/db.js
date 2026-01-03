@@ -28,10 +28,11 @@ let db;
 const initializeDb = async () => {
   console.log("Initializing DB...");
   try {
-    const secrets =
-      process.env.NODE_ENV === "local"
-        ? loadLocalSecrets()
-        : await loadSecrets();
+    const secrets = loadLocalSecrets();
+    // const secrets =
+    //   process.env.NODE_ENV === "local"
+    //     ? loadLocalSecrets()
+    //     : await loadSecrets();
     console.log("initializeDb secrets fetched successfully");
 
     db = pgp({
