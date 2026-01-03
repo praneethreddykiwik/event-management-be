@@ -317,6 +317,71 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /users/updateEventManager:
+    put:
+      tags:
+        - Users
+      summary: Update Event Manager
+      description: Update event manager mobile number and status using managerId
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - managerId
+              properties:
+                managerId:
+                  type: string
+                  example: mng_123
+                mobile:
+                  type: string
+                  example: "9999999999"
+                status:
+                  type: string
+                  enum:
+                    - Active
+                    - Inactive
+                  example: Inactive
+      responses:
+        200:
+          description: Manager updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "0000"
+                  message:
+                    type: string
+                    example: Manager updated successfully
+                  details:
+                    type: object
+                    properties:
+                      managerId:
+                        type: string
+                        example: mng_123
+                      mobile:
+                        type: string
+                        example: "9999999999"
+                      status:
+                        type: string
+                        example: Inactive
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: managerId is required
+
+
   /users/{uid}:
     get:
       tags: [Users]

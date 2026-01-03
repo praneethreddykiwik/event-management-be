@@ -61,10 +61,19 @@ const getMeCtrl = (req, res) => {
   return res.status(200).json(successRes("Current user", req.session.user));
 };
 
-module.exports = {
-  getUsersCtrl,
-  getUserById,
-  createUser,
-  loginUser,
-  getMeCtrl,
+const updateEventManagerCtrl = (req, res) => {
+  try {
+    const { managerId, mobile, status } = req.body;
+    const updatedManager = {
+      managerId,
+      mobile,
+      status,
+    };
+    return res.status(200).json(successRes("Manager updated successfully", updatedManager));
+  } catch (err) {
+    return res.status(400).json(
+      errorRes(err.message || "Update failed"));
+  }
 };
+
+module.exports = { getUsersCtrl, getUserById, createUser, loginUser, getMeCtrl, updateEventManagerCtrl };

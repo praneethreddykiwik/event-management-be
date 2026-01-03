@@ -20,7 +20,7 @@ const startServer = async () => {
   try {
     console.log("Starting server...");
 
-    await registerRedis(app);
+    // await registerRedis(app);
 
     // Mount routes AFTER session middleware
     const version = "/v1";

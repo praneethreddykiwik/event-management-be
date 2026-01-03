@@ -52,10 +52,29 @@ const loginValidation = (req, res, next) => {
   next();
 };
 
+const updateEventManagerVal = (req, res, next) => {
+  const { managerId, mobile, status } = req.body;
+
+  if (!managerId) {
+    return res.status(400).json(errorRes("managerId is required"));
+  }
+
+  if (mobile && !/^\d{10}$/.test(mobile)) {
+    return res.status(400).json(errorRes("Invalid mobile number"));
+  }
+
+  if (status && !["Active", "Inactive"].includes(status)) {
+    return res.status(400).json(errorRes("Invalid status"));
+  }
+  
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
   authRegisterVal,
   deleteEventVal,
   loginValidation,
+  updateEventManagerVal
 };
