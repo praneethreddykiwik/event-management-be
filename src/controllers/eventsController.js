@@ -14,8 +14,19 @@ const deleteEventController = async (req, res) => {
 
 // reference users.controller
 // aadil
-const getEventByUidCtrl = () => {};
+const getEventByUidCtrl = async (req, res) => {
 
+  try {
+    const getEventidRes = await services.getEventByUid(req.query);
+
+    return res.status(200).json(successRes("success", getEventidRes));
+  } catch (err) {
+    console.error("getEventByUidCtrl", err);
+    return res.status(400).json(errorRes("server is not responing", err));
+  }
+};
+
+// module.exports = { deleteEventController, getEventByUidCtrl };
 const createEventCtrl = async (req, res) => {
   try {
     const payload = createEventReqModel(req);
@@ -28,4 +39,4 @@ const createEventCtrl = async (req, res) => {
   }
 };
 
-module.exports = { deleteEventController, createEventCtrl };
+module.exports = { deleteEventController, createEventCtrl, getEventByUidCtrl };

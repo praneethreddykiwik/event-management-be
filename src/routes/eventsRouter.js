@@ -13,6 +13,12 @@ router.post(
 // add router
 // route /getEventByUid
 
+router.get(
+  "/",
+  validations.eventUidValidation,
+  eventController.getEventByUidCtrl
+);
+
 router.post(
   "/create-event",
   validations.createEventValidation,

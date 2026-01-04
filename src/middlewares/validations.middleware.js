@@ -94,6 +94,14 @@ const createTaskVal = (req, res, next) => {
   next();
 };
 
+const eventUidValidation = (req, res, next) => {
+  if (!req.query.tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -103,4 +111,5 @@ module.exports = {
   updateUserVal,
   createEventValidation,
   createTaskVal,
+  eventUidValidation,
 };

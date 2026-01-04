@@ -104,21 +104,47 @@ async function listEvents(tenantUid, role, userUid, filters) {
 }
 
 // aadil
-async function getEventByUid(tenantUid, eventUid, includeDeleted = false) {
-  const sql = `
-    SELECT *
-    FROM events
-    WHERE tenant_uid = $(tenant_uid)
-      AND uid = $(event_uid)
-      AND ($(include_deleted)::boolean = true OR status <> 'deleted')
-    LIMIT 1;
-  `;
-  const db = getDb();
-  return db.oneOrNone(sql, {
-    tenant_uid: tenantUid,
-    event_uid: eventUid,
-    include_deleted: includeDeleted,
+async function getEventByUid(query, includeDeleted = false) {
+  console.log("getEventByUid", query);
+  const conditions = [];
+  const params = {};
+
+  const queries = [
+    { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
+    { query: "eventUid", condition: "e.uid = $(eventUid)" },
+  ];
+
+  queries.forEach((el) => {
+    if (query[el.query]) {
+      conditions.push(el.condition);
+      params[el.query] = query[el.query];
+    }
   });
+  // conditions.push(
+  //   "($(events_status_check)::boolean = true OR status <> 'deleted')"
+  // );
+
+  const whereClause = conditions.length
+    ? `where ${conditions.join(" and ")}`
+    : "";
+
+  const db = getDb();
+  const events = await db.any(
+    `
+      select
+        *  
+      from events e
+      join tenants t on t.uid = e.tenant_uid
+      ${whereClause}
+    `,
+    {
+      tenant_uid: query.tenantUid,
+      eventUid: query.eventUid,
+      include_deleted: includeDeleted,
+    }
+  );
+
+  return events;
 }
 
 async function updateEvent(tenantUid, eventUid, patch, actorUid) {

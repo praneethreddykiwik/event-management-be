@@ -500,6 +500,57 @@ paths:
                   type: string
                   format: uuid
                   example: "d12eac90-fbc1-4f41-a15e-fd983c1eaa33"
+
+  /events:
+    get:
+      summary: Get event by tenant UID
+      description: Fetch event details using tenantUid
+      tags:
+        - Events
+      parameters:
+        - in: query
+          name: tenantUid
+          required: true
+          schema:
+            type: string
+          description: Unique tenant identifier
+        - in: query
+          name: eventUid
+          required: false
+          schema:
+            type: string
+          description: Unique uuid identifier
+      responses:
+        200:
+          description: Event fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example:
+                      eventUid: "evt_123"
+                      tenantUid: "tenant_456"
+                      name: "Annual Meeting"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Missing Tenant Uid
+                  error:
+                    type: object
+
+
       responses:
         "201":
           description: Event created successfully
@@ -1050,6 +1101,24 @@ components:
               type: string
               format: email
               example: "john@example.com"
+
+      # -------------------- Event --------------------
+       
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+            type: string
+            data:
+            type: object
+
+    ErrorResponse:
+        type: object
+        properties:
+          message:
+            type: string
+          error:
+            type: object
 
     # -------------------- ERRORS --------------------
     ErrorResponse:
