@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", userController.getUsersCtrl);
 router.get("/me", userController.getMeCtrl);
-
+router.post("/", validations.createUserVal, userController.createUserCtrl);
 router.put("/", validations.updateUserVal, userController.updateUserCtrl);
 
 // router.get("/:id", userController.getUserById);

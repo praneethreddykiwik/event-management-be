@@ -1,6 +1,8 @@
-const { dummyUsersemail } = require("../../database");
+const tenantServices = require("../services/tenant.service");
 const { successRes, errorRes } = require("../models/response.model");
 const userServices = require("../services/user.service");
+const reqModels = require("../models/request.model");
+const utils = require("../utils/utils");
 
 const getUsersCtrl = async (req, res) => {
   try {
@@ -92,6 +94,49 @@ const updateUserCtrl = async (req, res) => {
   }
 };
 
+const createUserCtrl = async (req, res) => {
+  const {
+    tenantId,
+    username,
+    email,
+    password,
+    role,
+    firstName,
+    lastName,
+    mobile,
+  } = req.body;
+  try {
+    const tenant = await tenantServices.getTenantByIdService(tenantId);
+    if (!tenant) {
+      const invalidTenantRes = errorRes("Tenant not found");
+      return res.status(404).json(invalidTenantRes);
+    }
+
+    const tenantUid = tenant.uid;
+    const passwordHash = await utils.hashPassword(password);
+
+    const payload = reqModels.createUserReqModel(
+      tenantUid,
+      username,
+      email,
+      passwordHash,
+      role,
+      firstName,
+      lastName,
+      mobile
+    );
+    const createUserRes = await userServices.createUserService(payload);
+    console.log("createUserCtrl; createUserRes;", createUserRes);
+    return res
+      .status(201)
+      .json(successRes("User Created Success", createUserRes));
+  } catch (error) {
+    console.error("createUserCtrl", error);
+    const erorRes = errorRes("User Creation Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
 module.exports = {
   getUsersCtrl,
   getUserById,
@@ -99,4 +144,5 @@ module.exports = {
   loginUser,
   getMeCtrl,
   updateUserCtrl,
+  createUserCtrl,
 };

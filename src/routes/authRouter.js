@@ -5,12 +5,6 @@ const validations = require("../middlewares/validations.middleware");
 const authRouter = express.Router();
 
 authRouter.post(
-  "/register",
-  validations.authRegisterVal,
-  controllers.registerCtrl
-);
-
-authRouter.post(
   "/login",
   validations.loginValidation,
   controllers.loadUser,

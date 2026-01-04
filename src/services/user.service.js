@@ -1,6 +1,4 @@
-const { users } = require("../../database");
 const { getDb } = require("../db/db");
-// const Event = require("../models/Event");
 
 const deleteEventService = async (eventId) => {
   const deleted = await Event.findOneAndDelete({ eventId });
@@ -19,9 +17,9 @@ const createUserService = async (payload) => {
   const response = await db.one(
     `
       insert into users
-        (tenant_uid, username, email, password_hash, role)
+        (tenant_uid, username, email, password_hash, role, first_name, last_name, mobile)
       values
-        ($(tenant_uid), $(username), $(email), $(password_hash), $(role))
+        ($(tenant_uid), $(username), $(email), $(password_hash), $(role), $(first_name), $(last_name), $(mobile))
       returning
         uid, username, email, role, status
     `,
@@ -65,6 +63,9 @@ const getUsersService = async (query, providePasswordHash) => {
         u.email,
         u.role,
         u.status,
+        u.first_name as "firstName",
+        u.last_name as "lastName", 
+        u.mobile,
         ${providePasswordHash ? "u.password_hash," : ""}
         t.tenant_id
       from users u
@@ -77,8 +78,10 @@ const getUsersService = async (query, providePasswordHash) => {
 
   return users;
 };
+
 const updateUserService = async (data) => {
-  const { uid, username, role, email, status } = data;
+  const { uid, username, role, email, status, firstName, lastName, mobile } =
+    data;
   const db = getDb();
 
   const response = await db.oneOrNone(
@@ -89,10 +92,13 @@ const updateUserService = async (data) => {
       username = COALESCE($(username), username),
       role = COALESCE($(role), role),
       status = COALESCE($(status), status)
+      first_name = COALESCE($(firstName), firstName),
+      last_name = COALESCE($(lastName), lastName),
+      mobile = COALESCE($(mobile), mobile)
     WHERE uid = $(uid)
     RETURNING *;
     `,
-    { email, username, role, status, uid }
+    { email, username, role, status, uid, firstName, lastName, mobile }
   );
 
   return response;

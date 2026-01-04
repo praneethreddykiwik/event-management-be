@@ -17,7 +17,39 @@ const getTenantByIdVal = (req, res, next) => {
 };
 
 const authRegisterVal = (req, res, next) => {
-  const requiredFields = ["tenantId", "username", "email", "password", "role"];
+  const requiredFields = [
+    "tenantId",
+    "username",
+    "email",
+    "password",
+    "role",
+    "firstName",
+    "mobile",
+  ];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+
+  next();
+};
+
+const createUserVal = (req, res, next) => {
+  const requiredFields = [
+    "tenantId",
+    "username",
+    "email",
+    "password",
+    "role",
+    "firstName",
+    "mobile",
+  ];
   const missingFields = [];
 
   requiredFields.forEach((el) => {
@@ -112,4 +144,5 @@ module.exports = {
   createEventValidation,
   createTaskVal,
   eventUidValidation,
+  createUserVal,
 };

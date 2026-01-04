@@ -25,55 +25,6 @@ tags:
     description: Redis Session Management
 
 paths:
-  /auth/register:
-    post:
-      tags: [Auth]
-      summary: Register a user under a tenant
-      description: >
-        Creates a new user in a given tenant. Password is hashed on the backend.
-        Returns created user (without password) and optionally token if your API supports it.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RegisterRequest"
-            examples:
-              sample:
-                value:
-                  tenantId: "tenant_001"
-                  username: "abdul"
-                  email: "abdul.s@criskasecurity.com"
-                  password: "MyStrongPassword@123"
-                  role: "admin"
-      responses:
-        "201":
-          description: User registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RegisterResponse"
-        "400":
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
-          description: Duplicate username/email within the tenant
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
-          description: Tenant not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
   /auth/login:
     post:
       tags: [Auth]
@@ -277,49 +228,55 @@ paths:
 
     post:
       tags: [Users]
-      summary: Create a user (admin/management)
-      description: Creates a user. (If you use /auth/register from FE, you can keep this for internal/admin usage.)
+      summary: Create a user under a tenant
+      description: >
+        Creates a new user in a given tenant. Password is hashed on the backend.
+        Returns created user (without password) and optionally token if your API supports it.
       requestBody:
-        required: true
+        required:
+          - tenantId
+          - username
+          - email
+          - password
+          - role
+          - firstName
+          - mobile
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateUserRequest"
+              $ref: "#/components/schemas/RegisterRequest"
             examples:
               sample:
                 value:
                   tenantId: "tenant_001"
-                  username: "vendor01"
-                  email: "vendor01@company.com"
-                  password: "SomePassword@123"
-                  role: "vendor"
+                  username: "abdul"
+                  email: "abdul.s@criskasecurity.com"
+                  password: "MyStrongPassword@123"
+                  role: "admin"
+                  firstName: "Adbul"
+                  lastName: "Wahid Syed"
+                  mobile: "9581122911"
       responses:
         "201":
-          description: User created
+          description: Event created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateUserResponse"
-        "400":
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
-          description: Duplicate username/email within the tenant
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
-          description: Tenant not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+                type: object
+                properties:
+                  username:
+                    type: string
+                    format: text
+                  email:
+                    type: string
+                    format: text
+                  role:
+                    type: string
+                    format: text
+                  status:
+                    type: string
+                    format: text
+
     put:
       tags:
         - Users
@@ -1021,8 +978,6 @@ components:
     #       example: uid is required
     #     error:
     #       type: object
-
- 
 
     # -------------------- REDIS SESSION --------------------
     SessionResponse:
