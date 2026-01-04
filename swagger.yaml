@@ -320,6 +320,36 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
           $ref: "#/components/responses/InternalServerError"
+    put:
+      tags:
+        - Users
+      summary: Update user details
+      description: Updates user information such as mobile, role, status, or username
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateUserSuccessResponse"
+        "400":
+          description: Bad request or validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /users/updateEventManager:
     put:
@@ -740,7 +770,7 @@ components:
           type: string
           example: Tenant not found
 
-    # -------------------- AUTH / REGISTER --------------------
+    # -------------------- AUTH / REGISTER ----------------------
     RegisterRequest:
       type: object
       required: [tenantId, username, email, password, role]
@@ -889,6 +919,59 @@ components:
           type: string
           format: date-time
           example: "2025-12-29T10:30:00.000Z"
+
+    UpdateUserRequest:
+      type: object
+      required:
+        - uid
+      properties:
+        uid:
+          type: string
+          example: user_123
+        mobile:
+          type: string
+          example: "9876543210"
+        status:
+          type: string
+          example: active
+        role:
+          type: string
+          example: admin
+        username:
+          type: string
+          example: shahid.khan
+    UpdateUserSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: User updated successfully
+        data:
+          type: object
+          description: Updated user object
+          example:
+            uid: user_123
+            username: shahid.khan
+            mobile: "9876543210"
+            role: admin
+            status: active
+            updatedAt: "2026-01-05T11:00:00Z"
+    # ErrorResponse:
+    #   type: object
+    #   properties:
+    #     success:
+    #       type: boolean
+    #       example: false
+    #     message:
+    #       type: string
+    #       example: uid is required
+    #     error:
+    #       type: object
+
+ 
 
     # -------------------- REDIS SESSION --------------------
     SessionResponse:

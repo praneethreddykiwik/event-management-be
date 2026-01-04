@@ -1,6 +1,6 @@
 const { dummyUsersemail } = require("../../database");
 const { successRes, errorRes } = require("../models/response.model");
-const updateUserServices = require("../services/user.service")
+const updateUserServices = require("../services/user.service");
 
 const getUsersCtrl = async (req, res) => {
   try {
@@ -61,19 +61,42 @@ const getMeCtrl = (req, res) => {
   return res.status(200).json(successRes("Current user", req.session.user));
 };
 
-const updateUserCtrl = (req, res) => {
+const updateUserCtrl = async (req, res) => {
   try {
-    const { managerId, mobile, status } = req.body;
-    const updatedManager = {
-      managerId,
+    const { uid, mobile, status, role, username } = req.body;
+
+    if (!uid) {
+      return res.status(400).json(errorRes("uid is required"));
+    }
+
+    const updatedUser = await updateUserServices.updateUserService({
+      uid,
       mobile,
       status,
-    };
-    return res.status(200).json(successRes("Manager updated successfully", updatedManager));
-  } catch (err) {
-    return res.status(400).json(
-      errorRes(err.message || "Update failed"));
+      role,
+      username,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json(errorRes("User not found"));
+    }
+
+    return res
+      .status(200)
+      .json(successRes("User updated successfully", updatedUser));
+  } catch (error) {
+    console.error("updateUserCtrl", error);
+    return res
+      .status(400)
+      .json(errorRes(error.message || "Update failed", {}, error.code, error));
   }
 };
 
-module.exports = { getUsersCtrl, getUserById, createUser, loginUser, getMeCtrl, updateUserCtrl };
+module.exports = {
+  getUsersCtrl,
+  getUserById,
+  createUser,
+  loginUser,
+  getMeCtrl,
+  updateUserCtrl,
+};
