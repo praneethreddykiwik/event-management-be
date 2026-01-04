@@ -1,6 +1,6 @@
 const { dummyUsersemail } = require("../../database");
 const { successRes, errorRes } = require("../models/response.model");
-const updateUserServices = require("../services/user.service");
+const userServices = require("../services/user.service");
 
 const getUsersCtrl = async (req, res) => {
   try {
@@ -69,7 +69,7 @@ const updateUserCtrl = async (req, res) => {
       return res.status(400).json(errorRes("uid is required"));
     }
 
-    const updatedUser = await updateUserServices.updateUserService({
+    const updatedUser = await userServices.updateUserService({
       uid,
       mobile,
       status,

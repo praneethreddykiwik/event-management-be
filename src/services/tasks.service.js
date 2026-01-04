@@ -97,6 +97,44 @@ async function deleteTask(tenantUid, taskUid, actorUid) {
   });
 }
 
+const getTaskService = async (query) => {
+  // tenantUid, eventUid,
+  const conditions = [];
+  const params = {};
+
+  const queries = [
+    { query: "tenantId", condition: "t.tenant_uid = $(tenantUid)" },
+    { query: "eventUid", condition: "t.event_uid = $(eventUid)" },
+    { query: "username", condition: "u.username = $(username)" },
+  ];
+
+  queries.forEach((el) => {
+    if (query[el.query]) {
+      conditions.push(el.condition);
+      params[el.query] = query[el.query];
+    }
+  });
+
+  const whereClause = conditions.length
+    ? `where ${conditions.join(" and ")}`
+    : "";
+
+  const db = getDb();
+  const users = await db.any(
+    `
+      select
+        *
+      from tasks t
+      ${whereClause}
+      `,
+    { ...params }
+  );
+  // join tenants t on t.uid = t.tenant_uid
+
+  return users;
+};
+
 module.exports = {
   createTaskService,
+  getTaskService,
 };
