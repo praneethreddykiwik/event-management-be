@@ -1,3 +1,4 @@
+const errorCodes = require("../constants/errorCodes.constants");
 const reqModels = require("../models/request.model");
 const { successRes, errorRes } = require("../models/response.model");
 const tenantServices = require("../services/tenant.service");
@@ -89,11 +90,12 @@ const authenticateUserCtrl = async (req, res, next) => {
       sessionData: req.session,
       user,
     });
-    return res.status(200).json(
+    res.status(200).json(
       successRes("Login successful", {
         sessionID: req.sessionID,
       })
     );
+    next();
   } catch (error) {
     console.error("authenticateUserCtrl", error);
     res.status(401).json(errorRes("Authentication failed", error));
@@ -111,9 +113,28 @@ const logoutCtrl = (req, res) => {
   });
 };
 
+const loadUserFromSessionCtrl = (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res
+        .status(401)
+        .json(errorRes("Unauthorized", "Please login", errorCodes.UN_AUTH));
+    }
+
+    return res
+      .status(200)
+      .json({ ...req.session.user, sessionID: req.sessionID });
+  } catch (error) {
+    return res
+      .status(401)
+      .json(errorRes("Unauthorized", error, errorCodes.UN_AUTH));
+  }
+};
+
 module.exports = {
   registerCtrl,
   loadUser,
   authenticateUserCtrl,
   logoutCtrl,
+  loadUserFromSessionCtrl,
 };

@@ -13,17 +13,17 @@ const swaggerUi = require("swagger-ui-express");
 const path = require("path");
 
 const port = process.env.PORT || 3000;
+const version = "/v1";
 
 console.log("App Starting...");
 
 const startServer = async () => {
-  try {
-    console.log("Starting server...");
+  console.log("Starting server...");
 
-    // await registerRedis(app);
+  try {
+    await registerRedis(app);
 
     // Mount routes AFTER session middleware
-    const version = "/v1";
     app.use(version, middlewares.logRoute, router);
     console.log("Routes mounted");
 
@@ -48,7 +48,7 @@ const startServer = async () => {
 
     console.log(`Starting server on port ${port}...`);
     server.listen(port, "0.0.0.0", async () => {
-      // await testDbConnection();
+      await testDbConnection();
       console.log(`Server listening... on port: ${port}`);
     });
   } catch (err) {

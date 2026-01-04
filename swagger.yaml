@@ -5,104 +5,26 @@ info:
   description: Tenant, Auth, and User APIs for EMDB (pg-promise + PostgreSQL)
 
 servers:
+  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com/v1
+    description: Dev
   - url: http://localhost:4000/v1
     description: Local
-  - url: https://kf3kgwa3ba.ap-south-1.awsapprunner.com
-    description: Dev
 
 tags:
-  - name: Tenants
-    description: Tenant Management
   - name: Auth
     description: Authentication & Registration
   - name: Users
     description: User Management
+  - name: Tenants
+    description: Tenant Management
+  - name: Events
+    description: Event Management
+  - name: Tasks
+    description: Task Management
   - name: Redis Session
     description: Redis Session Management
 
 paths:
-  /tenants:
-    get:
-      tags: [Tenants]
-      summary: Get all tenants
-      responses:
-        "200":
-          description: List of tenants
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Tenant"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
-    post:
-      tags: [Tenants]
-      summary: Create a Tenant
-      description: Creates a new tenant record in the EMDB database.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateTenantRequest"
-            examples:
-              sample:
-                value:
-                  tenantId: "tenant_001"
-                  name: "Helm Corp"
-                  updatedBy: "Abdul"
-      responses:
-        "201":
-          description: Tenant created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreateTenantResponse"
-        "400":
-          description: Validation or request error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
-          description: Duplicate tenant (tenantId already exists)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
-  /tenants/{tenantId}:
-    get:
-      tags: [Tenants]
-      summary: Get a tenant by tenantId
-      parameters:
-        - name: tenantId
-          in: path
-          required: true
-          description: Tenant identifier (tenants.tenantId)
-          schema:
-            type: string
-            example: tenant_001
-      responses:
-        "200":
-          description: Tenant object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Tenant"
-        "404":
-          description: Tenant not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TenantNotFound"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
   /auth/register:
     post:
       tags: [Auth]
@@ -220,6 +142,88 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /tenants:
+    get:
+      tags: [Tenants]
+      summary: Get all tenants
+      responses:
+        "200":
+          description: List of tenants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tenant"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags: [Tenants]
+      summary: Create a Tenant
+      description: Creates a new tenant record in the EMDB database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTenantRequest"
+            examples:
+              sample:
+                value:
+                  tenantId: "tenant_001"
+                  name: "Helm Corp"
+                  updatedBy: "Abdul"
+      responses:
+        "201":
+          description: Tenant created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTenantResponse"
+        "400":
+          description: Validation or request error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Duplicate tenant (tenantId already exists)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /tenants/{tenantId}:
+    get:
+      tags: [Tenants]
+      summary: Get a tenant by tenantId
+      parameters:
+        - name: tenantId
+          in: path
+          required: true
+          description: Tenant identifier (tenants.tenantId)
+          schema:
+            type: string
+            example: tenant_001
+      responses:
+        "200":
+          description: Tenant object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant"
+        "404":
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantNotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users:
     get:
@@ -381,7 +385,6 @@ paths:
                     type: string
                     example: managerId is required
 
-
   /users/{uid}:
     get:
       tags: [Users]
@@ -409,6 +412,108 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
+  /events/create-event:
+    post:
+      summary: Create a new event
+      description: Creates an event for a tenant
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tenantUid
+                - eventName
+                - eventType
+                - scheduledAt
+                - venue
+                - expectedAttendees
+                - status
+                - createdByUid
+              properties:
+                tenantUid:
+                  type: string
+                  format: uuid
+                  example: "8f45a0b4-23cb-4d3e-b6c9-29fcb0c1a910"
+                eventName:
+                  type: string
+                  example: "Annual Meetup"
+                eventType:
+                  type: string
+                  example: "conference"
+                scheduledAt:
+                  type: string
+                  format: date-time
+                  example: "2026-12-10T10:00:00Z"
+                venue:
+                  type: string
+                  example: "Bangalore Convention Center"
+                expectedAttendees:
+                  type: integer
+                  example: 250
+                status:
+                  type: string
+                  example: "pending"
+                comments:
+                  type: string
+                  example: "VIP guests arriving early"
+                assignedEventManagerUid:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  example: "c31a28b7-17c0-47f6-a1f4-65b7db911aaa"
+                createdByUid:
+                  type: string
+                  format: uuid
+                  example: "d12eac90-fbc1-4f41-a15e-fd983c1eaa33"
+      responses:
+        "201":
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_uid:
+                    type: string
+                    format: uuid
+                  tenant_uid:
+                    type: string
+                    format: uuid
+                  event_name:
+                    type: string
+                  event_type:
+                    type: string
+                  scheduled_at:
+                    type: string
+                    format: date-time
+                  venue:
+                    type: string
+                  expected_attendees:
+                    type: integer
+                  status:
+                    type: string
+                  comments:
+                    type: string
+                  assigned_event_manager_uid:
+                    type: string
+                    format: uuid
+                    nullable: true
+                  assigned_at:
+                    type: string
+                    format: date-time
+                  created_by_uid:
+                    type: string
+                    format: uuid
+                  created_at:
+                    type: string
+                    format: date-time
+        "400":
+          description: Invalid request data
 
   /redis-session:
     get:
@@ -469,9 +574,108 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /tasks:
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      description: Creates a task for a tenant and event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskRequest"
+      responses:
+        "201":
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTaskSuccessResponse"
+        "400":
+          description: Bad request or validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     # -------------------- TENANTS --------------------
+    CreateTaskRequest:
+      type: object
+      required:
+        - tenantUid
+        - eventUid
+        - title
+        - createdByUid
+      properties:
+        tenantUid:
+          type: string
+          example: tenant_123
+        eventUid:
+          type: string
+          example: event_456
+        title:
+          type: string
+          example: Prepare meeting agenda
+        description:
+          type: string
+          example: Description of the task
+        priority:
+          type: string
+          example: Task priority
+        dueAt:
+          type: string
+          example: dueAt
+        assignedToUid:
+          type: string
+          example: Assigned bh whom
+        createdByUid:
+          type: string
+          example: user_123
+        updatedByUid:
+          type: string
+          example: user_123
+
+    CreateTaskSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Task created
+        data:
+          type: object
+          description: Created task object
+          example:
+            taskUid: task_789
+            tenantUid: tenant_123
+            eventUid: event_456
+            title: Prepare meeting agenda
+            priority: medium
+            createdByUid: user_123
+            updatedByUid: user_123
+            createdAt: "2026-01-05T10:30:00Z"
+
+      # ErrorResponse:
+      #   type: object
+      #   properties:
+      #     success:
+      #       type: boolean
+      #       example: false
+      #     message:
+      #       type: string
+      #       example: Failed to create task
+      #     error:
+      #       type: object
+      #       example:
+      #         code: INVALID_PAYLOAD
+      #         details: Validation error
+
     CreateTenantRequest:
       type: object
       required: [tenantId, name]

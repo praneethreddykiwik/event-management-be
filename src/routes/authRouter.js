@@ -16,6 +16,9 @@ authRouter.post(
   controllers.loadUser,
   controllers.authenticateUserCtrl
 );
+
+authRouter.get("/me", controllers.loadUserFromSessionCtrl);
+
 authRouter.post("/logout", controllers.logoutCtrl);
 
 module.exports = authRouter;

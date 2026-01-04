@@ -18,7 +18,7 @@ const getTenantByIdVal = (req, res, next) => {
 
 const authRegisterVal = (req, res, next) => {
   const requiredFields = ["tenantId", "username", "email", "password", "role"];
-  let missingFields = [];
+  const missingFields = [];
 
   requiredFields.forEach((el) => {
     if (!req.body?.[el]) {
@@ -70,6 +70,38 @@ const updateUserVal = (req, res, next) => {
   next();
 };
 
+const createEventValidation = (req, res, next) => {
+  const requiredFields = ["tenantUid", "eventName", "eventType", "scheduledAt"];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+  next();
+};
+
+const createTaskVal = (req, res, next) => {
+  const requiredFields = ["tenantUid", "eventUid", "title", "createdByUid"];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -77,4 +109,7 @@ module.exports = {
   deleteEventVal,
   loginValidation,
   updateUserVal,
+  updateEventManagerVal,
+  createEventValidation,
+  createTaskVal,
 };
