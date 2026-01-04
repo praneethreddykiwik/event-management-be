@@ -1,3 +1,4 @@
+const { users } = require("../../database");
 const { getDb } = require("../db/db");
 // const Event = require("../models/Event");
 
@@ -76,9 +77,30 @@ const getUsersService = async (query, providePasswordHash) => {
 
   return users;
 };
+const updateUserService = async (data) => {
+  const { uid, username, role, email, status } = data;
+  const db = getDb();
+
+  const response = await db.oneOrNone(
+    `
+    UPDATE users
+    SET
+      email = COALESCE($(email), email),
+      username = COALESCE($(username), username),
+      role = COALESCE($(role), role),
+      status = COALESCE($(status), status)
+    WHERE uid = $(uid)
+    RETURNING *;
+    `,
+    { email, username, role, status, uid }
+  );
+
+  return response;
+};
 
 module.exports = {
   createUserService,
   getUsersService,
   deleteEventService,
+  updateUserService,
 };
