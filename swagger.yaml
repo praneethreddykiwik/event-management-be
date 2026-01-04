@@ -19,6 +19,8 @@ tags:
     description: Tenant Management
   - name: Events
     description: Event Management
+  - name: Tasks
+    description: Task Management
   - name: Redis Session
     description: Redis Session Management
 
@@ -455,7 +457,7 @@ paths:
                   example: 250
                 status:
                   type: string
-                  example: "scheduled"
+                  example: "pending"
                 comments:
                   type: string
                   example: "VIP guests arriving early"
@@ -572,9 +574,108 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /tasks:
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      description: Creates a task for a tenant and event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskRequest"
+      responses:
+        "201":
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTaskSuccessResponse"
+        "400":
+          description: Bad request or validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     # -------------------- TENANTS --------------------
+    CreateTaskRequest:
+      type: object
+      required:
+        - tenantUid
+        - eventUid
+        - title
+        - createdByUid
+      properties:
+        tenantUid:
+          type: string
+          example: tenant_123
+        eventUid:
+          type: string
+          example: event_456
+        title:
+          type: string
+          example: Prepare meeting agenda
+        description:
+          type: string
+          example: Description of the task
+        priority:
+          type: string
+          example: Task priority
+        dueAt:
+          type: string
+          example: dueAt
+        assignedToUid:
+          type: string
+          example: Assigned bh whom
+        createdByUid:
+          type: string
+          example: user_123
+        updatedByUid:
+          type: string
+          example: user_123
+
+    CreateTaskSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Task created
+        data:
+          type: object
+          description: Created task object
+          example:
+            taskUid: task_789
+            tenantUid: tenant_123
+            eventUid: event_456
+            title: Prepare meeting agenda
+            priority: medium
+            createdByUid: user_123
+            updatedByUid: user_123
+            createdAt: "2026-01-05T10:30:00Z"
+
+      # ErrorResponse:
+      #   type: object
+      #   properties:
+      #     success:
+      #       type: boolean
+      #       example: false
+      #     message:
+      #       type: string
+      #       example: Failed to create task
+      #     error:
+      #       type: object
+      #       example:
+      #         code: INVALID_PAYLOAD
+      #         details: Validation error
+
     CreateTenantRequest:
       type: object
       required: [tenantId, name]

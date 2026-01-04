@@ -86,6 +86,22 @@ const createEventValidation = (req, res, next) => {
   next();
 };
 
+const createTaskVal = (req, res, next) => {
+  const requiredFields = ["tenantUid", "eventUid", "title", "createdByUid"];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -94,4 +110,5 @@ module.exports = {
   loginValidation,
   updateEventManagerVal,
   createEventValidation,
+  createTaskVal,
 };
