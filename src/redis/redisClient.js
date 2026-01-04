@@ -11,8 +11,12 @@ function getRedisClient() {
   if (client) return client;
 
   const redisUrl = process.env.REDIS_URL;
+  // const redisUrl =
+  //   "rediss://master.cache-cluster-on-support.3xkamd.aps1.cache.amazonaws.com:6379";
+
   if (!redisUrl) throw new Error("REDIS_URL is missing");
 
+  // const isTls = true;
   const isTls =
     process.env.REDIS_TLS === "true" || redisUrl.startsWith("rediss://");
 
@@ -22,11 +26,15 @@ function getRedisClient() {
       tls: isTls,
       // For ElastiCache TLS, many teams set this false.
       // If you want strict validation later, set it to true and use proper CA/certs.
-      rejectUnauthorized: process.env.REDIS_REJECT_UNAUTHORIZED !== "false",
+      rejectUnauthorized: false,
+      // rejectUnauthorized: process.env.REDIS_REJECT_UNAUTHORIZED !== "false",
     },
   });
 
-  client.on("error", (err) => console.error("Redis error:", err));
+  client.on("error", (err) => {
+    console.error("Redis error:", err);
+    process.exit(1);
+  });
 
   return client;
 }

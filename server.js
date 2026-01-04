@@ -12,18 +12,18 @@ const YAML = require("yamljs");
 const swaggerUi = require("swagger-ui-express");
 const path = require("path");
 
-const port = process.env.PORT || 4001;
+const port = process.env.PORT || 3000;
+const version = "/v1";
 
 console.log("App Starting...");
 
 const startServer = async () => {
-  try {
-    console.log("Starting server...");
+  console.log("Starting server...");
 
+  try {
     await registerRedis(app);
 
     // Mount routes AFTER session middleware
-    const version = "/v1";
     app.use(version, middlewares.logRoute, router);
     console.log("Routes mounted");
 

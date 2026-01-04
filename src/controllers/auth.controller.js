@@ -1,3 +1,4 @@
+const errorCodes = require("../constants/errorCodes.constants");
 const reqModels = require("../models/request.model");
 const { successRes, errorRes } = require("../models/response.model");
 const tenantServices = require("../services/tenant.service");
@@ -89,12 +90,12 @@ const authenticateUserCtrl = async (req, res, next) => {
       sessionData: req.session,
       user,
     });
-    return res.status(200).json(
+    res.status(200).json(
       successRes("Login successful", {
         sessionID: req.sessionID,
-        user: req.session.user,
       })
     );
+    next();
   } catch (error) {
     console.error("authenticateUserCtrl", error);
     res.status(401).json(errorRes("Authentication failed", error));
@@ -106,9 +107,28 @@ const logoutCtrl = (req, res) => {
     if (err) {
       return res.status(400).json(errorRes("Logout failed"));
     }
-    res.clearCookie(process.env.SESSION_COOKIE_NAME || "emdb.sid");
+    res.clearCookie("emdb.sid");
+    // res.clearCookie(process.env.SESSION_COOKIE_NAME || "emdb.sid");
     return res.status(200).json(successRes("Logout successful"));
   });
+};
+
+const loadUserFromSessionCtrl = (req, res) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res
+        .status(401)
+        .json(errorRes("Unauthorized", "Please login", errorCodes.UN_AUTH));
+    }
+
+    return res
+      .status(200)
+      .json({ ...req.session.user, sessionID: req.sessionID });
+  } catch (error) {
+    return res
+      .status(401)
+      .json(errorRes("Unauthorized", error, errorCodes.UN_AUTH));
+  }
 };
 
 module.exports = {
@@ -116,4 +136,5 @@ module.exports = {
   loadUser,
   authenticateUserCtrl,
   logoutCtrl,
+  loadUserFromSessionCtrl,
 };
