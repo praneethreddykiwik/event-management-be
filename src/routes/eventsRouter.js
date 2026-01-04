@@ -12,4 +12,7 @@ router.post(
 // aadil
 // add router
 // route /getEventByUid
+
+router.get("/get-event-by-id", eventController.getEventByUidCtrl);
+
 module.exports = router;
