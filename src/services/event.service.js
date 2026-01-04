@@ -104,8 +104,7 @@ async function listEvents(tenantUid, role, userUid, filters) {
 }
 
 // aadil
-async function getEventByUid(query, includeDeleted = false) {
-  console.log("getEventByUid", query);
+async function getEventsService(query, includeDeleted = false) {
   const conditions = [];
   const params = {};
 
@@ -320,7 +319,7 @@ const deleteEvent = async (tenantUid, eventUid, actorUid) => {
 module.exports = {
   createEventService,
   listEvents,
-  getEventByUid,
+  getEventsService,
   updateEvent,
   assignEventManager,
   acceptEvent,
