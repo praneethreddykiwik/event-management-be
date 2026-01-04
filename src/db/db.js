@@ -33,7 +33,7 @@ const initializeDb = async () => {
     //   process.env.NODE_ENV === "local"
     //     ? loadEnvSecrets()
     //     : await loadSecretsSM();
-    console.log("initializeDb secrets fetched successfully", secrets);
+    // console.log("initializeDb secrets fetched successfully", secrets);
 
     db = pgp({
       host: secrets.DB_HOST,
@@ -60,7 +60,9 @@ const initializeDb = async () => {
 };
 
 const getDb = () => {
-  if (!db) throw new Error("DB not initialized. Call initializeDb() first.");
+  if (!db) {
+    throw new Error("DB not initialized. Call initializeDb() first.");
+  }
   return db;
 };
 

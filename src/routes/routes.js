@@ -16,6 +16,6 @@ router.use("/users", requireAuth, userRouter); // admins, event managers, worker
 router.use("/tenants", requireAuth, tenantRouter); // admins, event managers, workers, vendors
 // router.use("/tasks"); // tasks, status updates
 // router.use("/notofications"); // WhatsApp and email integration
-router.use("/redis-session", requireAuth, redisRouter);
+router.use("/redis-session", redisRouter);
 
 module.exports = router;

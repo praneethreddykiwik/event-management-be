@@ -1,4 +1,6 @@
-const { successRes } = require("../models/response.model");
+const { createEventReqModel } = require("../models/request.model");
+const { successRes, errorRes } = require("../models/response.model");
+const services = require("../services/event.service");
 
 const deleteEventController = async (req, res) => {
   try {
@@ -14,4 +16,16 @@ const deleteEventController = async (req, res) => {
 // aadil
 const getEventByUidCtrl = () => {};
 
-module.exports = { deleteEventController };
+const createEventCtrl = async (req, res) => {
+  try {
+    const payload = createEventReqModel(req);
+    const res = await services.createEventService(payload);
+    res.status(200).json(successRes("Success", res));
+  } catch (error) {
+    console.error("getUsersCtrl", error);
+    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+module.exports = { deleteEventController, createEventCtrl };

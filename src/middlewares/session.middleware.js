@@ -23,7 +23,6 @@ async function buildSessionMiddleware() {
 
   return session({
     store: new RedisStore({ client: redisClient }),
-    name: "emdb.sid",
     name: process.env.SESSION_COOKIE_NAME || "emdb.sid",
     // secret: "super-secret",
     secret: process.env.SESSION_SECRET,

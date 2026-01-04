@@ -1,7 +1,6 @@
 const { getDb } = require("../db/db");
 
-// create event + assign event manager
-const createEventService = async (req) => {
+const createEventService = async (payload) => {
   const sql = `
   INSERT INTO events (
     tenant_uid,
@@ -23,7 +22,7 @@ const createEventService = async (req) => {
     $(scheduled_at),
     $(venue),
     $(expected_attendees),
-    'assigned',
+    $(status),
     $(comments),
     $(assigned_event_manager_uid),
     now(),
@@ -31,18 +30,6 @@ const createEventService = async (req) => {
   )
   RETURNING *;
 `;
-
-  const payload = {
-    tenant_uid: req.session.user.tenantUid,
-    event_name: req.body.eventName,
-    event_type: req.body.eventType,
-    scheduled_at: req.body.scheduledAt,
-    venue: req.body.venue || null,
-    expected_attendees: Number(req.body.expectedAttendees || 0),
-    assigned_event_manager_uid: req.body.assignedEventManagerUid, // uuid
-    comments: req.body.comments || null,
-    created_by_uid: req.session.user.uid,
-  };
 
   const db = getDb();
   const createdRes = await db.one(sql, payload);
@@ -120,7 +107,7 @@ async function listEvents(tenantUid, role, userUid, filters) {
 async function getEventByUid(tenantUid, eventUid, includeDeleted = false) {
   const sql = `
     SELECT *
-    FROM "emdb-schema".events
+    FROM events
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
       AND ($(include_deleted)::boolean = true OR status <> 'deleted')
@@ -136,7 +123,7 @@ async function getEventByUid(tenantUid, eventUid, includeDeleted = false) {
 
 async function updateEvent(tenantUid, eventUid, patch, actorUid) {
   const sql = `
-    UPDATE "emdb-schema".events
+    UPDATE events
     SET
       event_name = COALESCE($(event_name), event_name),
       event_type = COALESCE($(event_type), event_type),
@@ -171,7 +158,7 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
 
 async function assignEventManager(tenantUid, eventUid, managerUid, actorUid) {
   const sql = `
-    UPDATE "emdb-schema".events
+    UPDATE events
     SET
       assigned_event_manager_uid = $(manager_uid),
       assigned_at = now(),
@@ -221,7 +208,7 @@ const declineEvent = async (
   declineReason = null
 ) => {
   const sql = `
-    UPDATE "emdb-schema".events
+    UPDATE events
     SET
       status = 'declined',
       declined_at = now(),
