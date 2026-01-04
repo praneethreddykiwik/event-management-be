@@ -38,12 +38,12 @@ const loadSecretsSM = async () => {
 
 // move this to AWS credential manager
 const loadEnvSecrets = () => {
-  try {
-    const secretManagement = loadSecretsSM();
-    console.log("secretManagement secrets success", secretManagement);
-  } catch (error) {
-    console.log("secretManagement secrets Error", error);
-  }
+  // try {
+  //   const secretManagement = loadSecretsSM();
+  //   console.log("secretManagement secrets success", secretManagement);
+  // } catch (error) {
+  //   console.log("secretManagement secrets Error", error);
+  // }
 
   return {
     DB_HOST: process.env.DB_HOST,

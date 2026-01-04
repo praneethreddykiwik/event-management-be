@@ -16,6 +16,7 @@ const getSessionCtrl = async (req, res) => {
 const deleteSessionCtrl = async (req, res) => {
   try {
     const session = req.body.sessionID || req.sessionID;
+    console.log("deleteSessionCtrl session", session);
 
     const user = await deleteSessionService(session);
 

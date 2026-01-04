@@ -1,3 +1,4 @@
+const { createEventReqModel } = require("../models/request.model");
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
 
@@ -14,20 +15,28 @@ const deleteEventController = async (req, res) => {
 // reference users.controller
 // aadil
 const getEventByUidCtrl = async (req, res) => {
-  const { eventUid, tenantUid } = req.query;
 
   try {
-    const eventid = await services.getEventByUid(tenantUid, eventUid, false);
-    if (!eventid) {
-      const invalidEventRes = errorRes("eventUid is not found");
-      return res.status(404).json(invalidEventRes);
-    }
+    const getEventidRes = await services.getEventByUid(req.query);
 
-    return res.status(200).json(successRes("success", eventid));
+    return res.status(200).json(successRes("success", getEventidRes));
   } catch (err) {
-    console.error(err);
-    return res.status(500).json(errorRes("server is not responing", err));
+    console.error("getEventByUidCtrl", err);
+    return res.status(400).json(errorRes("server is not responing", err));
   }
 };
 
-module.exports = { deleteEventController, getEventByUidCtrl };
+// module.exports = { deleteEventController, getEventByUidCtrl };
+const createEventCtrl = async (req, res) => {
+  try {
+    const payload = createEventReqModel(req);
+    const createEventRes = await services.createEventService(payload);
+    res.status(200).json(successRes("Success", createEventRes));
+  } catch (error) {
+    console.error("createEventCtrl", error);
+    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+module.exports = { deleteEventController, createEventCtrl, getEventByUidCtrl };

@@ -1,6 +1,6 @@
 const { getDb } = require("../db/db");
 
-const createTask = ({
+const createTaskService = ({
   tenantUid,
   eventUid,
   title,
@@ -8,7 +8,8 @@ const createTask = ({
   priority = "medium",
   dueAt = null,
   assignedToUid = null,
-  actorUid,
+  createdByUid,
+  updatedByUid,
 }) => {
   const sql = `
     INSERT INTO tasks (
@@ -19,7 +20,7 @@ const createTask = ({
     VALUES (
       $(tenant_uid), $(event_uid), $(title), $(description),
       $(priority), $(due_at), $(assigned_to_uid),
-      $(actor_uid), $(actor_uid)
+      $(created_by_uid), $(updated_by_uid)
     )
     RETURNING *;
   `;
@@ -33,7 +34,8 @@ const createTask = ({
     priority,
     due_at: dueAt,
     assigned_to_uid: assignedToUid,
-    actor_uid: actorUid,
+    created_by_uid: createdByUid,
+    updated_by_uid: updatedByUid,
   });
 };
 
@@ -94,3 +96,7 @@ async function deleteTask(tenantUid, taskUid, actorUid) {
     actor_uid: actorUid,
   });
 }
+
+module.exports = {
+  createTaskService,
+};

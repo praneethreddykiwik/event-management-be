@@ -4,7 +4,7 @@ const fetchAllTenantsService = async (req) => {
   const db = getDb();
   const response = await db.any(`
   SELECT uid, tenant_id, name, status, created_at, updated_at
-  FROM "emdb-schema".tenants
+  FROM tenants
   ORDER BY created_at DESC
 `);
 

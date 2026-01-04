@@ -13,6 +13,16 @@ router.post(
 // add router
 // route /getEventByUid
 
-router.get("/get-event-by-id", eventController.getEventByUidCtrl);
+router.get(
+  "/",
+  validations.eventUidValidation,
+  eventController.getEventByUidCtrl
+);
+
+router.post(
+  "/create-event",
+  validations.createEventValidation,
+  eventController.createEventCtrl
+);
 
 module.exports = router;

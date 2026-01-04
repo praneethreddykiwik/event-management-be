@@ -18,7 +18,7 @@ const getTenantByIdVal = (req, res, next) => {
 
 const authRegisterVal = (req, res, next) => {
   const requiredFields = ["tenantId", "username", "email", "password", "role"];
-  let missingFields = [];
+  const missingFields = [];
 
   requiredFields.forEach((el) => {
     if (!req.body?.[el]) {
@@ -66,7 +66,47 @@ const updateEventManagerVal = (req, res, next) => {
   if (status && !["Active", "Inactive"].includes(status)) {
     return res.status(400).json(errorRes("Invalid status"));
   }
-  
+
+  next();
+};
+
+const createEventValidation = (req, res, next) => {
+  const requiredFields = ["tenantUid", "eventName", "eventType", "scheduledAt"];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+  next();
+};
+
+const createTaskVal = (req, res, next) => {
+  const requiredFields = ["tenantUid", "eventUid", "title", "createdByUid"];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+
+  next();
+};
+
+const eventUidValidation = (req, res, next) => {
+  if (!req.query.tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+
   next();
 };
 
@@ -76,5 +116,8 @@ module.exports = {
   authRegisterVal,
   deleteEventVal,
   loginValidation,
-  updateEventManagerVal
+  updateEventManagerVal,
+  createEventValidation,
+  createTaskVal,
+  eventUidValidation,
 };
