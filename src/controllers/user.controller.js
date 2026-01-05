@@ -137,6 +137,24 @@ const createUserCtrl = async (req, res) => {
   }
 };
 
+const userEventsTasksCtrl = async (req, res) => {
+  try {
+    const tenantUid = req.query.tenantUid;
+    const assignedToUid = req.query.assignedToUid;
+
+    const users = await userServices.userEventsTasksService(
+      tenantUid,
+      assignedToUid
+    );
+
+    res.status(200).json(successRes("Success", users));
+  } catch (error) {
+    console.error("userEventsTasksCtrl", error);
+    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
 module.exports = {
   getUsersCtrl,
   getUserById,
@@ -145,4 +163,5 @@ module.exports = {
   getMeCtrl,
   updateUserCtrl,
   createUserCtrl,
+  userEventsTasksCtrl,
 };

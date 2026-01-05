@@ -777,6 +777,62 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
           $ref: "#/components/responses.yaml#/responses/InternalServerError"
+  /users/user-events-tasks:
+    get:
+      tags: [Users]
+      summary: Get user events and tasks
+      description: Retrieves all events and tasks assigned to or created by a specific user.
+      parameters:
+        - name: assignedToUid
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: assignedToUid
+        - name: tenantUid
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: tenantUid
+      responses:
+        "200":
+          description: User events and tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      events:
+                        type: array
+                        items:
+                          $ref: "./components/schemas.yaml#/schemas/Event"
+                      tasks:
+                        type: array
+                        items:
+                          type: object
+                          additionalProperties: true
+        "400":
+          description: Validation or request error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   schemas:

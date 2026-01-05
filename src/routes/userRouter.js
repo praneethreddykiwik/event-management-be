@@ -8,11 +8,10 @@ router.get("/", userController.getUsersCtrl);
 router.get("/me", userController.getMeCtrl);
 router.post("/", validations.createUserVal, userController.createUserCtrl);
 router.put("/", validations.updateUserVal, userController.updateUserCtrl);
-
-// router.get("/:id", userController.getUserById);
-
-// router.post("/", userController.createUser);
-
-// router.post("/login", userController.loginUser);
+router.get(
+  "/user-events-tasks",
+  validations.userEventsTasksVal,
+  userController.userEventsTasksCtrl
+);
 
 module.exports = router;

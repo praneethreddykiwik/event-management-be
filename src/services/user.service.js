@@ -105,9 +105,44 @@ const updateUserService = async (data) => {
   return response;
 };
 
+const userEventsTasksService = async (tenantUid, assignedToUid) => {
+  const sql = `
+  SELECT
+    e.uid AS event_uid,
+    e.event_name,
+    e.event_type,
+    e.scheduled_at,
+    e.venue,
+    e.expected_attendees,
+    e.status AS event_status,
+    e.assigned_to_uid AS event_assigned_to_uid,
+    e.created_at AS event_created_at,
+
+    t.uid AS task_uid,
+    t.title AS task_title,
+    t.status AS task_status,
+    t.due_at AS task_due_at,
+    t.assigned_to_uid AS task_assigned_to_uid,
+    t.created_at AS task_created_at
+  FROM events e
+  LEFT JOIN tasks t
+    ON t.event_uid = e.uid
+    AND t.status <> 'deleted'
+  WHERE e.tenant_uid = $(tenantUid)
+    AND e.assigned_to_uid = $(assignedToUid)
+    AND e.status <> 'deleted'
+  ORDER BY e.created_at DESC, t.created_at ASC;
+`;
+  const db = getDb();
+  const rows = await db.any(sql, { tenantUid, assignedToUid });
+
+  return rows;
+};
+
 module.exports = {
   createUserService,
   getUsersService,
   deleteEventService,
   updateUserService,
+  userEventsTasksService,
 };
