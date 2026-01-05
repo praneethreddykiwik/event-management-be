@@ -126,6 +126,43 @@ const createTaskVal = (req, res, next) => {
   next();
 };
 
+const acceptEventVal = (req, res, next) => {
+  const requiredFields = ["tenantUid", "eventUid", "eventManagerUid"];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+
+  next();
+};
+
+const declineEventVal = (req, res, next) => {
+  const requiredFields = [
+    "tenantUid",
+    "eventUid",
+    "eventManagerUid",
+    "declineReason",
+  ];
+  const missingFields = [];
+
+  requiredFields.forEach((el) => {
+    if (!req.body?.[el]) {
+      missingFields.push(el);
+    }
+  });
+  if (missingFields.length) {
+    return res.status(400).json(errorRes("Missing fields", { missingFields }));
+  }
+
+  next();
+};
+
 const getEventsVal = (req, res, next) => {
   if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
     return res.status(400).json(errorRes("Missing Tenant Uid", {}));
@@ -203,4 +240,6 @@ module.exports = {
   getTasksByEventUidVal,
   assignEventVal,
   assignTaskVal,
+  acceptEventVal,
+  declineEventVal,
 };

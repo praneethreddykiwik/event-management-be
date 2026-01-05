@@ -35,7 +35,26 @@ const createEventReqModel = (req) => {
   };
 };
 
+const acceptEventReqModel = (req) => {
+  return {
+    tenantUid: req.body.tenantUid,
+    eventUid: req.body.eventUid,
+    eventManagerUid: req.body.eventManagerUid,
+  };
+};
+
+const declineEventReqModel = (req) => {
+  return {
+    tenantUid: req.body.tenantUid,
+    eventUid: req.body.eventUid,
+    eventManagerUid: req.body.eventManagerUid,
+    declineReason: req.body.declineReason,
+  };
+};
+
 module.exports = {
   createUserReqModel,
   createEventReqModel,
+  declineEventReqModel,
+  acceptEventReqModel,
 };
