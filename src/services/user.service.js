@@ -67,7 +67,8 @@ const getUsersService = async (query, providePasswordHash) => {
         u.last_name as "lastName", 
         u.mobile,
         ${providePasswordHash ? "u.password_hash," : ""}
-        t.tenant_id
+        t.tenant_id,
+        t.uid as "tenantUid"
       from users u
       join tenants t on t.uid = u.tenant_uid
       ${whereClause}

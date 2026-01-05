@@ -127,8 +127,44 @@ const createTaskVal = (req, res, next) => {
 };
 
 const getEventsVal = (req, res, next) => {
-  if (!req.query.tenantUid) {
+  if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
     return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+
+  next();
+};
+
+const getEventsTasksVal = (req, res, next) => {
+  const username = req.session?.user?.username;
+  const tenantUid = req.session?.user?.tenantUid;
+
+  if (!username) {
+    return res.status(400).json(errorRes("Missing username", {}));
+  }
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+
+  next();
+};
+
+const assignEventVal = (req, res, next) => {
+  const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+  const eventUid = req.body.eventUid;
+  const managerUid = req.body.managerUid;
+  const updatedByUid = req.body.updatedByUid || req.session?.user?.updatedByUid;
+
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing username", {}));
+  }
+  if (!eventUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+  if (!managerUid) {
+    return res.status(400).json(errorRes("Missing managerUid", {}));
+  }
+  if (!updatedByUid) {
+    return res.status(400).json(errorRes("Missing updatedByUid", {}));
   }
 
   next();
@@ -145,4 +181,6 @@ module.exports = {
   createTaskVal,
   getEventsVal,
   createUserVal,
+  getEventsTasksVal,
+  assignEventVal,
 };

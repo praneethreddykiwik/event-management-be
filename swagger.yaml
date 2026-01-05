@@ -467,7 +467,7 @@ paths:
       parameters:
         - in: query
           name: tenantUid
-          required: true
+          required: false
           schema:
             type: string
           description: Unique tenant identifier

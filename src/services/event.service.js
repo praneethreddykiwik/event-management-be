@@ -109,7 +109,7 @@ async function getEventsService(query, includeDeleted = false) {
   const params = {};
 
   const queries = [
-    { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
+    // { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
     { query: "eventUid", condition: "e.uid = $(eventUid)" },
   ];
 
@@ -131,9 +131,32 @@ async function getEventsService(query, includeDeleted = false) {
   const events = await db.any(
     `
       select
-        *  
+        e.uid,
+        e.tenant_uid as "tenantUid",
+        e.event_name as "eventName",
+        e.event_type as "eventType",
+        e.scheduled_at as "scheduledAt",
+        e.venue,
+        e.expected_attendees as "expectedAttendees",
+        e.status,
+        e.assigned_event_manager_uid as "assignedEventManagerUid",
+        e.assigned_at as "assignedAt",
+        e.accepted_at as "acceptedAt",
+        e.declined_at as "declinedAt",
+        e.decline_reason as "declineReason",
+        e.comments,
+        e.created_at as "createdAt",
+        e.updated_at as "updatedAt",
+        e.created_by_uid as "createdByUid",
+        e.updated_by_uid as "updatedByUid",
+        e.deleted_at as "deletedAt",
+        e.delete_reason as "deleteReason",
+        t.tenant_id as "tenantId",
+        t.name as "tenantName",
+        u.first_name as "firstName"
       from events e
       join tenants t on t.uid = e.tenant_uid
+      left join users u on u.uid = e.assigned_event_manager_uid
       ${whereClause}
     `,
     {
@@ -181,7 +204,12 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
   });
 }
 
-async function assignEventManager(tenantUid, eventUid, managerUid, actorUid) {
+async function assignEventService(
+  tenantUid,
+  eventUid,
+  managerUid,
+  updatedByUid
+) {
   const sql = `
     UPDATE events
     SET
@@ -189,7 +217,7 @@ async function assignEventManager(tenantUid, eventUid, managerUid, actorUid) {
       assigned_at = now(),
       status = 'assigned',
       updated_at = now(),
-      updated_by_uid = $(actor_uid)
+      updated_by_uid = $(updated_by_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
       AND status <> 'deleted'
@@ -201,7 +229,7 @@ async function assignEventManager(tenantUid, eventUid, managerUid, actorUid) {
     tenant_uid: tenantUid,
     event_uid: eventUid,
     manager_uid: managerUid,
-    actor_uid: actorUid,
+    updated_by_uid: updatedByUid,
   });
 }
 
@@ -321,7 +349,7 @@ module.exports = {
   listEvents,
   getEventsService,
   updateEvent,
-  assignEventManager,
+  assignEventService,
   acceptEvent,
   declineEvent,
   getAllEvents,

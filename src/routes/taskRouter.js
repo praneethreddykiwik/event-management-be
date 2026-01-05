@@ -4,7 +4,11 @@ const validations = require("../middlewares/validations.middleware");
 
 const taskRouter = express.Router();
 
-// taskRouter.get("/", controllers.getAllTask);
+taskRouter.get(
+  "/",
+  validations.getEventsTasksVal,
+  controllers.getEventsTasksCtrl
+);
 // taskRouter.get("/:taskId", validations.getTaskByIdVal, controllers.getTaskById);
 taskRouter.post("/", validations.createTaskVal, controllers.createTaskCtrl);
 

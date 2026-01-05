@@ -1,13 +1,17 @@
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tasks.service");
 
-async function getAllTasks(req, res) {
+async function getEventsTasksCtrl(req, res) {
   try {
-    const response = await services.fetchAllTasksService();
-    console.log("Success: getAllTasks response", response);
+    const username = req.session?.user?.username;
+    const tenantUid = req.session?.user?.tenantUid;
+    console.log("getEventsTasksCtrl req", { tenantUid, username });
+
+    const response = await services.getEventsTaskService(username, tenantUid);
+    console.log("Success: getEventsTasksCtrl response", response);
     return res.status(200).json(successRes("Tasks", response));
   } catch (error) {
-    console.error("getAllTasks", error);
+    console.error("getEventsTasksCtrl", error);
     const erorRes = errorRes("Get Tasks Failed", {}, error.code, error);
     return res.status(400).json(erorRes);
   }
@@ -55,7 +59,7 @@ async function createTaskCtrl(req, res) {
 }
 
 module.exports = {
-  getAllTasks,
+  getEventsTasksCtrl,
   getTaskById,
   createTaskCtrl,
 };

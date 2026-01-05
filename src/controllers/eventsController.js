@@ -12,11 +12,13 @@ const deleteEventController = async (req, res) => {
   }
 };
 
-// reference users.controller
-// aadil
 const getEventsCtrl = async (req, res) => {
   try {
-    const getEventidRes = await services.getEventsService(req.query);
+    const obj = {
+      tenantUid: req.query.tenantUid || req.session?.user?.tenantUid,
+      eventUid: req.query.eventUid,
+    };
+    const getEventidRes = await services.getEventsService(obj);
 
     return res.status(200).json(successRes("success", getEventidRes));
   } catch (err) {
@@ -25,7 +27,6 @@ const getEventsCtrl = async (req, res) => {
   }
 };
 
-// module.exports = { deleteEventController, getEventsCtrl };
 const createEventCtrl = async (req, res) => {
   try {
     const payload = createEventReqModel(req);
@@ -38,4 +39,31 @@ const createEventCtrl = async (req, res) => {
   }
 };
 
-module.exports = { deleteEventController, createEventCtrl, getEventsCtrl };
+const assignEventCtrl = async (req, res) => {
+  try {
+    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+    const eventUid = req.body.eventUid;
+    const managerUid = req.body.managerUid;
+    const updatedByUid =
+      req.body.updatedByUid || req.session?.user?.updatedByUid;
+
+    const createEventRes = await services.assignEventService(
+      tenantUid,
+      eventUid,
+      managerUid,
+      updatedByUid
+    );
+    res.status(200).json(successRes("Success", createEventRes));
+  } catch (error) {
+    console.error("assignEventCtrl", error);
+    const erorRes = errorRes("Asssign Event Failed", error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+module.exports = {
+  deleteEventController,
+  createEventCtrl,
+  getEventsCtrl,
+  assignEventCtrl,
+};

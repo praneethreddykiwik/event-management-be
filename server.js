@@ -21,7 +21,7 @@ const startServer = async () => {
   console.log("Starting server...");
 
   try {
-    // await registerRedis(app);
+    await registerRedis(app);
 
     // Mount routes AFTER session middleware
     app.use(version, middlewares.logRoute, router);

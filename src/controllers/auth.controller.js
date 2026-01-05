@@ -51,6 +51,7 @@ const authenticateUserCtrl = async (req, res, next) => {
       role: user.role,
       status: user.status,
       tenantId: user.tenant_id,
+      tenantUid: user.tenantUid,
     };
 
     console.log("authenticateUserCtrl success", {

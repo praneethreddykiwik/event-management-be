@@ -20,5 +20,10 @@ router.post(
   validations.createEventValidation,
   eventController.createEventCtrl
 );
+router.post(
+  "/assign-event",
+  validations.assignEventVal,
+  eventController.assignEventCtrl
+);
 
 module.exports = router;
