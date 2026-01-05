@@ -23,4 +23,16 @@ router.post(
   eventController.assignEventCtrl
 );
 
+router.put(
+  "/accept-event",
+  validations.acceptEventVal,
+  eventController.acceptEventCtrl
+);
+
+router.put(
+  "/decline-event",
+  validations.declineEventVal,
+  eventController.deleteEventCtrl
+);
+
 module.exports = router;

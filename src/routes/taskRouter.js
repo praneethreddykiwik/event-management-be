@@ -16,5 +16,5 @@ taskRouter.post(
   validations.assignTaskVal,
   controllers.assignTaskCtrl
 );
-
+taskRouter.put("/", controllers.updateTaskCtrl);
 module.exports = taskRouter;

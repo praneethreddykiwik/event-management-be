@@ -65,7 +65,8 @@ const getMeCtrl = (req, res) => {
 
 const updateUserCtrl = async (req, res) => {
   try {
-    const { uid, mobile, status, role, username } = req.body;
+    const { uid, mobile, status, role, username, email, firstName, lastName } =
+      req.body;
 
     if (!uid) {
       return res.status(400).json(errorRes("uid is required"));
@@ -77,6 +78,9 @@ const updateUserCtrl = async (req, res) => {
       status,
       role,
       username,
+      email,
+      firstName,
+      lastName,
     });
 
     if (!updatedUser) {
@@ -157,7 +161,6 @@ const userEventsTasksCtrl = async (req, res) => {
 
 const deleteUserCtrl = async (req, res) => {
   try {
-    console.log("body", req.body);
     const { uid } = req.query;
 
     if (!uid) {

@@ -632,6 +632,71 @@ paths:
         "400":
           description: Invalid request data
 
+  /events/accept-event:
+    put:
+      tags: [Events]
+      summary: Accept an assigned event
+      description: >
+        Accepts an event and updates its status to `accepted`.
+        The event must be in a valid state to be accepted.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AcceptEventRequest"
+            examples:
+              sample:
+                value:
+                  tenantUid: "7f5e0c8e-47a7-46dc-ba0d-3260760bf9d8"
+                  eventUid: "9dcb62bf-ffae-48f0-9c95-8a1000bed10f"
+                  eventManagerUid: "a35e30b9-04b6-454a-bff9-061a0c74731b"
+      responses:
+        "200":
+          description: Event accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AcceptEventSuccessResponse"
+        "400":
+          description: Validation error or bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MissingFieldsErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /events/decline-event:
+    put:
+      tags: [Events]
+      summary: Decline an assigned event
+      description: >
+        Declines an event and updates its status to `declined`
+        with an optional decline reason.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeclineEventRequest"
+            examples:
+              sample:
+                value:
+                  tenantUid: "7f5e0c8e-47a7-46dc-ba0d-3260760bf9d8"
+                  eventUid: "400082d9-156e-4a80-99b8-b48be6972924"
+                  eventManagerUid: "a35e30b9-04b6-454a-bff9-061a0c74731b"
+                  declineReason: "Scheduling conflict"
+      responses:
+        "200":
+          description: Event declined successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeclineEventSuccessResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  
   /redis-session:
     get:
       tags: [Redis Session]
@@ -1367,23 +1432,115 @@ components:
           error:
             type: object
 
-    # -------------------- ERRORS --------------------
-    ErrorResponse:
+    AcceptEventRequest:
+      type: object
+      required:
+        - tenantUid
+        - eventUid
+        - eventManagerUid
+      properties:
+        tenantUid:
+          type: string
+          format: uuid
+        eventUid:
+          type: string
+          format: uuid
+        eventManagerUid:
+          type: string
+          format: uuid
+
+    DeclineEventRequest:
+      type: object
+      required:
+        - tenantUid
+        - eventUid
+        - eventManagerUid
+      properties:
+        tenantUid:
+          type: string
+          format: uuid
+        eventUid:
+          type: string
+          format: uuid
+        eventManagerUid:
+          type: string
+          format: uuid
+        declineReason:
+          type: string
+          nullable: true
+  
+    AcceptEventSuccessResponse:
       type: object
       properties:
+        code:
+          type: string
+          example: "0000"
         message:
           type: string
-          example: Something went wrong
-        code:
-          nullable: true
-          oneOf:
-            - type: string
-            - type: "null"
+          example: Success
         details:
-          nullable: true
-          oneOf:
-            - type: object
-            - type: "null"
+          type: object
+          properties:
+            missingFields:
+              type: string
+              format: uuid
+            tenant_uid:
+              type: string
+              format: uuid
+            status:
+              type: string
+              example: accepted
+            accepted_at:
+              type: string
+              format: date-time
+
+    MissingFieldsErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "9991"
+        message:
+          type: string
+          example: Missing fields
+        details:
+          type: object
+          properties:
+            missingFields:
+              type: array
+              items:
+                type: string
+              example:
+                - tenantUid
+                - eventUid
+                - eventManagerUid
+
+    DeclineEventSuccessResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "0000"
+        message:
+          type: string
+          example: Success
+        details:
+          type: object
+          properties:
+            uid:
+              type: string
+              format: uuid
+            tenant_uid:
+              type: string
+              format: uuid
+            status:
+              type: string
+              example: declined
+            declined_at:
+              type: string
+              format: date-time
+            decline_reason:
+              type: string
 
     Error:
       type: object
@@ -1400,3 +1557,34 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+
+   #-----------------------TASKS----------------------------
+    UpdateTaskRequest:
+      type: object
+      required:
+        - updatedByUid
+      properties:
+        title:
+          type: string
+          example: "Fix login bug"
+        description:
+          type: string
+          example: "Investigate OAuth redirect issue"
+        status:
+          type: string
+          example: "in_progress"
+        priority:
+          type: string
+          example: "high"
+        dueAt:
+          type: string
+          format: date-time
+          example: "2026-01-15T10:00:00Z"
+        assignedToUid:
+          type: string
+          example: "u_789"
+        updatedByUid:
+          type: string
+          example: "u_admin_1"
+
+

@@ -83,6 +83,7 @@ const getUsersService = async (query, providePasswordHash) => {
 const updateUserService = async (data) => {
   const { uid, username, role, email, status, firstName, lastName, mobile } =
     data;
+
   const db = getDb();
 
   const response = await db.oneOrNone(
@@ -92,9 +93,9 @@ const updateUserService = async (data) => {
       email = COALESCE($(email), email),
       username = COALESCE($(username), username),
       role = COALESCE($(role), role),
-      status = COALESCE($(status), status)
-      first_name = COALESCE($(firstName), firstName),
-      last_name = COALESCE($(lastName), lastName),
+      status = COALESCE($(status), status),
+      first_name = COALESCE($(firstName), first_name),
+      last_name = COALESCE($(lastName), last_name),
       mobile = COALESCE($(mobile), mobile)
     WHERE uid = $(uid)
     RETURNING *;

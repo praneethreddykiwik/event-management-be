@@ -235,7 +235,7 @@ async function assignEventService(
   });
 }
 
-async function acceptEvent(db, { tenantUid, eventUid, eventManagerUid }) {
+async function acceptEvent({ tenantUid, eventUid, eventManagerUid }) {
   const sql = `
     UPDATE events
     SET
@@ -249,6 +249,7 @@ async function acceptEvent(db, { tenantUid, eventUid, eventManagerUid }) {
       AND status IN ('assigned', 'declined') -- allow accept after reassignment, adjust as you like
     RETURNING *;
   `;
+  const db = getDb();
   return db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
@@ -256,12 +257,12 @@ async function acceptEvent(db, { tenantUid, eventUid, eventManagerUid }) {
   });
 }
 
-const declineEvent = async (
+const declineEvent = async ({
   tenantUid,
   eventUid,
-  managerUid,
-  declineReason = null
-) => {
+  eventManagerUid,
+  declineReason = null,
+}) => {
   const sql = `
     UPDATE events
     SET
@@ -281,7 +282,7 @@ const declineEvent = async (
   return db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
-    manager_uid: managerUid,
+    manager_uid: eventManagerUid,
     decline_reason: declineReason,
   });
 };
