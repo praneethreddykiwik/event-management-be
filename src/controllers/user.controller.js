@@ -161,7 +161,7 @@ const userEventsTasksCtrl = async (req, res) => {
 
 const deleteUserCtrl = async (req, res) => {
   try {
-    const { uid } = req.body;
+    const { uid } = req.query;
 
     if (!uid) {
       return res.status(400).json(errorRes("uid is required"));
