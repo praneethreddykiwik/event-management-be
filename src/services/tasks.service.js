@@ -192,4 +192,6 @@ module.exports = {
   getTaskService,
   getTasksByEventService,
   assignTaskService,
+  updateTask,
+
 };
