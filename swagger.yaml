@@ -1400,3 +1400,34 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
+
+   #-----------------------TASKS----------------------------
+    UpdateTaskRequest:
+      type: object
+      required:
+        - updatedByUid
+      properties:
+        title:
+          type: string
+          example: "Fix login bug"
+        description:
+          type: string
+          example: "Investigate OAuth redirect issue"
+        status:
+          type: string
+          example: "in_progress"
+        priority:
+          type: string
+          example: "high"
+        dueAt:
+          type: string
+          format: date-time
+          example: "2026-01-15T10:00:00Z"
+        assignedToUid:
+          type: string
+          example: "u_789"
+        updatedByUid:
+          type: string
+          example: "u_admin_1"
+
+
