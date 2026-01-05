@@ -13,5 +13,6 @@ router.get(
   validations.userEventsTasksVal,
   userController.userEventsTasksCtrl
 );
+router.delete("/delete-user", userController.deleteUserCtrl);
 
 module.exports = router;

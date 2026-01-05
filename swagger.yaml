@@ -400,6 +400,36 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /users/delete-user:
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      description: Permanently deletes a user if the user is not assigned to any events or tasks.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteUserRequest"
+      responses:
+        "200":
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteUserResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: User not found
+        "409":
+          description: User is involved in events or tasks
+
   /events/create-event:
     post:
       summary: Create a new event
@@ -734,50 +764,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-
-    put:
-      tags:
-        - Tasks
-      summary: Update a task
-      description: >
-        Updates task fields such as title, description, status, priority,
-        due date, or assignee. Only provided fields will be updated.
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: query
-          name: tenantUid
-          required: true
-          schema:
-            type: string
-          example: "tnt_123"
-        - in: query
-          name: taskUid
-          required: true
-          schema:
-            type: string
-          example: "task_456"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateTaskRequest"
-      responses:
-        "200":
-          description: Task updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UpdateTaskResponse"
-        "400":
-          description: Bad request / update failed
-        "401":
-          description: Unauthorized
-        "404":
-          description: Task not found
-  
-
+                
   /tasks/assign-task:
     post:
       tags: [Tasks]
@@ -821,7 +808,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
           $ref: "#/components/responses.yaml#/responses/InternalServerError"
-    
+
   /users/user-events-tasks:
     get:
       tags: [Users]
@@ -1189,6 +1176,7 @@ components:
         username:
           type: string
           example: shahid.khan
+
     UpdateUserSuccessResponse:
       type: object
       properties:
@@ -1219,6 +1207,40 @@ components:
     #       example: uid is required
     #     error:
     #       type: object
+
+    DeleteUserRequest:
+      type: object
+      required:
+        - uid
+      properties:
+        uid:
+          type: string
+          example: "u_123456"
+
+    DeleteUserResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: User deleted successfully
+        data:
+          $ref: "#/components/schemas/DeletedUser"
+
+    DeletedUser:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: "u_123456"
+        username:
+          type: string
+          example: "john_doe"
+        email:
+          type: string
+          example: "john@example.com"
 
     # -------------------- REDIS SESSION --------------------
     SessionResponse:
