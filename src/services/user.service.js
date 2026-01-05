@@ -108,22 +108,23 @@ const updateUserService = async (data) => {
 const userEventsTasksService = async (tenantUid, assignedToUid) => {
   const sql = `
   SELECT
-    e.uid AS event_uid,
-    e.event_name,
-    e.event_type,
-    e.scheduled_at,
+    e.uid AS "eventUid",
+    e.event_name as "eventName",
+    e.event_type as "eventType",
+    e.scheduled_at as "scheduledAt",
     e.venue,
-    e.expected_attendees,
-    e.status AS event_status,
-    e.assigned_to_uid AS event_assigned_to_uid,
-    e.created_at AS event_created_at,
+    e.expected_attendees as "expectedAttendees",
+    e.status AS "eventStatus",
+    e.assigned_to_uid AS "eventAssignedToUid",
+    e.created_at AS "eventCreatedAt",
 
-    t.uid AS task_uid,
-    t.title AS task_title,
-    t.status AS task_status,
-    t.due_at AS task_due_at,
-    t.assigned_to_uid AS task_assigned_to_uid,
-    t.created_at AS task_created_at
+    t.uid AS "taskUid",
+    t.title AS "taskTitle",
+    t.status AS "taskStatus",
+    t.description AS "taskDescription",
+    t.due_at AS "taskDueAt",
+    t.assigned_to_uid AS "taskAssignedToUid",
+    t.created_at AS "taskCreatedAt"
   FROM events e
   LEFT JOIN tasks t
     ON t.event_uid = e.uid
