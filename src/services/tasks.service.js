@@ -137,15 +137,15 @@ const getTaskService = async (query) => {
 const getTasksByEventService = async (tenantUid, eventUid) => {
   const sql = `
   SELECT
-    e.uid              AS eventUid,
+    e.uid              AS "eventUid",
     e.event_name,
     e.event_type,
     e.scheduled_at,
     e.venue,
-    e.status           AS eventStatus,
-    t.uid              AS taskUid,
-    t.title            AS taskTitle,
-    t.status           AS taskStatus,
+    e.status           AS "eventStatus",
+    t.uid              AS "taskUid",
+    t.title            AS "taskTitle",
+    t.status           AS "taskStatus",
     t.priority,
     t.due_at
   FROM events e
@@ -193,5 +193,4 @@ module.exports = {
   getTasksByEventService,
   assignTaskService,
   updateTask,
-
 };
