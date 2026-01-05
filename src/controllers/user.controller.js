@@ -155,6 +155,27 @@ const userEventsTasksCtrl = async (req, res) => {
   }
 };
 
+const deleteUserCtrl = async (req, res) => {
+  try {
+    const { uid } = req.body;
+
+    if (!uid) {
+      return res.status(400).json(errorRes("uid is required"));
+    }
+
+    const deletedUser = await userServices.deleteUserService(uid);
+
+    return res
+      .status(200)
+      .json(successRes("User deleted successfully", deletedUser));
+  } catch (error) {
+    console.error("deleteUserCtrl", error);
+    return res
+      .status(error.code || 400)
+      .json(errorRes(error.message || "Delete failed", {}, error.code, error));
+  }
+};
+
 module.exports = {
   getUsersCtrl,
   getUserById,
@@ -164,4 +185,5 @@ module.exports = {
   updateUserCtrl,
   createUserCtrl,
   userEventsTasksCtrl,
+  deleteUserCtrl,
 };
