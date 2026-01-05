@@ -226,6 +226,20 @@ const assignTaskVal = (req, res, next) => {
   next();
 };
 
+const userEventsTasksVal = (req, res, next) => {
+  const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
+  const assignedToUid = req.query.assignedToUid;
+
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+  if (!assignedToUid) {
+    return res.status(400).json(errorRes("Missing User Uid", {}));
+  }
+
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -242,4 +256,5 @@ module.exports = {
   assignTaskVal,
   acceptEventVal,
   declineEventVal,
+  userEventsTasksVal,
 };

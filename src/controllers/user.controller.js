@@ -137,6 +137,45 @@ const createUserCtrl = async (req, res) => {
   }
 };
 
+const userEventsTasksCtrl = async (req, res) => {
+  try {
+    const tenantUid = req.query.tenantUid;
+    const assignedToUid = req.query.assignedToUid;
+
+    const users = await userServices.userEventsTasksService(
+      tenantUid,
+      assignedToUid
+    );
+
+    res.status(200).json(successRes("Success", users));
+  } catch (error) {
+    console.error("userEventsTasksCtrl", error);
+    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+const deleteUserCtrl = async (req, res) => {
+  try {
+    const { uid } = req.body;
+
+    if (!uid) {
+      return res.status(400).json(errorRes("uid is required"));
+    }
+
+    const deletedUser = await userServices.deleteUserService(uid);
+
+    return res
+      .status(200)
+      .json(successRes("User deleted successfully", deletedUser));
+  } catch (error) {
+    console.error("deleteUserCtrl", error);
+    return res
+      .status(error.code || 400)
+      .json(errorRes(error.message || "Delete failed", {}, error.code, error));
+  }
+};
+
 module.exports = {
   getUsersCtrl,
   getUserById,
@@ -145,4 +184,6 @@ module.exports = {
   getMeCtrl,
   updateUserCtrl,
   createUserCtrl,
+  userEventsTasksCtrl,
+  deleteUserCtrl,
 };

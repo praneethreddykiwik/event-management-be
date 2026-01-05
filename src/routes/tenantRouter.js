@@ -15,5 +15,9 @@ tenantRouter.post(
   validations.createTenantVal,
   controllers.createTenantCtrl
 );
+tenantRouter.post(
+  "/event-managers",
+  controllers.createManager
+);
 
 module.exports = tenantRouter;

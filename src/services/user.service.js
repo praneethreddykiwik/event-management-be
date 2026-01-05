@@ -105,9 +105,88 @@ const updateUserService = async (data) => {
   return response;
 };
 
+const userEventsTasksService = async (tenantUid, assignedToUid) => {
+  const sql = `
+  SELECT
+    e.uid AS "eventUid",
+    e.event_name as "eventName",
+    e.event_type as "eventType",
+    e.scheduled_at as "scheduledAt",
+    e.venue,
+    e.expected_attendees as "expectedAttendees",
+    e.status AS "eventStatus",
+    e.assigned_to_uid AS "eventAssignedToUid",
+    e.created_at AS "eventCreatedAt",
+
+    t.uid AS "taskUid",
+    t.title AS "taskTitle",
+    t.status AS "taskStatus",
+    t.description AS "taskDescription",
+    t.due_at AS "taskDueAt",
+    t.assigned_to_uid AS "taskAssignedToUid",
+    t.created_at AS "taskCreatedAt"
+  FROM events e
+  LEFT JOIN tasks t
+    ON t.event_uid = e.uid
+    AND t.status <> 'deleted'
+  WHERE e.tenant_uid = $(tenantUid)
+    AND e.assigned_to_uid = $(assignedToUid)
+    AND e.status <> 'deleted'
+  ORDER BY e.created_at DESC, t.created_at ASC;
+`;
+  const db = getDb();
+  const rows = await db.any(sql, { tenantUid, assignedToUid });
+
+  return rows;
+};
+
+const deleteUserService = async (uid) => {
+  const db = getDb();
+
+  // 1. Check if user is referenced anywhere
+  const involvement = await db.one(
+    `
+    SELECT
+      EXISTS (
+        SELECT 1 FROM events WHERE assigned_to_uid = $(uid)
+      ) AS in_events,
+      EXISTS (
+        SELECT 1 FROM tasks WHERE assigned_to_uid = $(uid)
+      ) AS in_tasks
+    `,
+    { uid }
+  );
+
+  if (involvement.in_events || involvement.in_tasks) {
+    const err = new Error("User is involved in event or tasks");
+    err.code = 409; // Conflict
+    throw err;
+  }
+
+  // 2. Hard delete user
+  const deletedUser = await db.oneOrNone(
+    `
+    DELETE FROM users
+    WHERE uid = $(uid)
+    RETURNING uid, username, email;
+    `,
+    { uid }
+  );
+
+  if (!deletedUser) {
+    const err = new Error("User not found");
+    err.code = 404;
+    throw err;
+  }
+
+  return deletedUser;
+};
+
 module.exports = {
   createUserService,
   getUsersService,
   deleteEventService,
   updateUserService,
+  userEventsTasksService,
+  deleteUserService,
 };
