@@ -140,10 +140,53 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
   return rows;
 };
 
+const deleteUserService = async (uid) => {
+  const db = getDb();
+
+  // 1. Check if user is referenced anywhere
+  const involvement = await db.one(
+    `
+    SELECT
+      EXISTS (
+        SELECT 1 FROM events WHERE assigned_to_uid = $(uid)
+      ) AS in_events,
+      EXISTS (
+        SELECT 1 FROM tasks WHERE assigned_to_uid = $(uid)
+      ) AS in_tasks
+    `,
+    { uid }
+  );
+
+  if (involvement.in_events || involvement.in_tasks) {
+    const err = new Error("User is involved in event or tasks");
+    err.code = 409; // Conflict
+    throw err;
+  }
+
+  // 2. Hard delete user
+  const deletedUser = await db.oneOrNone(
+    `
+    DELETE FROM users
+    WHERE uid = $(uid)
+    RETURNING uid, username, email;
+    `,
+    { uid }
+  );
+
+  if (!deletedUser) {
+    const err = new Error("User not found");
+    err.code = 404;
+    throw err;
+  }
+
+  return deletedUser;
+};
+
 module.exports = {
   createUserService,
   getUsersService,
   deleteEventService,
   updateUserService,
   userEventsTasksService,
+  deleteUserService,
 };
