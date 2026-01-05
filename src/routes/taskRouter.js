@@ -6,10 +6,15 @@ const taskRouter = express.Router();
 
 taskRouter.get(
   "/",
-  validations.getEventsTasksVal,
-  controllers.getEventsTasksCtrl
+  validations.getTasksByEventUidVal,
+  controllers.getTasksByEventUidCtrl
 );
 // taskRouter.get("/:taskId", validations.getTaskByIdVal, controllers.getTaskById);
 taskRouter.post("/", validations.createTaskVal, controllers.createTaskCtrl);
+taskRouter.post(
+  "/assign-task",
+  validations.assignTaskVal,
+  controllers.assignTaskCtrl
+);
 
 module.exports = taskRouter;

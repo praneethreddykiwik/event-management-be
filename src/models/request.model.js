@@ -29,7 +29,7 @@ const createEventReqModel = (req) => {
     venue: req.body.venue || null,
     expected_attendees: Number(req.body.expectedAttendees || 0),
     status: req.body.status,
-    assigned_event_manager_uid: req.body.assignedEventManagerUid, // uuid
+    assigned_to_uid: req.body.assignedToUid,
     comments: req.body.comments || null,
     created_by_uid: req.body.uid || req.session?.user?.uid,
   };

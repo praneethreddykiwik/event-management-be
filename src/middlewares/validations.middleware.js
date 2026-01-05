@@ -134,12 +134,12 @@ const getEventsVal = (req, res, next) => {
   next();
 };
 
-const getEventsTasksVal = (req, res, next) => {
-  const username = req.session?.user?.username;
-  const tenantUid = req.session?.user?.tenantUid;
+const getTasksByEventUidVal = (req, res, next) => {
+  const eventUid = req.query.eventUid;
+  const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
 
-  if (!username) {
-    return res.status(400).json(errorRes("Missing username", {}));
+  if (!eventUid) {
+    return res.status(400).json(errorRes("Missing Event Uid", {}));
   }
   if (!tenantUid) {
     return res.status(400).json(errorRes("Missing Tenant Uid", {}));
@@ -149,22 +149,41 @@ const getEventsTasksVal = (req, res, next) => {
 };
 
 const assignEventVal = (req, res, next) => {
-  const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
   const eventUid = req.body.eventUid;
-  const managerUid = req.body.managerUid;
+  const assignedToUid = req.body.assignedToUid;
+  const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
   const updatedByUid = req.body.updatedByUid || req.session?.user?.updatedByUid;
 
-  if (!tenantUid) {
-    return res.status(400).json(errorRes("Missing username", {}));
+  if (!assignedToUid) {
+    return res.status(400).json(errorRes("Missing assignedToUid", {}));
   }
   if (!eventUid) {
     return res.status(400).json(errorRes("Missing Tenant Uid", {}));
   }
-  if (!managerUid) {
-    return res.status(400).json(errorRes("Missing managerUid", {}));
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing username", {}));
   }
   if (!updatedByUid) {
     return res.status(400).json(errorRes("Missing updatedByUid", {}));
+  }
+
+  next();
+};
+
+const assignTaskVal = (req, res, next) => {
+  const taskUid = req.body.taskUid;
+  const assignedToUid = req.body.assignedToUid;
+  const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
+
+  if (!assignedToUid) {
+    return res.status(400).json(errorRes("Missing Assigned To Uid", {}));
+  }
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Missing Task Uid", {}));
+  }
+
+  if (!updatedByUid) {
+    return res.status(400).json(errorRes("Missing Updated By Uid", {}));
   }
 
   next();
@@ -181,6 +200,7 @@ module.exports = {
   createTaskVal,
   getEventsVal,
   createUserVal,
-  getEventsTasksVal,
+  getTasksByEventUidVal,
   assignEventVal,
+  assignTaskVal,
 };

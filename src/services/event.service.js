@@ -11,7 +11,7 @@ const createEventService = async (payload) => {
     expected_attendees,
     status,
     comments,
-    assigned_event_manager_uid,
+    assigned_to_uid,
     assigned_at,
     created_by_uid
   )
@@ -24,7 +24,7 @@ const createEventService = async (payload) => {
     $(expected_attendees),
     $(status),
     $(comments),
-    $(assigned_event_manager_uid),
+    $(assigned_to_uid),
     now(),
     $(created_by_uid)
   )
@@ -68,10 +68,10 @@ async function listEvents(tenantUid, role, userUid, filters) {
   }
 
   if (role === "event_manager") {
-    baseWhere.push(`e.assigned_event_manager_uid = $(me_uid)`);
+    baseWhere.push(`e.assigned_to_uid = $(me_uid)`);
     params.me_uid = userUid;
   } else if (role === "admin" && assignedTo) {
-    baseWhere.push(`e.assigned_event_manager_uid = $(assigned_to)`);
+    baseWhere.push(`e.assigned_to_uid = $(assigned_to)`);
     params.assigned_to = assignedTo;
   }
 
@@ -111,6 +111,10 @@ async function getEventsService(query, includeDeleted = false) {
   const queries = [
     // { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
     { query: "eventUid", condition: "e.uid = $(eventUid)" },
+    {
+      query: "assignedToUid",
+      condition: "e.assigned_to_uid = $(assignedToUid)",
+    },
   ];
 
   queries.forEach((el) => {
@@ -139,7 +143,7 @@ async function getEventsService(query, includeDeleted = false) {
         e.venue,
         e.expected_attendees as "expectedAttendees",
         e.status,
-        e.assigned_event_manager_uid as "assignedEventManagerUid",
+        e.assigned_to_uid as "assignedToUid",
         e.assigned_at as "assignedAt",
         e.accepted_at as "acceptedAt",
         e.declined_at as "declinedAt",
@@ -151,17 +155,15 @@ async function getEventsService(query, includeDeleted = false) {
         e.updated_by_uid as "updatedByUid",
         e.deleted_at as "deletedAt",
         e.delete_reason as "deleteReason",
-        t.tenant_id as "tenantId",
-        t.name as "tenantName",
         u.first_name as "firstName"
-      from events e
-      join tenants t on t.uid = e.tenant_uid
-      left join users u on u.uid = e.assigned_event_manager_uid
-      ${whereClause}
-    `,
+        from events e
+        left join users u on u.uid = e.assigned_to_uid
+        ${whereClause}
+        `,
     {
       tenant_uid: query.tenantUid,
       eventUid: query.eventUid,
+      assignedToUid: query.assignedToUid,
       include_deleted: includeDeleted,
     }
   );
@@ -207,13 +209,13 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
 async function assignEventService(
   tenantUid,
   eventUid,
-  managerUid,
+  assignedToUid,
   updatedByUid
 ) {
   const sql = `
     UPDATE events
     SET
-      assigned_event_manager_uid = $(manager_uid),
+      assigned_to_uid = $(assigned_to_uid),
       assigned_at = now(),
       status = 'assigned',
       updated_at = now(),
@@ -228,7 +230,7 @@ async function assignEventService(
   return db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
-    manager_uid: managerUid,
+    assigned_to_uid: assignedToUid,
     updated_by_uid: updatedByUid,
   });
 }
@@ -243,7 +245,7 @@ async function acceptEvent(db, { tenantUid, eventUid, eventManagerUid }) {
       updated_by_uid = $(manager_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND assigned_event_manager_uid = $(manager_uid)
+      AND assigned_to_uid = $(manager_uid)
       AND status IN ('assigned', 'declined') -- allow accept after reassignment, adjust as you like
     RETURNING *;
   `;
@@ -270,7 +272,7 @@ const declineEvent = async (
       updated_by_uid = $(manager_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND assigned_event_manager_uid = $(manager_uid)
+      AND assigned_to_uid = $(manager_uid)
       AND status IN ('assigned')
     RETURNING *;
   `;
@@ -303,7 +305,7 @@ const eventsAssignedToMe = async (req) => {
     SELECT *
     FROM events
     WHERE tenant_uid = $(tenant_uid)
-      AND assigned_event_manager_uid = $(uid)
+      AND assigned_to_uid = $(uid)
     ORDER BY scheduled_at ASC;
     `;
 

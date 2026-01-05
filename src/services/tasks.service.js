@@ -134,46 +134,62 @@ const getTaskService = async (query) => {
   return users;
 };
 
-const getEventsTaskService = async (username, tenantUid) => {
+const getTasksByEventService = async (tenantUid, eventUid) => {
   const sql = `
   SELECT
-    e.uid              AS event_uid,
+    e.uid              AS eventUid,
     e.event_name,
     e.event_type,
     e.scheduled_at,
     e.venue,
-    e.status           AS event_status,
-    t.uid              AS task_uid,
-    t.title            AS task_title,
-    t.status           AS task_status,
+    e.status           AS eventStatus,
+    t.uid              AS taskUid,
+    t.title            AS taskTitle,
+    t.status           AS taskStatus,
     t.priority,
-    t.due_at,
-    u.username         AS assigned_username
+    t.due_at
   FROM events e
   JOIN tasks t
     ON t.event_uid = e.uid
   JOIN users u
     ON u.uid = t.assigned_to_uid
   WHERE
-    u.username = $(username)
-    AND e.tenant_uid = $(tenant_uid)
-    AND e.status <> 'deleted'
-    AND t.status <> 'deleted'
+    AND e.event_uid = $(eventUid)
   ORDER BY
-    e.scheduled_at DESC,
-    t.due_at ASC;
+    e.scheduled_at DESC;
 `;
 
   const db = getDb();
   const rows = await db.any(sql, {
-    username,
+    eventUid,
     tenant_uid: tenantUid,
   });
   return rows;
 };
 
+async function assignTaskService(taskUid, assignedToUid, updatedByUid) {
+  const sql = `
+  UPDATE tasks
+  SET
+    assigned_to_uid = $(assignedToUid),
+    status = 'assigned',
+    updated_at = NOW(),
+    updated_by_uid = $(updatedByUid)
+  WHERE uid = $(taskUid)
+  RETURNING *;
+`;
+
+  const db = getDb();
+  await db.one(sql, {
+    taskUid,
+    assignedToUid,
+    updatedByUid,
+  });
+}
+
 module.exports = {
   createTaskService,
   getTaskService,
-  getEventsTaskService,
+  getTasksByEventService,
+  assignTaskService,
 };

@@ -9,9 +9,6 @@ router.post(
   validations.deleteEventVal,
   eventController.deleteEventController
 );
-// aadil
-// add router
-// route /getEventByUid
 
 router.get("/", validations.getEventsVal, eventController.getEventsCtrl);
 

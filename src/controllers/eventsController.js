@@ -17,6 +17,7 @@ const getEventsCtrl = async (req, res) => {
     const obj = {
       tenantUid: req.query.tenantUid || req.session?.user?.tenantUid,
       eventUid: req.query.eventUid,
+      assignedToUid: req.query.assignedToUid,
     };
     const getEventidRes = await services.getEventsService(obj);
 
@@ -41,16 +42,15 @@ const createEventCtrl = async (req, res) => {
 
 const assignEventCtrl = async (req, res) => {
   try {
-    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
     const eventUid = req.body.eventUid;
-    const managerUid = req.body.managerUid;
-    const updatedByUid =
-      req.body.updatedByUid || req.session?.user?.updatedByUid;
+    const assignedToUid = req.body.assignedToUid;
+    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+    const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
 
     const createEventRes = await services.assignEventService(
       tenantUid,
       eventUid,
-      managerUid,
+      assignedToUid,
       updatedByUid
     );
     res.status(200).json(successRes("Success", createEventRes));

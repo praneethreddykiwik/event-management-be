@@ -5,10 +5,10 @@ info:
   description: Tenant, Auth, and User APIs for EMDB (pg-promise + PostgreSQL)
 
 servers:
-  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com/v1
-    description: Dev
   - url: http://localhost:4000/v1
     description: Local
+  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com/v1
+    description: Dev
 
 tags:
   - name: Auth
@@ -448,7 +448,7 @@ paths:
                 comments:
                   type: string
                   example: "VIP guests arriving early"
-                assignedEventManagerUid:
+                assignedToUid:
                   type: string
                   format: uuid
                   nullable: true
@@ -466,13 +466,13 @@ paths:
         - Events
       parameters:
         - in: query
-          name: tenantUid
+          name: eventUid
           required: false
           schema:
             type: string
           description: Unique tenant identifier
         - in: query
-          name: eventUid
+          name: assignedToUid
           required: false
           schema:
             type: string
@@ -507,6 +507,55 @@ paths:
                   error:
                     type: object
 
+  /events/assign-event:
+    post:
+      tags: [Events]
+      summary: Assign event to a user
+      description: Assigns an event to a specific user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventUid, assignedToUid]
+              properties:
+                eventUid:
+                  type: string
+                  format: uuid
+                  description: The UID of the event to assign
+                assignedToUid:
+                  type: string
+                  format: uuid
+                  description: The UID of the user to assign the event to
+                tenantUid:
+                  type: string
+                  format: uuid
+                updatedByUid:
+                  type: string
+                  format: uuid
+      responses:
+        "200":
+          description: Event assigned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignEventResponse"
+        "400":
+          description: Bad request or validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignEventResponse"
+        "404":
+          description: Event or user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignEventResponse"
+        "500":
+          $ref: "#/components/schemas/AssignEventResponse"
+
 
       responses:
         "201":
@@ -537,7 +586,7 @@ paths:
                     type: string
                   comments:
                     type: string
-                  assigned_event_manager_uid:
+                  assigned_to_uid:
                     type: string
                     format: uuid
                     nullable: true
@@ -613,6 +662,54 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 
   /tasks:
+    get:
+      summary: Get Tasks By Event
+      description: Fetch task details
+      tags:
+        - Tasks
+      parameters:
+        - in: query
+          name: eventUid
+          required: false
+          schema:
+            type: string
+          description: UID
+        - in: query
+          name: tenantUid
+          required: false
+          schema:
+            type: string
+          description: UID
+      responses:
+        200:
+          description: Get Tasks successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example:
+                      eventUid: "evt_123"
+                      tenantUid: "tenant_456"
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Missing Tenant Uid
+                  error:
+                    type: object
+
     post:
       tags:
         - Tasks
@@ -637,6 +734,49 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /tasks/assign-task:
+    post:
+      tags: [Tasks]
+      summary: Assign a task to a user
+      description: Assigns an existing task to a specified user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [taskUid, assignedToUid, updatedByUid]
+              properties:
+                taskUid:
+                  type: string
+                  format: uuid
+                assignedToUid:
+                  type: string
+                  format: uuid
+                updatedByUid:
+                  type: string
+                  format: uuid
+      responses:
+        "200":
+          description: Task assigned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTaskSuccessResponse"
+        "400":
+          description: Validation or request error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Task or user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses.yaml#/responses/InternalServerError"
 
 components:
   schemas:
@@ -981,6 +1121,35 @@ components:
 
     # -------------------- REDIS SESSION --------------------
     SessionResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "0000"
+        message:
+          type: string
+          example: "Success"
+        details:
+          type: object
+          properties:
+            sessionID:
+              type: string
+              example: "abc123def456ghi789"
+            views:
+              type: integer
+              example: 1
+            user:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "u1"
+                role:
+                  type: string
+                  enum: [admin, user, vendor]
+                  example: "admin"
+
+    AssignEventResponse:
       type: object
       properties:
         code:
