@@ -9,14 +9,18 @@ router.post(
   validations.deleteEventVal,
   eventController.deleteEventController
 );
-// aadil
-// add router
-// route /getEventByUid
+
+router.get("/", validations.getEventsVal, eventController.getEventsCtrl);
 
 router.post(
   "/create-event",
   validations.createEventValidation,
   eventController.createEventCtrl
+);
+router.post(
+  "/assign-event",
+  validations.assignEventVal,
+  eventController.assignEventCtrl
 );
 
 module.exports = router;

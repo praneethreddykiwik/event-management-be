@@ -1,6 +1,8 @@
-const { dummyUsersemail } = require("../../database");
+const tenantServices = require("../services/tenant.service");
 const { successRes, errorRes } = require("../models/response.model");
 const userServices = require("../services/user.service");
+const reqModels = require("../models/request.model");
+const utils = require("../utils/utils");
 
 const getUsersCtrl = async (req, res) => {
   try {
@@ -61,19 +63,105 @@ const getMeCtrl = (req, res) => {
   return res.status(200).json(successRes("Current user", req.session.user));
 };
 
-const updateEventManagerCtrl = (req, res) => {
+const updateUserCtrl = async (req, res) => {
   try {
-    const { managerId, mobile, status } = req.body;
-    const updatedManager = {
-      managerId,
+    const { uid, mobile, status, role, username } = req.body;
+
+    if (!uid) {
+      return res.status(400).json(errorRes("uid is required"));
+    }
+
+    const updatedUser = await userServices.updateUserService({
+      uid,
       mobile,
       status,
-    };
-    return res.status(200).json(successRes("Manager updated successfully", updatedManager));
-  } catch (err) {
-    return res.status(400).json(
-      errorRes(err.message || "Update failed"));
+      role,
+      username,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json(errorRes("User not found"));
+    }
+
+    return res
+      .status(200)
+      .json(successRes("User updated successfully", updatedUser));
+  } catch (error) {
+    console.error("updateUserCtrl", error);
+    return res
+      .status(400)
+      .json(errorRes(error.message || "Update failed", {}, error.code, error));
   }
 };
 
-module.exports = { getUsersCtrl, getUserById, createUser, loginUser, getMeCtrl, updateEventManagerCtrl };
+const createUserCtrl = async (req, res) => {
+  const {
+    tenantId,
+    username,
+    email,
+    password,
+    role,
+    firstName,
+    lastName,
+    mobile,
+  } = req.body;
+  try {
+    const tenant = await tenantServices.getTenantByIdService(tenantId);
+    if (!tenant) {
+      const invalidTenantRes = errorRes("Tenant not found");
+      return res.status(404).json(invalidTenantRes);
+    }
+
+    const tenantUid = tenant.uid;
+    const passwordHash = await utils.hashPassword(password);
+
+    const payload = reqModels.createUserReqModel(
+      tenantUid,
+      username,
+      email,
+      passwordHash,
+      role,
+      firstName,
+      lastName,
+      mobile
+    );
+    const createUserRes = await userServices.createUserService(payload);
+    console.log("createUserCtrl; createUserRes;", createUserRes);
+    return res
+      .status(201)
+      .json(successRes("User Created Success", createUserRes));
+  } catch (error) {
+    console.error("createUserCtrl", error);
+    const erorRes = errorRes("User Creation Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+const userEventsTasksCtrl = async (req, res) => {
+  try {
+    const tenantUid = req.query.tenantUid;
+    const assignedToUid = req.query.assignedToUid;
+
+    const users = await userServices.userEventsTasksService(
+      tenantUid,
+      assignedToUid
+    );
+
+    res.status(200).json(successRes("Success", users));
+  } catch (error) {
+    console.error("userEventsTasksCtrl", error);
+    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+module.exports = {
+  getUsersCtrl,
+  getUserById,
+  createUser,
+  loginUser,
+  getMeCtrl,
+  updateUserCtrl,
+  createUserCtrl,
+  userEventsTasksCtrl,
+};

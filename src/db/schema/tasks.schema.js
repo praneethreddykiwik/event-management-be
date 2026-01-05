@@ -22,3 +22,25 @@ const createTaskTable = `
   updated_by_uid UUID NULL REFERENCES "emdb-schema".users(uid)
 );
 `;
+
+const changeConstraint = `
+ALTER TABLE "emdb-schema".tasks
+DROP CONSTRAINT tasks_status_check;
+
+
+ALTER TABLE "emdb-schema".tasks
+ADD CONSTRAINT tasks_status_check
+CHECK (
+  status = ANY (
+    ARRAY[
+      'not_started'::text,
+      'assigned'::text,
+      'in_progress'::text,
+      'completed'::text,
+      'cancelled'::text,
+      'deleted'::text
+    ]
+  )
+);
+
+`;

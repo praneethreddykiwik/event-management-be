@@ -1,13 +1,18 @@
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tasks.service");
 
-async function getAllTasks(req, res) {
+async function getTasksByEventUidCtrl(req, res) {
   try {
-    const response = await services.fetchAllTasksService();
-    console.log("Success: getAllTasks response", response);
+    const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
+    const eventUid = req.query.tenantUid;
+
+    console.log("getTasksByEventUidCtrl req", { tenantUid, eventUid });
+
+    const response = await services.getTasksByEventService(tenantUid, eventUid);
+    console.log("Success: getTasksByEventUidCtrl response", response);
     return res.status(200).json(successRes("Tasks", response));
   } catch (error) {
-    console.error("getAllTasks", error);
+    console.error("getTasksByEventUidCtrl", error);
     const erorRes = errorRes("Get Tasks Failed", {}, error.code, error);
     return res.status(400).json(erorRes);
   }
@@ -54,8 +59,28 @@ async function createTaskCtrl(req, res) {
   }
 }
 
+const assignTaskCtrl = async (req, res) => {
+  try {
+    const taskUid = req.body.taskUid;
+    const assignedToUid = req.body.assignedToUid;
+    const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
+
+    const createEventRes = await services.assignTaskService(
+      taskUid,
+      assignedToUid,
+      updatedByUid
+    );
+    res.status(200).json(successRes("Success", createEventRes));
+  } catch (error) {
+    console.error("assignEventCtrl", error);
+    const erorRes = errorRes("Asssign Event Failed", error);
+    return res.status(400).json(erorRes);
+  }
+};
+
 module.exports = {
-  getAllTasks,
+  getTasksByEventUidCtrl,
   getTaskById,
   createTaskCtrl,
+  assignTaskCtrl,
 };

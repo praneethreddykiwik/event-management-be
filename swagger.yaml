@@ -5,10 +5,10 @@ info:
   description: Tenant, Auth, and User APIs for EMDB (pg-promise + PostgreSQL)
 
 servers:
-  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com/v1
-    description: Dev
   - url: http://localhost:4000/v1
     description: Local
+  - url: https://ma63kqxkyb.ap-south-1.awsapprunner.com/v1
+    description: Dev
 
 tags:
   - name: Auth
@@ -19,59 +19,12 @@ tags:
     description: Tenant Management
   - name: Events
     description: Event Management
+  - name: Tasks
+    description: Task Management
   - name: Redis Session
     description: Redis Session Management
 
 paths:
-  /auth/register:
-    post:
-      tags: [Auth]
-      summary: Register a user under a tenant
-      description: >
-        Creates a new user in a given tenant. Password is hashed on the backend.
-        Returns created user (without password) and optionally token if your API supports it.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RegisterRequest"
-            examples:
-              sample:
-                value:
-                  tenantId: "tenant_001"
-                  username: "abdul"
-                  email: "abdul.s@criskasecurity.com"
-                  password: "MyStrongPassword@123"
-                  role: "admin"
-      responses:
-        "201":
-          description: User registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RegisterResponse"
-        "400":
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
-          description: Duplicate username/email within the tenant
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
-          description: Tenant not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
   /auth/login:
     post:
       tags: [Auth]
@@ -275,49 +228,85 @@ paths:
 
     post:
       tags: [Users]
-      summary: Create a user (admin/management)
-      description: Creates a user. (If you use /auth/register from FE, you can keep this for internal/admin usage.)
+      summary: Create a user under a tenant
+      description: >
+        Creates a new user in a given tenant. Password is hashed on the backend.
+        Returns created user (without password) and optionally token if your API supports it.
+      requestBody:
+        required:
+          - tenantId
+          - username
+          - email
+          - password
+          - role
+          - firstName
+          - mobile
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+            examples:
+              sample:
+                value:
+                  tenantId: "tenant_001"
+                  username: "abdul"
+                  email: "abdul.s@criskasecurity.com"
+                  password: "MyStrongPassword@123"
+                  role: "admin"
+                  firstName: "Adbul"
+                  lastName: "Wahid Syed"
+                  mobile: "9581122911"
+      responses:
+        "201":
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    format: text
+                  email:
+                    type: string
+                    format: text
+                  role:
+                    type: string
+                    format: text
+                  status:
+                    type: string
+                    format: text
+
+    put:
+      tags:
+        - Users
+      summary: Update user details
+      description: Updates user information such as mobile, role, status, or username
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateUserRequest"
-            examples:
-              sample:
-                value:
-                  tenantId: "tenant_001"
-                  username: "vendor01"
-                  email: "vendor01@company.com"
-                  password: "SomePassword@123"
-                  role: "vendor"
+              $ref: "#/components/schemas/UpdateUserRequest"
       responses:
-        "201":
-          description: User created
+        "200":
+          description: User updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateUserResponse"
+                $ref: "#/components/schemas/UpdateUserSuccessResponse"
         "400":
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "409":
-          description: Duplicate username/email within the tenant
+          description: Bad request or validation error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
-          description: Tenant not found
+          description: User not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
 
   /users/updateEventManager:
     put:
@@ -455,11 +444,11 @@ paths:
                   example: 250
                 status:
                   type: string
-                  example: "scheduled"
+                  example: "pending"
                 comments:
                   type: string
                   example: "VIP guests arriving early"
-                assignedEventManagerUid:
+                assignedToUid:
                   type: string
                   format: uuid
                   nullable: true
@@ -468,6 +457,106 @@ paths:
                   type: string
                   format: uuid
                   example: "d12eac90-fbc1-4f41-a15e-fd983c1eaa33"
+
+  /events:
+    get:
+      summary: Get event by tenant UID
+      description: Fetch event details using tenantUid
+      tags:
+        - Events
+      parameters:
+        - in: query
+          name: eventUid
+          required: false
+          schema:
+            type: string
+          description: Unique tenant identifier
+        - in: query
+          name: assignedToUid
+          required: false
+          schema:
+            type: string
+          description: Unique uuid identifier
+      responses:
+        200:
+          description: Event fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example:
+                      eventUid: "evt_123"
+                      tenantUid: "tenant_456"
+                      name: "Annual Meeting"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Missing Tenant Uid
+                  error:
+                    type: object
+
+  /events/assign-event:
+    post:
+      tags: [Events]
+      summary: Assign event to a user
+      description: Assigns an event to a specific user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventUid, assignedToUid]
+              properties:
+                eventUid:
+                  type: string
+                  format: uuid
+                  description: The UID of the event to assign
+                assignedToUid:
+                  type: string
+                  format: uuid
+                  description: The UID of the user to assign the event to
+                tenantUid:
+                  type: string
+                  format: uuid
+                updatedByUid:
+                  type: string
+                  format: uuid
+      responses:
+        "200":
+          description: Event assigned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignEventResponse"
+        "400":
+          description: Bad request or validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignEventResponse"
+        "404":
+          description: Event or user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignEventResponse"
+        "500":
+          $ref: "#/components/schemas/AssignEventResponse"
+
+
       responses:
         "201":
           description: Event created successfully
@@ -497,7 +586,7 @@ paths:
                     type: string
                   comments:
                     type: string
-                  assigned_event_manager_uid:
+                  assigned_to_uid:
                     type: string
                     format: uuid
                     nullable: true
@@ -572,9 +661,255 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /tasks:
+    get:
+      summary: Get Tasks By Event
+      description: Fetch task details
+      tags:
+        - Tasks
+      parameters:
+        - in: query
+          name: eventUid
+          required: false
+          schema:
+            type: string
+          description: UID
+        - in: query
+          name: tenantUid
+          required: false
+          schema:
+            type: string
+          description: UID
+      responses:
+        200:
+          description: Get Tasks successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example:
+                      eventUid: "evt_123"
+                      tenantUid: "tenant_456"
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Missing Tenant Uid
+                  error:
+                    type: object
+
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      description: Creates a task for a tenant and event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskRequest"
+      responses:
+        "201":
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTaskSuccessResponse"
+        "400":
+          description: Bad request or validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /tasks/assign-task:
+    post:
+      tags: [Tasks]
+      summary: Assign a task to a user
+      description: Assigns an existing task to a specified user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [taskUid, assignedToUid, updatedByUid]
+              properties:
+                taskUid:
+                  type: string
+                  format: uuid
+                assignedToUid:
+                  type: string
+                  format: uuid
+                updatedByUid:
+                  type: string
+                  format: uuid
+      responses:
+        "200":
+          description: Task assigned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTaskSuccessResponse"
+        "400":
+          description: Validation or request error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Task or user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses.yaml#/responses/InternalServerError"
+  /users/user-events-tasks:
+    get:
+      tags: [Users]
+      summary: Get user events and tasks
+      description: Retrieves all events and tasks assigned to or created by a specific user.
+      parameters:
+        - name: assignedToUid
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: assignedToUid
+        - name: tenantUid
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: tenantUid
+      responses:
+        "200":
+          description: User events and tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      events:
+                        type: array
+                        items:
+                          $ref: "./components/schemas.yaml#/schemas/Event"
+                      tasks:
+                        type: array
+                        items:
+                          type: object
+                          additionalProperties: true
+        "400":
+          description: Validation or request error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
 components:
   schemas:
     # -------------------- TENANTS --------------------
+    CreateTaskRequest:
+      type: object
+      required:
+        - tenantUid
+        - eventUid
+        - title
+        - createdByUid
+      properties:
+        tenantUid:
+          type: string
+          example: tenant_123
+        eventUid:
+          type: string
+          example: event_456
+        title:
+          type: string
+          example: Prepare meeting agenda
+        description:
+          type: string
+          example: Description of the task
+        priority:
+          type: string
+          example: Task priority
+        dueAt:
+          type: string
+          example: dueAt
+        assignedToUid:
+          type: string
+          example: Assigned bh whom
+        createdByUid:
+          type: string
+          example: user_123
+        updatedByUid:
+          type: string
+          example: user_123
+
+    CreateTaskSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Task created
+        data:
+          type: object
+          description: Created task object
+          example:
+            taskUid: task_789
+            tenantUid: tenant_123
+            eventUid: event_456
+            title: Prepare meeting agenda
+            priority: medium
+            createdByUid: user_123
+            updatedByUid: user_123
+            createdAt: "2026-01-05T10:30:00Z"
+
+      # ErrorResponse:
+      #   type: object
+      #   properties:
+      #     success:
+      #       type: boolean
+      #       example: false
+      #     message:
+      #       type: string
+      #       example: Failed to create task
+      #     error:
+      #       type: object
+      #       example:
+      #         code: INVALID_PAYLOAD
+      #         details: Validation error
+
     CreateTenantRequest:
       type: object
       required: [tenantId, name]
@@ -639,7 +974,7 @@ components:
           type: string
           example: Tenant not found
 
-    # -------------------- AUTH / REGISTER --------------------
+    # -------------------- AUTH / REGISTER ----------------------
     RegisterRequest:
       type: object
       required: [tenantId, username, email, password, role]
@@ -789,8 +1124,88 @@ components:
           format: date-time
           example: "2025-12-29T10:30:00.000Z"
 
+    UpdateUserRequest:
+      type: object
+      required:
+        - uid
+      properties:
+        uid:
+          type: string
+          example: user_123
+        mobile:
+          type: string
+          example: "9876543210"
+        status:
+          type: string
+          example: active
+        role:
+          type: string
+          example: admin
+        username:
+          type: string
+          example: shahid.khan
+    UpdateUserSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: User updated successfully
+        data:
+          type: object
+          description: Updated user object
+          example:
+            uid: user_123
+            username: shahid.khan
+            mobile: "9876543210"
+            role: admin
+            status: active
+            updatedAt: "2026-01-05T11:00:00Z"
+    # ErrorResponse:
+    #   type: object
+    #   properties:
+    #     success:
+    #       type: boolean
+    #       example: false
+    #     message:
+    #       type: string
+    #       example: uid is required
+    #     error:
+    #       type: object
+
     # -------------------- REDIS SESSION --------------------
     SessionResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "0000"
+        message:
+          type: string
+          example: "Success"
+        details:
+          type: object
+          properties:
+            sessionID:
+              type: string
+              example: "abc123def456ghi789"
+            views:
+              type: integer
+              example: 1
+            user:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "u1"
+                role:
+                  type: string
+                  enum: [admin, user, vendor]
+                  example: "admin"
+
+    AssignEventResponse:
       type: object
       properties:
         code:
@@ -866,6 +1281,24 @@ components:
               type: string
               format: email
               example: "john@example.com"
+
+      # -------------------- Event --------------------
+       
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+            type: string
+            data:
+            type: object
+
+    ErrorResponse:
+        type: object
+        properties:
+          message:
+            type: string
+          error:
+            type: object
 
     # -------------------- ERRORS --------------------
     ErrorResponse:
