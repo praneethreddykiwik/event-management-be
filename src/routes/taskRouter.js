@@ -16,5 +16,16 @@ taskRouter.post(
   validations.assignTaskVal,
   controllers.assignTaskCtrl
 );
+taskRouter.post(
+  "/accept-task",
+  validations.acceptTaskVal,
+  controllers.acceptTaskCtrl
+);
+
+taskRouter.post(
+  "/decline-task",
+  validations.declineTaskVal,
+  controllers.declineTaskCtrl
+);
 taskRouter.put("/", controllers.updateTaskCtrl);
 module.exports = taskRouter;
