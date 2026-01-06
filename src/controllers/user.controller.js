@@ -156,7 +156,7 @@ const userEventsTasksCtrl = async (req, res) => {
       .filter((fl, i, arr) => i === arr.findIndex((fi) => fi === fl));
 
     const userEventsAndTasks = eventIds.map((eventId) => {
-      const eventObj = data.find((fn) => fn.eventUid);
+      const eventObj = data.find((fn) => fn.eventUid === eventId);
       const tasks = data
         .filter((fl) => fl.eventUid === eventId && fl.taskUid)
         .map((m) => ({
