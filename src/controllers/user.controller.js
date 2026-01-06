@@ -174,9 +174,15 @@ const deleteUserCtrl = async (req, res) => {
       .json(successRes("User deleted successfully", deletedUser));
   } catch (error) {
     console.error("deleteUserCtrl", error);
-    return res
-      .status(error.code || 400)
-      .json(errorRes(error.message || "Delete failed", {}, error.code, error));
+
+    // PostgreSQL FK violation → user involved in tasks/events
+    if (error.code === "23503") {
+      return res
+        .status(409)
+        .json(errorRes("User is involved in events or tasks"));
+    }
+
+    return res.status(400).json(errorRes(error.message || "Delete failed"));
   }
 };
 
