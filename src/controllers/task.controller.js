@@ -61,11 +61,11 @@ async function createTaskCtrl(req, res) {
 async function updateTaskCtrl(req, res) {
   try {
     let { taskUid, tenantUid } = req.query;
- 
+
     // Trim accidental newline (%0A issue)
     if (tenantUid) tenantUid = tenantUid.trim();
     if (taskUid) taskUid = taskUid.trim();
- 
+
     const patch = {
       title: req.body.title || null,
       description: req.body.description || null,
@@ -74,30 +74,29 @@ async function updateTaskCtrl(req, res) {
       dueAt: req.body.dueAt || null,
       assignedToUid: req.body.assignedToUid || null,
     };
- 
+
     const actorUid = req.body.updatedByUid;
- 
+
     console.log("Update Task Input:", {
       tenantUid,
       taskUid,
       patch,
       actorUid,
     });
- 
+
     const response = await services.updateTask(
       tenantUid,
       taskUid,
       patch,
       actorUid
     );
- 
+
     if (!response) {
       return res.status(404).json(errorRes("Task not found"));
     }
- 
+
     console.log("Success: updateTaskCtrl response", response);
     return res.status(200).json(successRes("Task updated", response));
- 
   } catch (error) {
     console.error("updateTaskCtrl", error);
     const errRes = errorRes(
@@ -129,11 +128,46 @@ const assignTaskCtrl = async (req, res) => {
   }
 };
 
+const acceptTaskCtrl = async (req, res) => {
+  try {
+    const taskUid = req.body.taskUid;
+    const assignedToUid = req.body.assignedToUid || req.body.session?.user?.uid;
+
+    const createEventRes = await services.acceptTaskService(
+      taskUid,
+      assignedToUid
+    );
+    res.status(200).json(successRes("Success", createEventRes));
+  } catch (error) {
+    console.error("assignEventCtrl", error);
+    const erorRes = errorRes("Asssign Event Failed", error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+const declineTaskCtrl = async (req, res) => {
+  try {
+    const taskUid = req.body.taskUid;
+    const declinedByUid = req.body.declinedByUid || req.body.session?.user?.uid;
+
+    const createEventRes = await services.declineTaskService(
+      taskUid,
+      declinedByUid
+    );
+    res.status(200).json(successRes("Success", createEventRes));
+  } catch (error) {
+    console.error("assignEventCtrl", error);
+    const erorRes = errorRes("Asssign Event Failed", error);
+    return res.status(400).json(erorRes);
+  }
+};
+
 module.exports = {
   getTasksByEventUidCtrl,
   getTaskById,
   createTaskCtrl,
   assignTaskCtrl,
   updateTaskCtrl,
-
+  acceptTaskCtrl,
+  declineTaskCtrl,
 };

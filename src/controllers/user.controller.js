@@ -146,12 +146,45 @@ const userEventsTasksCtrl = async (req, res) => {
     const tenantUid = req.query.tenantUid;
     const assignedToUid = req.query.assignedToUid;
 
-    const users = await userServices.userEventsTasksService(
+    const data = await userServices.userEventsTasksService(
       tenantUid,
       assignedToUid
     );
 
-    res.status(200).json(successRes("Success", users));
+    const eventIds = data
+      .map((el) => el.eventUid)
+      .filter((fl, i, arr) => i === arr.findIndex((fi) => fi === fl));
+
+    const userEventsAndTasks = eventIds.map((eventId) => {
+      const eventObj = data.find((fn) => fn.eventUid);
+      const tasks = data
+        .filter((fl) => fl.eventUid === eventId && fl.taskUid)
+        .map((m) => ({
+          taskUid: m.taskUid,
+          taskTitle: m.taskTitle,
+          taskStatus: m.taskStatus,
+          taskDescription: m.taskDescription,
+          taskDueAt: m.taskDueAt,
+          taskAssignedToUid: m.taskAssignedToUid,
+          taskCreatedAt: m.taskCreatedAt,
+          eventVenue: m.eventVenue,
+        }));
+
+      return {
+        eventUid: eventObj.eventUid,
+        eventName: eventObj.eventName,
+        eventType: eventObj.eventType,
+        evenScheduledAt: eventObj.evenScheduledAt,
+        eventVenue: eventObj.eventVenue,
+        expectedAttendees: eventObj.expectedAttendees,
+        eventStatus: eventObj.eventStatus,
+        eventAssignedToUid: eventObj.eventAssignedToUid,
+        eventCreatedAt: eventObj.eventCreatedAt,
+        tasks,
+      };
+    });
+
+    res.status(200).json(successRes("Success", userEventsAndTasks));
   } catch (error) {
     console.error("userEventsTasksCtrl", error);
     const erorRes = errorRes("getUsers Failed", {}, error.code, error);

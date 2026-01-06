@@ -187,10 +187,50 @@ async function assignTaskService(taskUid, assignedToUid, updatedByUid) {
   });
 }
 
+async function acceptTaskService(taskUid, assignedToUid) {
+  const sql = `
+  UPDATE tasks
+  SET
+    assigned_to_uid = $(assignedToUid),
+    status = assigned,
+    updated_at = NOW(),
+    updated_by_uid = $(assignedToUid)
+  WHERE uid = $(taskUid)
+  RETURNING *;
+`;
+
+  const db = getDb();
+  await db.one(sql, {
+    taskUid,
+    assignedToUid,
+  });
+}
+
+async function declineTaskService(taskUid, assignedToUid) {
+  const sql = `
+  UPDATE tasks
+  SET
+    assigned_to_uid = $(assignedToUid),
+    status = assigned,
+    updated_at = NOW(),
+    updated_by_uid = $(assignedToUid)
+  WHERE uid = $(taskUid)
+  RETURNING *;
+`;
+
+  const db = getDb();
+  await db.one(sql, {
+    taskUid,
+    assignedToUid,
+  });
+}
+
 module.exports = {
   createTaskService,
   getTaskService,
   getTasksByEventService,
   assignTaskService,
   updateTask,
+  acceptTaskService,
+  declineTaskService,
 };
