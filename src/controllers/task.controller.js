@@ -63,8 +63,12 @@ async function updateTaskCtrl(req, res) {
     let { taskUid, tenantUid } = req.query;
 
     // Trim accidental newline (%0A issue)
-    if (tenantUid) tenantUid = tenantUid.trim();
-    if (taskUid) taskUid = taskUid.trim();
+    if (tenantUid) {
+      tenantUid = tenantUid.trim();
+    }
+    if (taskUid) {
+      taskUid = taskUid.trim();
+    }
 
     const patch = {
       title: req.body.title || null,

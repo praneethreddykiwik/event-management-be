@@ -9,6 +9,7 @@ taskRouter.get(
   validations.getTasksByEventUidVal,
   controllers.getTasksByEventUidCtrl
 );
+// taskRouter.get('/getByQuery', )
 // taskRouter.get("/:taskId", validations.getTaskByIdVal, controllers.getTaskById);
 taskRouter.post("/", validations.createTaskVal, controllers.createTaskCtrl);
 taskRouter.post(
