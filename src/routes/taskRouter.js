@@ -28,5 +28,7 @@ taskRouter.post(
   validations.declineTaskVal,
   controllers.declineTaskCtrl
 );
-taskRouter.put("/", controllers.updateTaskCtrl);
+
+// swagger not added
+taskRouter.post("/edit", validations.editTaskVal, controllers.updateTaskCtrl);
 module.exports = taskRouter;

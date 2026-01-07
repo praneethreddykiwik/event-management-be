@@ -123,6 +123,7 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
     e.created_at AS "eventCreatedAt",
 
     t.uid AS "taskUid",
+    t.priority AS "taskPriority",
     t.title AS "taskTitle",
     t.status AS "taskStatus",
     t.description AS "taskDescription",

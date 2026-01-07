@@ -39,42 +39,46 @@ const createTaskService = ({
   });
 };
 
-async function updateTask(
+const updateTaskService = ({
   tenantUid,
-  taskUid,
-  patch = {}, // { title, description, status, priority, dueAt, assignedToUid }
-  actorUid
-) {
+  taskUid, // required
+  title, // optional
+  description, // optional (can be null)
+  priority, // optional
+  dueAt, // optional (can be null)
+  assignedToUid, // optional (can be null)
+  status, // optional (if you have status column)
+  updatedByUid, // required
+}) => {
   const sql = `
     UPDATE tasks
     SET
       title = COALESCE($(title), title),
       description = COALESCE($(description), description),
-      status = COALESCE($(status), status),
       priority = COALESCE($(priority), priority),
       due_at = COALESCE($(due_at), due_at),
       assigned_to_uid = COALESCE($(assigned_to_uid), assigned_to_uid),
-      updated_at = now(),
-      updated_by_uid = $(actor_uid)
+      status = COALESCE($(status), status),
+      updated_by_uid = $(updated_by_uid),
+      updated_at = NOW()
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(task_uid)
-      AND status <> 'deleted'
     RETURNING *;
   `;
 
   const db = getDb();
-  return db.oneOrNone(sql, {
+  return db.one(sql, {
     tenant_uid: tenantUid,
     task_uid: taskUid,
-    title: patch.title ?? null,
-    description: patch.description ?? null,
-    status: patch.status ?? null,
-    priority: patch.priority ?? null,
-    due_at: patch.dueAt ?? null,
-    assigned_to_uid: patch.assignedToUid ?? null,
-    actor_uid: actorUid,
+    title: title ?? null,
+    description: description ?? null,
+    priority: priority ?? null,
+    due_at: dueAt ?? null,
+    assigned_to_uid: assignedToUid ?? null,
+    status: status ?? null,
+    updated_by_uid: updatedByUid,
   });
-}
+};
 
 async function deleteTask(tenantUid, taskUid, actorUid) {
   const sql = `
@@ -230,7 +234,7 @@ module.exports = {
   getTaskService,
   getTasksByEventService,
   assignTaskService,
-  updateTask,
+  updateTaskService,
   acceptTaskService,
   declineTaskService,
 };

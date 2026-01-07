@@ -247,7 +247,7 @@ const userEventsTasksVal = (req, res, next) => {
 
 const acceptTaskVal = (req, res, next) => {
   const taskUid = req.body.taskUid;
-  const assignedToUid = req.body.assignedToUid || req.body.session?.user?.uid;
+  const assignedToUid = req.body.assignedToUid || req.session?.user?.uid;
 
   if (!taskUid) {
     return res.status(400).json(errorRes("Missing Task Uid", {}));
@@ -261,13 +261,32 @@ const acceptTaskVal = (req, res, next) => {
 
 const declineTaskVal = (req, res, next) => {
   const taskUid = req.body.taskUid;
-  const declinedByUid = req.body.declinedByUid || req.body.session?.user?.uid;
+  const declinedByUid = req.body.declinedByUid || req.session?.user?.uid;
 
   if (!taskUid) {
     return res.status(400).json(errorRes("Missing Task Uid", {}));
   }
   if (!declinedByUid) {
     return res.status(400).json(errorRes("Missing User Uid", {}));
+  }
+
+  next();
+};
+
+const editTaskVal = (req, res, next) => {
+  const taskUid = req.body.taskUid;
+
+  const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
+  const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Missing Task Uid", {}));
+  }
+  if (!updatedByUid) {
+    return res.status(400).json(errorRes("Missing Updated by Uid", {}));
   }
 
   next();
@@ -292,4 +311,5 @@ module.exports = {
   userEventsTasksVal,
   acceptTaskVal,
   declineTaskVal,
+  editTaskVal,
 };

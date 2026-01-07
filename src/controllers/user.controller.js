@@ -168,6 +168,7 @@ const userEventsTasksCtrl = async (req, res) => {
           taskAssignedToUid: m.taskAssignedToUid,
           taskCreatedAt: m.taskCreatedAt,
           eventVenue: m.eventVenue,
+          taskPriority: m.taskPriority,
         }));
 
       return {
