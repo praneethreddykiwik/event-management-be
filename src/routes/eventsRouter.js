@@ -4,12 +4,6 @@ const validations = require("../middlewares/validations.middleware");
 
 const router = express.Router();
 
-router.post(
-  "/deleteEvent",
-  validations.deleteEventVal,
-  eventController.deleteEventController
-);
-
 router.get("/", validations.getEventsVal, eventController.getEventsCtrl);
 
 router.post(
@@ -32,6 +26,18 @@ router.put(
 router.put(
   "/decline-event",
   validations.declineEventVal,
+  eventController.deleteEventCtrl
+);
+
+router.put(
+  "/update-event",
+  validations.updateEventVal,
+  eventController.updateEventCtrl
+);
+
+router.delete(
+  "/delete-event",
+  validations.deleteEventVal,
   eventController.deleteEventCtrl
 );
 

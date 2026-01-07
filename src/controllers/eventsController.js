@@ -73,29 +73,63 @@ const acceptEventCtrl = async (req, res) => {
   }
 };
 
-const deleteEventCtrl = async (req, res) => {
+const updateEventCtrl = async (req, res) => {
   try {
-    const payload = declineEventReqModel(req);
-    const declineEventRes = await services.declineEvent(payload);
+    const {
+      eventUid,
+      tenantUid: bodyTenantUid,
+      updatedByUid: bodyUpdatedByUid,
+      ...updateFields
+    } = req.body;
 
-    console.log("accepEventres", declineEventRes);
+    const tenantUid = bodyTenantUid || req.session?.user?.tenantUid;
+    const updatedByUid = bodyUpdatedByUid || req.session?.user?.uid;
 
-    const { uid, tenant_uid, status, declined_at, decline_reason } =
-      declineEventRes;
-
-    const declineEventResFeilds = {
-      uid,
-      tenant_uid,
-      status,
-      declined_at,
-      decline_reason,
+    const payload = {
+      tenantUid,
+      eventUid,
+      updatedByUid,
+      updateFields,
     };
 
-    res.status(200).json(successRes("Success", declineEventResFeilds));
+    const updateEventRes = await services.updateEventService(payload);
+
+    if (!updateEventRes) {
+      return res.status(404).json(errorRes("Event not found or not updatable"));
+    }
+
+    return res
+      .status(200)
+      .json(successRes("Event updated successfully", updateEventRes));
   } catch (error) {
-    console.error("declineError", error);
-    const erorRes = errorRes("Accept Event Failed", error);
-    return res.status(400).json(erorRes);
+    console.error("updateEventCtrl", error);
+    return res.status(400).json(errorRes("Update Event Failed", error));
+  }
+};
+
+const deleteEventCtrl = async (req, res) => {
+  try {
+    const eventUid = req.body.eventUid;
+    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+    const actorUid = req.body.deletedByUid || req.session?.user?.uid;
+    const deleteReason = req.body.deleteReason || null;
+
+    const deletedEvent = await services.deleteEvent(
+      tenantUid,
+      eventUid,
+      actorUid,
+      deleteReason
+    );
+
+    return res
+      .status(200)
+      .json(successRes("Event deleted successfully", deletedEvent));
+  } catch (error) {
+    console.error("deleteEventCtrl", error);
+
+    return res
+      .status(error.statusCode || 400)
+      .json(errorRes(error.message || "Delete Event Failed", error));
   }
 };
 
@@ -127,4 +161,5 @@ module.exports = {
   assignEventCtrl,
   acceptEventCtrl,
   deleteEventCtrl,
+  updateEventCtrl,
 };
