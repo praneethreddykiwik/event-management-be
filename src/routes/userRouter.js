@@ -6,17 +6,13 @@ const router = express.Router();
 
 router.get("/", userController.getUsersCtrl);
 router.get("/me", userController.getMeCtrl);
-
-router.put(
-  "/updateEventManager",
-  validations.updateEventManagerVal,
-  userController.updateEventManagerCtrl
+router.post("/", validations.createUserVal, userController.createUserCtrl);
+router.put("/", validations.updateUserVal, userController.updateUserCtrl);
+router.get(
+  "/user-events-tasks",
+  validations.userEventsTasksVal,
+  userController.userEventsTasksCtrl
 );
-
-// router.get("/:id", userController.getUserById);
-
-// router.post("/", userController.createUser);
-
-// router.post("/login", userController.loginUser);
+router.delete("/delete-user", userController.deleteUserCtrl);
 
 module.exports = router;

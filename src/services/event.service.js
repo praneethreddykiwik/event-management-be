@@ -11,7 +11,7 @@ const createEventService = async (payload) => {
     expected_attendees,
     status,
     comments,
-    assigned_event_manager_uid,
+    assigned_to_uid,
     assigned_at,
     created_by_uid
   )
@@ -24,7 +24,7 @@ const createEventService = async (payload) => {
     $(expected_attendees),
     $(status),
     $(comments),
-    $(assigned_event_manager_uid),
+    $(assigned_to_uid),
     now(),
     $(created_by_uid)
   )
@@ -68,10 +68,10 @@ async function listEvents(tenantUid, role, userUid, filters) {
   }
 
   if (role === "event_manager") {
-    baseWhere.push(`e.assigned_event_manager_uid = $(me_uid)`);
+    baseWhere.push(`e.assigned_to_uid = $(me_uid)`);
     params.me_uid = userUid;
   } else if (role === "admin" && assignedTo) {
-    baseWhere.push(`e.assigned_event_manager_uid = $(assigned_to)`);
+    baseWhere.push(`e.assigned_to_uid = $(assigned_to)`);
     params.assigned_to = assignedTo;
   }
 
@@ -104,21 +104,71 @@ async function listEvents(tenantUid, role, userUid, filters) {
 }
 
 // aadil
-async function getEventByUid(tenantUid, eventUid, includeDeleted = false) {
-  const sql = `
-    SELECT *
-    FROM events
-    WHERE tenant_uid = $(tenant_uid)
-      AND uid = $(event_uid)
-      AND ($(include_deleted)::boolean = true OR status <> 'deleted')
-    LIMIT 1;
-  `;
-  const db = getDb();
-  return db.oneOrNone(sql, {
-    tenant_uid: tenantUid,
-    event_uid: eventUid,
-    include_deleted: includeDeleted,
+async function getEventsService(query, includeDeleted = false) {
+  const conditions = [];
+  const params = {};
+
+  const queries = [
+    // { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
+    { query: "eventUid", condition: "e.uid = $(eventUid)" },
+    {
+      query: "assignedToUid",
+      condition: "e.assigned_to_uid = $(assignedToUid)",
+    },
+  ];
+
+  queries.forEach((el) => {
+    if (query[el.query]) {
+      conditions.push(el.condition);
+      params[el.query] = query[el.query];
+    }
   });
+  // conditions.push(
+  //   "($(events_status_check)::boolean = true OR status <> 'deleted')"
+  // );
+
+  const whereClause = conditions.length
+    ? `where ${conditions.join(" and ")}`
+    : "";
+
+  const db = getDb();
+  const events = await db.any(
+    `
+      select
+        e.uid,
+        e.tenant_uid as "tenantUid",
+        e.event_name as "eventName",
+        e.event_type as "eventType",
+        e.scheduled_at as "scheduledAt",
+        e.venue,
+        e.expected_attendees as "expectedAttendees",
+        e.status,
+        e.assigned_to_uid as "assignedToUid",
+        e.assigned_at as "assignedAt",
+        e.accepted_at as "acceptedAt",
+        e.declined_at as "declinedAt",
+        e.decline_reason as "declineReason",
+        e.comments,
+        e.created_at as "createdAt",
+        e.updated_at as "updatedAt",
+        e.created_by_uid as "createdByUid",
+        e.updated_by_uid as "updatedByUid",
+        e.deleted_at as "deletedAt",
+        e.delete_reason as "deleteReason",
+        u.first_name as "firstName"
+        from events e
+        left join users u on u.uid = e.assigned_to_uid
+        ${whereClause}
+        `,
+    {
+      tenant_uid: query.tenantUid,
+      eventUid: query.eventUid,
+      assignedToUid: query.assignedToUid,
+      include_deleted: includeDeleted,
+    }
+  );
+
+  return events;
 }
 
 async function updateEvent(tenantUid, eventUid, patch, actorUid) {
@@ -156,15 +206,20 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
   });
 }
 
-async function assignEventManager(tenantUid, eventUid, managerUid, actorUid) {
+async function assignEventService(
+  tenantUid,
+  eventUid,
+  assignedToUid,
+  updatedByUid
+) {
   const sql = `
     UPDATE events
     SET
-      assigned_event_manager_uid = $(manager_uid),
+      assigned_to_uid = $(assigned_to_uid),
       assigned_at = now(),
       status = 'assigned',
       updated_at = now(),
-      updated_by_uid = $(actor_uid)
+      updated_by_uid = $(updated_by_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
       AND status <> 'deleted'
@@ -175,12 +230,12 @@ async function assignEventManager(tenantUid, eventUid, managerUid, actorUid) {
   return db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
-    manager_uid: managerUid,
-    actor_uid: actorUid,
+    assigned_to_uid: assignedToUid,
+    updated_by_uid: updatedByUid,
   });
 }
 
-async function acceptEvent(db, { tenantUid, eventUid, eventManagerUid }) {
+async function acceptEvent({ tenantUid, eventUid, eventManagerUid }) {
   const sql = `
     UPDATE events
     SET
@@ -190,10 +245,11 @@ async function acceptEvent(db, { tenantUid, eventUid, eventManagerUid }) {
       updated_by_uid = $(manager_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND assigned_event_manager_uid = $(manager_uid)
+      AND assigned_to_uid = $(manager_uid)
       AND status IN ('assigned', 'declined') -- allow accept after reassignment, adjust as you like
     RETURNING *;
   `;
+  const db = getDb();
   return db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
@@ -201,12 +257,12 @@ async function acceptEvent(db, { tenantUid, eventUid, eventManagerUid }) {
   });
 }
 
-const declineEvent = async (
+const declineEvent = async ({
   tenantUid,
   eventUid,
-  managerUid,
-  declineReason = null
-) => {
+  eventManagerUid,
+  declineReason = null,
+}) => {
   const sql = `
     UPDATE events
     SET
@@ -217,7 +273,7 @@ const declineEvent = async (
       updated_by_uid = $(manager_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND assigned_event_manager_uid = $(manager_uid)
+      AND assigned_to_uid = $(manager_uid)
       AND status IN ('assigned')
     RETURNING *;
   `;
@@ -226,7 +282,7 @@ const declineEvent = async (
   return db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
-    manager_uid: managerUid,
+    manager_uid: eventManagerUid,
     decline_reason: declineReason,
   });
 };
@@ -250,7 +306,7 @@ const eventsAssignedToMe = async (req) => {
     SELECT *
     FROM events
     WHERE tenant_uid = $(tenant_uid)
-      AND assigned_event_manager_uid = $(uid)
+      AND assigned_to_uid = $(uid)
     ORDER BY scheduled_at ASC;
     `;
 
@@ -294,9 +350,9 @@ const deleteEvent = async (tenantUid, eventUid, actorUid) => {
 module.exports = {
   createEventService,
   listEvents,
-  getEventByUid,
+  getEventsService,
   updateEvent,
-  assignEventManager,
+  assignEventService,
   acceptEvent,
   declineEvent,
   getAllEvents,

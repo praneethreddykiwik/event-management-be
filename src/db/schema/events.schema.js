@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "emdb-schema".events (
       'cancelled'
     )),
 
-  assigned_event_manager_uid UUID NULL,
+  assigned_to_uid UUID NULL,
   assigned_at TIMESTAMPTZ NULL,
   accepted_at TIMESTAMPTZ NULL,
   declined_at TIMESTAMPTZ NULL,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "emdb-schema".events (
     ON DELETE CASCADE,
 
   CONSTRAINT fk_events_assigned_event_manager_uid
-    FOREIGN KEY (assigned_event_manager_uid)
+    FOREIGN KEY (assigned_to_uid)
     REFERENCES "emdb-schema".users(uid),
 
   CONSTRAINT fk_events_created_by_uid
@@ -83,3 +83,6 @@ const addColumns = `
   ADD COLUMN IF NOT EXISTS deleted_by_uid UUID NULL REFERENCES "emdb-schema".users(uid),
   ADD COLUMN IF NOT EXISTS delete_reason TEXT NULL;
 `;
+
+const changeColName = `ALTER TABLE events
+RENAME COLUMN assigned_to_uid TO assigned_to_uid;`;

@@ -1,4 +1,4 @@
-export const createUsersTable = `
+const createUsersTable = `
 	create table users (
 		uid uuid primary key default gen_random_uuid(),
 		tenant_uid uuid not null,
@@ -33,4 +33,29 @@ export const createUsersTable = `
 const modification = `
 	ALTER TABLE users
 	ALTER COLUMN status SET DEFAULT 'ACTIVE';
+`;
+
+const addFirstNameMobileColumns = `
+	-- Step 1: Add columns (nullable + temp default for mobile)
+
+	ALTER TABLE users
+ADD COLUMN first_name TEXT,
+ADD COLUMN last_name TEXT,
+ADD COLUMN mobile BIGINT;
+
+
+-- Adjust values as needed.
+
+UPDATE users
+SET
+  first_name = 'Unknown',
+  mobile = 0
+WHERE first_name IS NULL
+   OR mobile IS NULL;
+
+   -- Step 3: Enforce NOT NULL constraints
+   ALTER TABLE users
+ALTER COLUMN first_name SET NOT NULL,
+ALTER COLUMN mobile SET NOT NULL;
+
 `;
