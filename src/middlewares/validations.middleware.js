@@ -111,7 +111,7 @@ const createEventValidation = (req, res, next) => {
 };
 
 const createTaskVal = (req, res, next) => {
-  const requiredFields = ["tenantUid", "eventUid", "title", "createdByUid"];
+  const requiredFields = ["tenantUid", "eventUid", "title"];
   const missingFields = [];
 
   requiredFields.forEach((el) => {
@@ -119,6 +119,11 @@ const createTaskVal = (req, res, next) => {
       missingFields.push(el);
     }
   });
+
+  if (!req.body.createdByUid && !req.session.user.uid) {
+    missingFields.push("createdByUid");
+  }
+
   if (missingFields.length) {
     return res.status(400).json(errorRes("Missing fields", { missingFields }));
   }

@@ -33,6 +33,8 @@ const getUsersService = async (query, providePasswordHash) => {
   const limit = query.limit || 50;
   const offset = query.offset || 0;
 
+  console.log("abdul query", query);
+
   const conditions = [];
   const params = {};
 
@@ -41,6 +43,7 @@ const getUsersService = async (query, providePasswordHash) => {
     { query: "username", condition: "u.username = $(username)" },
     { query: "email", condition: "lower(u.email) = lower($(email))" },
     { query: "status", condition: "u.status = $(status)" },
+    { query: "role", condition: "u.role = $(role)" },
   ];
 
   queries.forEach((el) => {

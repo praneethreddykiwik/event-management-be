@@ -44,8 +44,8 @@ async function createTaskCtrl(req, res) {
     priority: "medium",
     dueAt: null,
     assignedToUid: null,
-    createdByUid: req.body.createdByUid,
-    updatedByUid: req.body.updatedByUid,
+    createdByUid: req.body.createdByUid || req.session.user.uid,
+    updatedByUid: req.body.updatedByUid || req.session.user.uid,
   };
   console.log("shahid", payload);
   try {
