@@ -1,10 +1,12 @@
-const { getDb } = require("../db/db");
+/** @format */
+
+const { getDb } = require('../db/db');
 
 const deleteEventService = async (eventId) => {
   const deleted = await Event.findOneAndDelete({ eventId });
 
   if (!deleted) {
-    const err = new Error("Event not found");
+    const err = new Error('Event not found');
     err.statusCode = 404;
     throw err;
   }
@@ -54,8 +56,8 @@ const getUsersService = async (query, providePasswordHash) => {
   });
 
   const whereClause = conditions.length
-    ? `where ${conditions.join(" and ")}`
-    : "";
+    ? `where ${conditions.join(' and ')}`
+    : '';
 
   const db = getDb();
   const users = await db.any(
@@ -69,7 +71,7 @@ const getUsersService = async (query, providePasswordHash) => {
         u.first_name as "firstName",
         u.last_name as "lastName", 
         u.mobile,
-        ${providePasswordHash ? "u.password_hash," : ""}
+        ${providePasswordHash ? 'u.password_hash,' : ''}
         t.tenant_id,
         t.uid as "tenantUid"
       from users u
@@ -112,32 +114,44 @@ const updateUserService = async (data) => {
 const userEventsTasksService = async (tenantUid, assignedToUid) => {
   const sql = `
   SELECT
-    e.uid AS "eventUid",
-    e.event_name as "eventName",
-    e.event_type as "eventType",
-    e.scheduled_at as "evenScheduledAt",
-    e.venue as "eventVenue",
-    e.expected_attendees as "expectedAttendees",
-    e.status AS "eventStatus",
-    e.assigned_to_uid AS "eventAssignedToUid",
-    e.created_at AS "eventCreatedAt",
+  e.uid AS "eventUid",
+  e.event_name AS "eventName",
+  e.event_type AS "eventType",
+  e.scheduled_at AS "evenScheduledAt",
+  e.venue AS "eventVenue",
+  e.expected_attendees AS "expectedAttendees",
+  e.status AS "eventStatus",
+  e.assigned_to_uid AS "eventAssignedToUid",
+  e.created_at AS "eventCreatedAt",
 
-    t.uid AS "taskUid",
-    t.priority AS "taskPriority",
-    t.title AS "taskTitle",
-    t.status AS "taskStatus",
-    t.description AS "taskDescription",
-    t.due_at AS "taskDueAt",
-    t.assigned_to_uid AS "taskAssignedToUid",
-    t.created_at AS "taskCreatedAt"
-  FROM events e
-  LEFT JOIN tasks t
-    ON t.event_uid = e.uid
-    AND t.status <> 'deleted'
-  WHERE e.tenant_uid = $(tenantUid)
-    AND e.assigned_to_uid = $(assignedToUid)
-    AND e.status <> 'deleted'
-  ORDER BY e.created_at DESC, t.created_at ASC;
+  u.first_name AS "eventAssignedToFirstName",
+  u.last_name AS "eventAssignedToLastName",
+  u.username AS "eventAssignedToUsername",
+
+
+  t.uid AS "taskUid",
+  t.title AS "taskTitle",
+  t.status AS "taskStatus",
+  t.description AS "taskDescription",
+  t.due_at AS "taskDueAt",
+  t.assigned_to_uid AS "taskAssignedToUid",
+  t.created_at AS "taskCreatedAt"
+
+FROM events e
+
+
+LEFT JOIN users u
+  ON u.uid = e.assigned_to_uid
+
+LEFT JOIN tasks t
+  ON t.event_uid = e.uid
+  AND t.status <> 'deleted'
+
+WHERE e.tenant_uid = $(tenantUid)
+  AND e.assigned_to_uid = $(assignedToUid)
+  AND e.status <> 'deleted'
+
+ORDER BY e.created_at DESC, t.created_at ASC;
 `;
   const db = getDb();
   const rows = await db.any(sql, { tenantUid, assignedToUid });
@@ -163,7 +177,7 @@ const deleteUserService = async (uid) => {
   );
 
   if (involvement.in_events || involvement.in_tasks) {
-    const err = new Error("User is involved in event or tasks");
+    const err = new Error('User is involved in event or tasks');
     err.code = 409; // Conflict
     throw err;
   }
@@ -179,7 +193,7 @@ const deleteUserService = async (uid) => {
   );
 
   if (!deletedUser) {
-    const err = new Error("User not found");
+    const err = new Error('User not found');
     err.code = 404;
     throw err;
   }
