@@ -358,4 +358,4 @@ module.exports = {
   getAllEvents,
   eventsAssignedToMe,
   deleteEvent,
-git };
+ };
