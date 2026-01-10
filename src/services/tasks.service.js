@@ -157,8 +157,7 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
     ON t.event_uid = e.uid
   JOIN users u
     ON u.uid = t.assigned_to_uid
-  WHERE
-    AND e.event_uid = $(eventUid)
+  WHERE e.event_uid = $(eventUid)
   ORDER BY
     e.scheduled_at DESC;
 `;
