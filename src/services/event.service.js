@@ -206,6 +206,25 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
   });
 }
 
+async function updateEventService({
+  tenantUid,
+  eventUid,
+  updatedByUid,
+  updateFields,
+}) {
+  // whitelist + map camelCase → snake_case
+  const patch = {
+    event_name: updateFields.eventName,
+    event_type: updateFields.eventType,
+    scheduled_at: updateFields.scheduledAt,
+    venue: updateFields.venue,
+    expected_attendees: updateFields.expectedAttendees,
+    comments: updateFields.comments,
+  };
+
+  return updateEvent(tenantUid, eventUid, patch, updatedByUid);
+}
+
 async function assignEventService(
   tenantUid,
   eventUid,
@@ -318,28 +337,37 @@ const eventsAssignedToMe = async (req) => {
   return rows;
 };
 
-const deleteEvent = async (tenantUid, eventUid, actorUid) => {
+const deleteEvent = async (
+  tenantUid,
+  eventUid,
+  actorUid,
+  deleteReason = null
+) => {
   const sql = `
     UPDATE events
     SET
-        status = 'deleted',
-        deleted_at = now(),
-        deleted_by_uid = $(uid),
-        delete_reason = $(reason),
-        updated_at = now(),
-        updated_by_uid = $(uid)
-    WHERE uid = $(event_uid) AND tenant_uid = $(tenant_uid);
-    `;
+      status = 'deleted',
+      deleted_at = now(),
+      deleted_by_uid = $(actor_uid),
+      delete_reason = $(delete_reason),
+      updated_at = now(),
+      updated_by_uid = $(actor_uid)
+    WHERE uid = $(event_uid)
+      AND tenant_uid = $(tenant_uid)
+      AND status <> 'deleted'
+    RETURNING *;
+  `;
 
   const db = getDb();
   const result = await db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
     actor_uid: actorUid,
+    delete_reason: deleteReason,
   });
 
   if (!result) {
-    const err = new Error("Event not found (or already deleted)");
+    const err = new Error("Event not found or already deleted");
     err.statusCode = 404;
     throw err;
   }
@@ -352,6 +380,7 @@ module.exports = {
   listEvents,
   getEventsService,
   updateEvent,
+  updateEventService,
   assignEventService,
   acceptEvent,
   declineEvent,

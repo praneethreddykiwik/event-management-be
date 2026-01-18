@@ -65,13 +65,23 @@ const createUserVal = (req, res, next) => {
 };
 
 const deleteEventVal = (req, res, next) => {
-  const eventId = req.body?.eventId;
+  const eventUid = req.body.eventUid;
+  const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+  const deletedByUid = req.body.deletedByUid || req.session?.user?.uid;
 
-  if (!eventId) {
-    return res.status(400).json(errorRes("eventId is required"));
+  if (!eventUid) {
+    return res.status(400).json(errorRes("Missing Event Uid", {}));
   }
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+  if (!deletedByUid) {
+    return res.status(400).json(errorRes("Missing Deleted By Uid", {}));
+  }
+
   next();
 };
+
 
 const loginValidation = (req, res, next) => {
   if (!req.body.tenantId) {
@@ -212,6 +222,45 @@ const assignEventVal = (req, res, next) => {
   next();
 };
 
+const updateEventVal = (req, res, next) => {
+  const eventUid = req.body.eventUid;
+  const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+  const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
+
+  if (!eventUid) {
+    return res.status(400).json(errorRes("Missing Event Uid", {}));
+  }
+
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+
+  if (!updatedByUid) {
+    return res.status(400).json(errorRes("Missing Updated By Uid", {}));
+  }
+
+  // fields allowed to update
+  const updatableFields = [
+    "eventName",
+    "eventType",
+    "scheduledAt",
+    "assignedToUid",
+    "status",
+    "location",
+    "description",
+  ];
+
+  const hasUpdatableField = updatableFields.some(
+    (field) => req.body?.[field] !== undefined
+  );
+
+  if (!hasUpdatableField) {
+    return res.status(400).json(errorRes("No fields provided to update", {}));
+  }
+
+  next();
+};
+
 const assignTaskVal = (req, res, next) => {
   const taskUid = req.body.taskUid;
   const assignedToUid = req.body.assignedToUid;
@@ -302,6 +351,7 @@ module.exports = {
   createEventValidation,
   createTaskVal,
   getEventsVal,
+  updateEventVal,
   createUserVal,
   getTasksByEventUidVal,
   assignEventVal,

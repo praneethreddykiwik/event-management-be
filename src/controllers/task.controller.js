@@ -4,7 +4,7 @@ const services = require("../services/tasks.service");
 async function getTasksByEventUidCtrl(req, res) {
   try {
     const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
-    const eventUid = req.query.tenantUid;
+    const eventUid = req.query.eventUid;
 
     console.log("getTasksByEventUidCtrl req", { tenantUid, eventUid });
 
