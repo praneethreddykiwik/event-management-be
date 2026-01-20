@@ -1,0 +1,70 @@
+/tenants:
+  get:
+    summary: Get all tenants
+    tags: [Tenants]
+    responses:
+      '200':
+        description: Tenants list
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tenants.schemas.yaml#/TenantsListResponse'
+
+  post:
+    summary: Create tenant
+    tags: [Tenants]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/tenants.schemas.yaml#/CreateTenantRequest'
+    responses:
+      '201':
+        description: Tenant created
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tenants.schemas.yaml#/TenantResponse'
+
+/tenants/{tenantId}:
+  get:
+    summary: Get tenant by tenantId
+    tags: [Tenants]
+    parameters:
+      - in: path
+        name: tenantId
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Tenant
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tenants.schemas.yaml#/TenantResponse'
+      '404':
+        description: Tenant not found
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tenants.schemas.yaml#/ErrorResponse'
+
+/tenants/event-managers:
+  post:
+    summary: Create event manager
+    tags: [Tenants]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/tenants.schemas.yaml#/CreateManagerRequest'
+    responses:
+      '200':
+        description: Manager created
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tenants.schemas.yaml#/GenericResponse'

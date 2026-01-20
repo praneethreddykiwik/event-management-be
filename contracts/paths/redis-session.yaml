@@ -1,0 +1,40 @@
+/redis-session:
+  get:
+    summary: Get session from redis
+    tags: [Redis]
+    responses:
+      '200':
+        description: Session found
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/redis-session.schemas.yaml#/GetSessionResponse'
+      '404':
+        description: Session not found
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/redis-session.schemas.yaml#/ErrorResponse'
+
+  delete:
+    summary: Delete session from redis
+    tags: [Redis]
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/redis-session.schemas.yaml#/DeleteSessionRequest'
+    responses:
+      '200':
+        description: Session deleted
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/redis-session.schemas.yaml#/DeleteSessionResponse'
+      '400':
+        description: Delete failed
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/redis-session.schemas.yaml#/ErrorResponse'

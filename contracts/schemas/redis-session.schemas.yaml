@@ -1,0 +1,40 @@
+DeleteSessionRequest:
+  type: object
+  properties:
+    sessionID:
+      type: string
+
+GetSessionResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: object
+      properties:
+        sessionID:
+          type: string
+        data:
+          type: object
+
+DeleteSessionResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: object
+
+ErrorResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    error:
+      type: string

@@ -1,0 +1,123 @@
+/users:
+  get:
+    summary: Get users
+    tags: [Users]
+    parameters:
+      - in: query
+        name: tenantId
+        schema:
+          type: string
+      - in: query
+        name: username
+        schema:
+          type: string
+      - in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: role
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Users list
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/users.schemas.yaml#/UsersListResponse'
+
+  post:
+    summary: Create user
+    tags: [Users]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/users.schemas.yaml#/CreateUserRequest'
+    responses:
+      '201':
+        description: User created
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/users.schemas.yaml#/UserResponse'
+
+  put:
+    summary: Update user
+    tags: [Users]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/users.schemas.yaml#/UpdateUserRequest'
+    responses:
+      '200':
+        description: User updated
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/users.schemas.yaml#/UserResponse'
+
+/users/me:
+  get:
+    summary: Get current user
+    tags: [Users]
+    responses:
+      '200':
+        description: Current user
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/users.schemas.yaml#/UserResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/users.schemas.yaml#/ErrorResponse'
+
+/users/user-events-tasks:
+  get:
+    summary: Get user events and tasks
+    tags: [Users]
+    parameters:
+      - in: query
+        name: tenantUid
+        schema:
+          type: string
+      - in: query
+        name: assignedToUid
+        schema:
+          type: string
+    responses:
+      '200':
+        description: User events & tasks
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/users.schemas.yaml#/UserEventsTasksResponse'
+
+/users/delete-user:
+  delete:
+    summary: Delete user
+    tags: [Users]
+    parameters:
+      - in: query
+        name: uid
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: User deleted
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/users.schemas.yaml#/UserResponse'

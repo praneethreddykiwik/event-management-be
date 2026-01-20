@@ -1,0 +1,86 @@
+CreateUserRequest:
+  type: object
+  required: [tenantId, username, email, password, role, firstName, mobile]
+  properties:
+    tenantId:
+      type: string
+    username:
+      type: string
+    email:
+      type: string
+    password:
+      type: string
+      format: password
+    role:
+      type: string
+    firstName:
+      type: string
+    lastName:
+      type: string
+    mobile:
+      type: string
+
+UpdateUserRequest:
+  type: object
+  required: [uid]
+  properties:
+    uid:
+      type: string
+    username:
+      type: string
+    email:
+      type: string
+    role:
+      type: string
+    status:
+      type: string
+    firstName:
+      type: string
+    lastName:
+      type: string
+    mobile:
+      type: string
+
+UserResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: object
+
+UsersListResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        type: object
+
+UserEventsTasksResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        type: object
+
+ErrorResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    error:
+      type: string

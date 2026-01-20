@@ -1,0 +1,78 @@
+CreateTenantRequest:
+  type: object
+  required: [tenantId, name]
+  properties:
+    tenantId:
+      type: string
+    name:
+      type: string
+    updatedBy:
+      type: string
+
+CreateManagerRequest:
+  type: object
+  required: [email]
+  properties:
+    email:
+      type: string
+      format: email
+
+Tenant:
+  type: object
+  properties:
+    uid:
+      type: string
+    tenant_id:
+      type: string
+    name:
+      type: string
+    status:
+      type: string
+    created_at:
+      type: string
+      format: date-time
+    updated_at:
+      type: string
+      format: date-time
+
+TenantResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      $ref: '#/Tenant'
+
+TenantsListResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        $ref: '#/Tenant'
+
+GenericResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: string
+
+ErrorResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    error:
+      type: string

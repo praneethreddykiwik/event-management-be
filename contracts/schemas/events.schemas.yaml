@@ -1,0 +1,127 @@
+CreateEventRequest:
+  type: object
+  required: [tenantUid, eventName, eventType, scheduledAt]
+  properties:
+    tenantUid:
+      type: string
+    eventName:
+      type: string
+    eventType:
+      type: string
+    scheduledAt:
+      type: string
+      format: date-time
+    venue:
+      type: string
+    expectedAttendees:
+      type: number
+    comments:
+      type: string
+
+AssignEventRequest:
+  type: object
+  required: [eventUid, assignedToUid]
+  properties:
+    eventUid:
+      type: string
+    assignedToUid:
+      type: string
+    tenantUid:
+      type: string
+    updatedByUid:
+      type: string
+
+AcceptEventRequest:
+  type: object
+  required: [tenantUid, eventUid, eventManagerUid]
+  properties:
+    tenantUid:
+      type: string
+    eventUid:
+      type: string
+    eventManagerUid:
+      type: string
+
+DeclineEventRequest:
+  type: object
+  required: [tenantUid, eventUid, eventManagerUid, declineReason]
+  properties:
+    tenantUid:
+      type: string
+    eventUid:
+      type: string
+    eventManagerUid:
+      type: string
+    declineReason:
+      type: string
+
+UpdateEventRequest:
+  type: object
+  required: [eventUid]
+  properties:
+    eventUid:
+      type: string
+    tenantUid:
+      type: string
+    updatedByUid:
+      type: string
+    eventName:
+      type: string
+    eventType:
+      type: string
+    scheduledAt:
+      type: string
+      format: date-time
+    assignedToUid:
+      type: string
+    status:
+      type: string
+    location:
+      type: string
+    description:
+      type: string
+
+DeleteEventRequest:
+  type: object
+  required: [eventUid]
+  properties:
+    eventUid:
+      type: string
+    tenantUid:
+      type: string
+    deletedByUid:
+      type: string
+    deleteReason:
+      type: string
+
+EventResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: object
+
+EventsListResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        type: object
+
+ErrorResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    error:
+      type: string
