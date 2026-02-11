@@ -4,19 +4,26 @@ CreateEventRequest:
   properties:
     tenantUid:
       type: string
+      example: "8f45a0b4-23cb-4d3e-b6c9-29fcb0c1a910"
     eventName:
       type: string
+      example: "Annual Meetup"
     eventType:
       type: string
+      example: "conference"
     scheduledAt:
       type: string
       format: date-time
+      example: "2026-12-10T10:00:00Z"
     venue:
       type: string
+      example: "Bangalore Convention Center"
     expectedAttendees:
       type: number
+      example: 250
     comments:
       type: string
+      example: "VIP guests arriving early"
 
 AssignEventRequest:
   type: object
@@ -24,12 +31,20 @@ AssignEventRequest:
   properties:
     eventUid:
       type: string
+      format: uuid
+      example: "evt_123456"
     assignedToUid:
       type: string
+      format: uuid
+      example: "c31a28b7-17c0-47f6-a1f4-65b7db911aaa"
     tenantUid:
       type: string
+      format: uuid
+      example: "tenant_123"
     updatedByUid:
       type: string
+      format: uuid
+      example: "admin_uid_001"
 
 AcceptEventRequest:
   type: object
@@ -37,10 +52,16 @@ AcceptEventRequest:
   properties:
     tenantUid:
       type: string
+      format: uuid
+      example: "7f5e0c8e-47a7-46dc-ba0d-3260760bf9d8"
     eventUid:
       type: string
+      format: uuid
+      example: "9dcb62bf-ffae-48f0-9c95-8a1000bed10f"
     eventManagerUid:
       type: string
+      format: uuid
+      example: "a35e30b9-04b6-454a-bff9-061a0c74731b"
 
 DeclineEventRequest:
   type: object
@@ -48,12 +69,19 @@ DeclineEventRequest:
   properties:
     tenantUid:
       type: string
+      format: uuid
+      example: "7f5e0c8e-47a7-46dc-ba0d-3260760bf9d8"
     eventUid:
       type: string
+      format: uuid
+      example: "400082d9-156e-4a80-99b8-b48be6972924"
     eventManagerUid:
       type: string
+      format: uuid
+      example: "a35e30b9-04b6-454a-bff9-061a0c74731b"
     declineReason:
       type: string
+      example: "Scheduling conflict"
 
 UpdateEventRequest:
   type: object
@@ -61,25 +89,39 @@ UpdateEventRequest:
   properties:
     eventUid:
       type: string
+      format: uuid
+      example: "evt_123456"
     tenantUid:
       type: string
+      format: uuid
+      example: "tenant_001"
     updatedByUid:
       type: string
+      format: uuid
+      example: "admin_uid_001"
     eventName:
       type: string
+      example: "Tech Summit 2026"
     eventType:
       type: string
+      example: "seminar"
     scheduledAt:
       type: string
       format: date-time
+      example: "2026-11-15T09:00:00Z"
     assignedToUid:
       type: string
+      format: uuid
+      example: "user_456"
     status:
       type: string
+      example: "pending"
     location:
       type: string
+      example: "Hyderabad Expo Center"
     description:
       type: string
+      example: "Annual technology summit"
 
 DeleteEventRequest:
   type: object
@@ -87,41 +129,65 @@ DeleteEventRequest:
   properties:
     eventUid:
       type: string
+      format: uuid
+      example: "evt_123456"
     tenantUid:
       type: string
+      format: uuid
+      example: "tenant_001"
     deletedByUid:
       type: string
+      format: uuid
+      example: "admin_uid_001"
     deleteReason:
       type: string
+      example: "Event cancelled by organizer"
 
 EventResponse:
   type: object
   properties:
     success:
       type: boolean
+      example: true
     message:
       type: string
+      example: "Event fetched successfully"
     data:
       type: object
+      example:
+        eventUid: "evt_123456"
+        eventName: "Annual Meetup"
+        status: "pending"
 
 EventsListResponse:
   type: object
   properties:
     success:
       type: boolean
+      example: true
     message:
       type: string
+      example: "Events retrieved successfully"
     data:
       type: array
       items:
         type: object
+        example:
+          eventUid: "evt_123"
+          eventName: "Annual Meetup"
+          status: "pending"
+        
+
 
 ErrorResponse:
   type: object
   properties:
     success:
       type: boolean
+      example: false
     message:
       type: string
+      example: "Invalid request"
     error:
       type: string
+      example: "VALIDATION_ERROR"

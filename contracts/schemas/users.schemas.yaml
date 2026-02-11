@@ -4,21 +4,29 @@ CreateUserRequest:
   properties:
     tenantId:
       type: string
+      example: tenant_001
     username:
       type: string
+      example: vendor01
     email:
       type: string
+      example: vendor01@company.com
     password:
       type: string
       format: password
+      example: SomePassword@123
     role:
       type: string
+      example: vendor
     firstName:
       type: string
+      example: Abdul
     lastName:
       type: string
+      example: Shahid
     mobile:
       type: string
+      example: 9876543210
 
 UpdateUserRequest:
   type: object
@@ -26,61 +34,96 @@ UpdateUserRequest:
   properties:
     uid:
       type: string
+      example: "550e8400-e29b-41d4-a716-446655440000"
     username:
       type: string
+      example: vendor02
     email:
       type: string
+      example: vendor02@company.com
     role:
       type: string
+      example: vendor
     status:
       type: string
+      example: ACTIVE
     firstName:
       type: string
+      example: Akhil
     lastName:
       type: string
+      example: Shaik
     mobile:
       type: string
+      example: "9123456789"
 
 UserResponse:
   type: object
   properties:
     success:
       type: boolean
+      example: true
     message:
       type: string
+      example: "User fetched successfully"
     data:
       type: object
+      example:
+        uid: "550e8400-e29b-41d4-a716-446655440000"
+        username: vendor01
+        email: vendor01@company.com
+        role: vendor
+        status: ACTIVE
 
 UsersListResponse:
   type: object
   properties:
     success:
       type: boolean
+      example: true
     message:
       type: string
+      example: "Users retrieved successfully"
     data:
       type: array
       items:
         type: object
+        example:
+          uid: "550e8400-e29b-41d4-a716-446655440000"
+          username: vendor01
+          email: vendor01@company.com
+          role: vendor
+          status: ACTIVE
+          
 
 UserEventsTasksResponse:
   type: object
   properties:
     success:
       type: boolean
+      example: true
     message:
       type: string
+      example: "User events and tasks retrieved successfully"
     data:
       type: array
       items:
         type: object
+      example:
+        eventUid: "evt_123"
+        taskUid: "task_456"
+        title: "Prepare stage"
+        status: "pending"
 
 ErrorResponse:
   type: object
   properties:
     success:
       type: boolean
+      example: false
     message:
       type: string
+      example: "Bad request"
     error:
       type: string
+      example: "VALIDATION_ERROR"
