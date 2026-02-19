@@ -1,0 +1,29 @@
+/auth/login:
+  post:
+    summary: Login
+    tags: [Auth]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/auth.schemas.yaml#/LoginRequest'
+    responses:
+      '200':
+        description: Login successful
+
+/auth/me:
+  get:
+    summary: Get current user from session
+    tags: [Auth]
+    responses:
+      '200':
+        description: User session info
+
+/auth/logout:
+  post:
+    summary: Logout
+    tags: [Auth]
+    responses:
+      '200':
+        description: Logout successful

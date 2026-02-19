@@ -1,0 +1,68 @@
+LoginRequest:
+  type: object
+  required: [tenantId, username, password]
+  properties:
+    tenantId:
+      type: string
+      example: tenant_001
+    username:
+      type: string
+      example: username
+    password:
+      type: string
+      format: password
+      example: password123
+
+LoginSuccessResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+      example: "Login successful"
+    data:
+      type: object
+      properties:
+        sessionID:
+          type: string
+          example: "abc123def456"
+
+MeResponse:
+  type: object
+  properties:
+    uid:
+      type: string
+
+    username:
+      type: string
+    email:
+      type: string
+    role:
+      type: string
+    status:
+      type: string
+    tenantId:
+      type: string
+    tenantUid:
+      type: string
+    sessionID:
+      type: string
+
+LogoutResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+
+ErrorResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    error:
+      type: string

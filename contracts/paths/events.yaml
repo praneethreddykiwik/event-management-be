@@ -1,0 +1,37 @@
+/events:
+  get:
+    summary: Get events
+    tags: [Events]
+    parameters:
+      - in: query
+        name: tenantUid
+        schema:
+          type: string
+      - in: query
+        name: eventUid
+        schema:
+          type: string
+      - in: query
+        name: assignedToUid
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Events list
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/events.schemas.yaml#/EventsListResponse'
+
+  post:
+    summary: Create event
+    tags: [Events]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/events.schemas.yaml#/CreateEventRequest'
+    responses:
+      '200':
+        description: Event created

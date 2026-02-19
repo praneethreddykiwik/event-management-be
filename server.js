@@ -10,6 +10,7 @@ const router = require("./src/routes/routes");
 const middlewares = require("./src/middlewares/middlewares");
 const YAML = require("yamljs");
 const swaggerUi = require("swagger-ui-express");
+const SwaggerParser = require("@apidevtools/swagger-parser");
 const path = require("path");
 
 const port = process.env.PORT || 3000;
@@ -28,8 +29,10 @@ const startServer = async () => {
     console.log("Routes mounted");
 
     // Mount swagger
-    const swaggerDocument = YAML.load(path.join(__dirname, "./swagger.yaml"));
-    app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    const swaggerPath = path.join(__dirname, "./contracts/swagger.yaml");
+    const swaggerDocument = await SwaggerParser.bundle(swaggerPath);
+
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     console.log("Swagger mounted");
 
     // Create HTTP server and initialize DB

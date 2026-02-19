@@ -1,0 +1,29 @@
+openapi: 3.0.3
+
+info:
+  title: EMDB API
+  description: Tenant, Auth, User, Event, Task APIs for EMDB
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4000/v1
+    description: Local
+  - url: https://ma63qkxkvb.ap-south-1.awsapprunner.com/v1
+    description: Dev
+
+tags:
+  - name: Auth
+    description: Authentication & Session Management
+  - name: Users
+    description: User Management
+  - name: Tenants
+    description: Tenant Management
+  - name: Events
+    description: Event Management
+  - name: Tasks
+    description: Task Management
+  - name: Redis
+    description: Redis Session Management
+
+paths:
+  $ref: "./paths/index.yaml"
