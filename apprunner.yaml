@@ -27,6 +27,8 @@ run:
     - name: DB_PORT
       value: "5432"
     - name: REDIS_HOST
-      value: rediss://my-redis-cluster.y9cnnb.0001.aps1.cache.amazonaws.com
+      value: redis://my-redis-cluster.y9cnnb.0001.aps1.cache.amazonaws.com
     - name: REDIS_PORT
       value: "6379"
+    - name: REDIS_TLS
+      value: false
