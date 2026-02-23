@@ -1,14 +1,14 @@
 version: 1.0
-runtime: docker
+runtime: nodejs22
 build:
   commands:
     build:
-      - echo "Build started on `date`"
-      - echo "Using Docker build process"
-    post_build:
-      - echo "Build completed on `date`"
+      - echo "Installing dependencies"
+      - npm install
+      - echo "Building application"
+      - npm run build
 run:
-  runtime-version: latest
+  runtime-version: 22.14.0
   command: npm start
   network:
     port: 8080
