@@ -12,20 +12,21 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      console.log("cors origin", origin);
+    origin: "*",
+    // origin: function (origin, callback) {
+    //   console.log("cors origin", origin);
 
-      if (!origin) {
-        return callback(null, true);
-      } // mobile apps, curl, etc.
+    //   if (!origin) {
+    //     return callback(null, true);
+    //   } // mobile apps, curl, etc.
 
-      if (allowedOrigins.includes(origin)) {
-        console.log("CORS allowed");
-        return callback(null, true);
-      }
-      console.log("CORS not allowed");
-      return callback(new Error("CORS not allowed"), false);
-    },
+    //   if (allowedOrigins.includes(origin)) {
+    //     console.log("CORS allowed");
+    //     return callback(null, true);
+    //   }
+    //   console.log("CORS not allowed");
+    //   return callback(new Error("CORS not allowed"), false);
+    // },
     credentials: true,
   }),
 );
