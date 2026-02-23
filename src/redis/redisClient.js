@@ -3,18 +3,22 @@ const { createClient } = require("redis");
 let client;
 
 /**
- * REDIS_URL examples:
+ * REDIS_HOST examples:
  * - Non TLS: redis://my-redis.xxxxxx.ap-south-1.cache.amazonaws.com:6379
  * - TLS:     rediss://my-redis.xxxxxx.ap-south-1.cache.amazonaws.com:6379
  */
 function getRedisClient() {
-  if (client) return client;
+  if (client) {
+    return client;
+  }
 
-  const redisUrl = process.env.REDIS_URL;
+  const redisUrl = process.env.REDIS_HOST;
   // const redisUrl =
   //   "rediss://master.cache-cluster-on-support.3xkamd.aps1.cache.amazonaws.com:6379";
 
-  if (!redisUrl) throw new Error("REDIS_URL is missing");
+  if (!redisUrl) {
+    throw new Error("REDIS_HOST is missing");
+  }
 
   // const isTls = true;
   const isTls =
