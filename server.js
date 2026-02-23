@@ -1,6 +1,10 @@
 const http = require("http");
-const dotenv = require("dotenv");
-dotenv.config();
+// const dotenv = require("dotenv");
+
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+// dotenv.config();
 
 const app = require("./src/app");
 const { testDbConnection } = require("./src/db/testDb");
