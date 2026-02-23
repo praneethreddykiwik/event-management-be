@@ -42,10 +42,11 @@ const initializeDb = async () => {
       user: secrets.DB_USER,
       password: secrets.DB_PASSWORD,
 
-      ssl:
-        process.env.DB_SSL === "true"
-          ? { rejectUnauthorized: false } // For lower envronments // checkHere
-          : false, // for prod
+      ssl: { rejectUnauthorized: false },
+      // ssl:
+      //   process.env.DB_SSL === "true"
+      //     ? { rejectUnauthorized: false } // For lower envronments // checkHere
+      //     : false, // for prod
 
       max: 10, // max connections // but checkHere
       idleTimeoutMillis: 30000,
