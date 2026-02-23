@@ -1,0 +1,32 @@
+version: 1.0
+runtime: docker
+build:
+  commands:
+    build:
+      - echo "Build started on `date`"
+      - echo "Using Docker build process"
+    post_build:
+      - echo "Build completed on `date`"
+run:
+  runtime-version: latest
+  command: npm start
+  network:
+    port: 8080
+    env: PORT
+  env:
+    - name: NODE_ENV
+      value: production
+    - name: DB_HOST
+      value: my-postgres-db.cny4we0u4x0v.ap-south-1.rds.amazonaws.com
+    - name: DB_USER
+      value: myuser
+    - name: DB_PASSWORD
+      value: MySecurePassword123!
+    - name: DB_NAME
+      value: postgres
+    - name: DB_PORT
+      value: "5432"
+    - name: REDIS_HOST
+      value: my-redis-cluster.y9cnnb.0001.aps1.cache.amazonaws.com
+    - name: REDIS_PORT
+      value: "6379"
