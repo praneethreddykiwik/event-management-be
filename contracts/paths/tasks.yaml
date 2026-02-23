@@ -1,0 +1,116 @@
+/tasks:
+  get:
+    summary: Get tasks by event
+    tags: [Tasks]
+    parameters:
+      - in: query
+        name: eventUid
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: tenantUid
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Tasks list
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tasks.schemas.yaml#/TasksListResponse'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tasks.schemas.yaml#/ErrorResponse'
+
+  post:
+    summary: Create task
+    tags: [Tasks]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/tasks.schemas.yaml#/CreateTaskRequest'
+    responses:
+      '201':
+        description: Task created
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tasks.schemas.yaml#/TaskResponse'
+
+/tasks/assign-task:
+  post:
+    summary: Assign task
+    tags: [Tasks]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/tasks.schemas.yaml#/AssignTaskRequest'
+    responses:
+      '200':
+        description: Task assigned
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tasks.schemas.yaml#/TaskResponse'
+
+/tasks/accept-task:
+  post:
+    summary: Accept task
+    tags: [Tasks]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/tasks.schemas.yaml#/AcceptTaskRequest'
+    responses:
+      '200':
+        description: Task accepted
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tasks.schemas.yaml#/TaskResponse'
+
+/tasks/decline-task:
+  post:
+    summary: Decline task
+    tags: [Tasks]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/tasks.schemas.yaml#/DeclineTaskRequest'
+    responses:
+      '200':
+        description: Task declined
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tasks.schemas.yaml#/TaskResponse'
+
+/tasks/edit:
+  post:
+    summary: Update task
+    tags: [Tasks]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/tasks.schemas.yaml#/UpdateTaskRequest'
+    responses:
+      '200':
+        description: Task updated
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/tasks.schemas.yaml#/TaskResponse'

@@ -1,0 +1,50 @@
+/auth/login:
+  $ref: './auth.yaml#/~1auth~1login'
+
+/auth/me:
+  $ref: './auth.yaml#/~1auth~1me'
+
+/auth/logout:
+  $ref: './auth.yaml#/~1auth~1logout'
+
+/events:
+  $ref: './events.yaml#/~1events'
+
+/tasks:
+  $ref: './tasks.yaml#/~1tasks'
+
+/tasks/assign-task:
+  $ref: './tasks.yaml#/~1tasks~1assign-task'
+
+/tasks/accept-task:
+  $ref: './tasks.yaml#/~1tasks~1accept-task'
+
+/tasks/decline-task:
+  $ref: './tasks.yaml#/~1tasks~1decline-task'
+
+/tasks/edit:
+  $ref: './tasks.yaml#/~1tasks~1edit'
+
+/tenants:
+  $ref: './tenants.yaml#/~1tenants'
+
+/tenants/{tenantId}:
+  $ref: './tenants.yaml#/~1tenants~1{tenantId}'
+
+/tenants/event-managers:
+  $ref: './tenants.yaml#/~1tenants~1event-managers'
+
+/users:
+  $ref: './users.yaml#/~1users'
+
+/users/me:
+  $ref: './users.yaml#/~1users~1me'
+
+/users/user-events-tasks:
+  $ref: './users.yaml#/~1users~1user-events-tasks'
+
+/users/delete-user:
+  $ref: './users.yaml#/~1users~1delete-user'
+
+/redis-session:
+  $ref: './redis-session.yaml#/~1redis-session'

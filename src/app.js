@@ -27,7 +27,7 @@ app.use(
       return callback(new Error("CORS not allowed"), false);
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());

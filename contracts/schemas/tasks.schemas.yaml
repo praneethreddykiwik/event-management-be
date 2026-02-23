@@ -1,0 +1,99 @@
+CreateTaskRequest:
+  type: object
+  required: [tenantUid, eventUid, title]
+  properties:
+    tenantUid:
+      type: string
+    eventUid:
+      type: string
+    title:
+      type: string
+    createdByUid:
+      type: string
+    updatedByUid:
+      type: string
+
+AssignTaskRequest:
+  type: object
+  required: [taskUid, assignedToUid]
+  properties:
+    taskUid:
+      type: string
+    assignedToUid:
+      type: string
+    updatedByUid:
+      type: string
+
+AcceptTaskRequest:
+  type: object
+  required: [taskUid]
+  properties:
+    taskUid:
+      type: string
+    assignedToUid:
+      type: string
+
+DeclineTaskRequest:
+  type: object
+  required: [taskUid]
+  properties:
+    taskUid:
+      type: string
+    declinedByUid:
+      type: string
+
+UpdateTaskRequest:
+  type: object
+  required: [taskUid]
+  properties:
+    tenantUid:
+      type: string
+    taskUid:
+      type: string
+    title:
+      type: string
+    description:
+      type: string
+    priority:
+      type: string
+    dueAt:
+      type: string
+      format: date-time
+    assignedToUid:
+      type: string
+    status:
+      type: string
+    updatedByUid:
+      type: string
+
+TaskResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: object
+
+TasksListResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    data:
+      type: array
+      items:
+        type: object
+
+ErrorResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+    error:
+      type: string
