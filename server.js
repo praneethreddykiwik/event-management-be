@@ -1,9 +1,5 @@
 const http = require("http");
 const dotenv = require("dotenv");
-
-// if (process.env.NODE_ENV !== "production") {
-//   require("dotenv").config();
-// }
 dotenv.config();
 
 const app = require("./src/app");
@@ -12,14 +8,11 @@ const { initializeDb } = require("./src/db/db");
 const { registerRedis } = require("./src/redis/redisSessionRegistration");
 const router = require("./src/routes/routes");
 const middlewares = require("./src/middlewares/middlewares");
-const swaggerUi = require("swagger-ui-express");
-const SwaggerParser = require("@apidevtools/swagger-parser");
-const path = require("path");
+const utils = require("./src/utils/server.utils");
+const { mainHealth } = require("./src/controllers/health.controller");
 
 const port = process.env.PORT || 8080;
 const version = "/v1";
-
-console.log("App Starting...");
 
 const startServer = async () => {
   console.log("Starting server...");
@@ -28,31 +21,18 @@ const startServer = async () => {
     await registerRedis(app);
 
     // Mount routes AFTER session middleware
-    app.use("/health", (req, res) => {
-      console.log("/health working");
-      res.status(200).json({ status: "working" });
-    });
+    app.use("/health", mainHealth);
     app.use(version, middlewares.logRoute, router);
     console.log("Routes mounted");
 
     // Mount swagger
-    const swaggerPath = path.join(__dirname, "./contracts/swagger.yaml");
-    const swaggerDocument = await SwaggerParser.bundle(swaggerPath);
-
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    console.log("Swagger mounted");
+    await utils.swaggerHandler(app);
 
     // Create HTTP server and initialize DB
     console.log("Creating HTTP server");
     const server = http.createServer(app);
-
-    server.on("error", (err) => {
-      console.error("Server error:", err);
-    });
-
-    app.on("error", (err) => {
-      console.error("App error:", err);
-    });
+    server.on("error", utils.serverErrorHandler);
+    app.on("error", utils.appOnError);
 
     await initializeDb();
 
@@ -68,3 +48,6 @@ const startServer = async () => {
 };
 
 startServer();
+
+// update swagger
+// make the image sizes low

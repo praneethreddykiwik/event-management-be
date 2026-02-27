@@ -34,9 +34,15 @@ const patchHealth = (req, res) => {
   });
 };
 
+const mainHealth = (req, res) => {
+  console.log("/health working");
+  res.status(200).json({ success: "Main health Working" });
+};
+
 module.exports = {
   healthPost,
   getHealth,
   deleteHealth,
   patchHealth,
+  mainHealth,
 };

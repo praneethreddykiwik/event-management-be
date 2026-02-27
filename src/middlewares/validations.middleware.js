@@ -82,7 +82,6 @@ const deleteEventVal = (req, res, next) => {
   next();
 };
 
-
 const loginValidation = (req, res, next) => {
   if (!req.body.tenantId) {
     return res.status(400).json(errorRes("Missing Tenant ID", {}));
@@ -251,7 +250,7 @@ const updateEventVal = (req, res, next) => {
   ];
 
   const hasUpdatableField = updatableFields.some(
-    (field) => req.body?.[field] !== undefined
+    (field) => req.body?.[field] !== undefined,
   );
 
   if (!hasUpdatableField) {
