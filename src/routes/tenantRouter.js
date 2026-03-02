@@ -8,16 +8,13 @@ tenantRouter.get("/", controllers.getAllTenants);
 tenantRouter.get(
   "/:tenantId",
   validations.getTenantByIdVal,
-  controllers.getTenantById
+  controllers.getTenantById,
 );
 tenantRouter.post(
   "/",
   validations.createTenantVal,
-  controllers.createTenantCtrl
+  controllers.createTenantCtrl,
 );
-tenantRouter.post(
-  "/event-managers",
-  controllers.createManager
-);
+tenantRouter.post("/event-managers", controllers.createManager);
 
 module.exports = tenantRouter;

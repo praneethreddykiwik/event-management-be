@@ -8,8 +8,8 @@ info:
 servers:
   - url: http://localhost:4000/v1
     description: Local
-  - url: https://ma63qkxkvb.ap-south-1.awsapprunner.com/v1
-    description: Dev
+  - url: https://ww9v3wwhmp.ap-south-1.awsapprunner.com
+    description: Prod
 
 tags:
   - name: Auth

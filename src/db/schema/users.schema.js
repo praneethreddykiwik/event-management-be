@@ -59,3 +59,38 @@ ALTER COLUMN first_name SET NOT NULL,
 ALTER COLUMN mobile SET NOT NULL;
 
 `;
+
+// stage 2
+
+const createTable = `CREATE TABLE IF NOT EXISTS users (
+  uid uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_uid uuid NOT NULL,
+  CONSTRAINT fk_users_tenant_uid
+    FOREIGN KEY (tenant_uid)
+    REFERENCES "EMDB_SCHEMA".tenants(uid)
+    ON DELETE CASCADE,
+  username text NOT NULL,
+  email text NOT NULL,
+  password_hash text NOT NULL,
+  role text NOT NULL,
+  CONSTRAINT users_role_check
+    CHECK (role IN ('admin', 'event_manager', 'vendor', 'customer')),
+  status text NOT NULL DEFAULT 'ACTIVE',
+  CONSTRAINT users_status_check
+    CHECK (status IN ('ACTIVE', 'DISABLED')),
+  first_name text NOT NULL,
+  last_name text,
+  mobile bigint NOT NULL
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_users_tenant_uid
+  ON users (tenant_uid);
+
+-- Unique: email per tenant (case-insensitive)
+CREATE UNIQUE INDEX IF NOT EXISTS users_tenant_email_unique
+  ON users (tenant_uid, lower(email));
+
+-- Unique: username per tenant (case-sensitive as you had)
+CREATE UNIQUE INDEX IF NOT EXISTS users_tenant_username_unique
+  ON users (tenant_uid, username);`;

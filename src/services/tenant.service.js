@@ -19,7 +19,7 @@ const getTenantByIdService = async (tenantId) => {
       FROM tenants
       WHERE tenant_id = $(tenant_id)
       `,
-    { tenant_id: tenantId }
+    { tenant_id: tenantId },
   );
 
   return response;
@@ -36,7 +36,7 @@ const createTenantService = async (req) => {
       VALUES ($(tenantId), $(name), $(updatedBy))
       RETURNING uid, tenant_id, name, status, created_at, updated_at, updated_by 
       `,
-    { tenantId, name, updatedBy }
+    { tenantId, name, updatedBy },
   );
 
   return response;
@@ -61,16 +61,15 @@ const createTenantServices = async (req) => {
         updated_at, 
         updated_by
     `,
-    { tenantId, name, updatedBy }
+    { tenantId, name, updatedBy },
   );
 
   return response;
 };
 
-
 module.exports = {
   fetchAllTenantsService,
   createTenantService,
   getTenantByIdService,
-  createTenantServices
+  createTenantServices,
 };

@@ -29,29 +29,17 @@ const initializeDb = async () => {
   console.log("Initializing DB...");
   try {
     const secrets = loadEnvSecrets();
-    // const secrets =
-    //   process.env.NODE_ENV === "local"
-    //     ? loadEnvSecrets()
-    //     : await loadSecretsSM();
-    // console.log("initializeDb secrets fetched successfully", secrets);
-
     db = pgp({
       host: secrets.DB_HOST,
       port: secrets.DB_PORT,
       database: secrets.DB_NAME,
       user: secrets.DB_USER,
       password: secrets.DB_PASSWORD,
-
       ssl: { rejectUnauthorized: false },
-      // ssl:
-      //   process.env.DB_SSL === "true"
-      //     ? { rejectUnauthorized: false } // For lower envronments // checkHere
-      //     : false, // for prod
-
       max: 10, // max connections // but checkHere
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 5000,
-      options: "-c search_path=emdb-schema,public",
+      options: '-c search_path="EMDB_SCHEMA",public',
     });
     console.log("initializeDb Successfully...");
   } catch (error) {

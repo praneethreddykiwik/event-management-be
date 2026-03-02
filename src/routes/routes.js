@@ -13,8 +13,8 @@ const router = express.Router();
 router.use("/health", healthRouter);
 router.use("/auth", authRouter);
 router.use("/events", eventsRouter); // admins, event managers, workers, vendors
-router.use("/users", requireAuth, userRouter); // admins, event managers, workers, vendors
-router.use("/tenants", requireAuth, tenantRouter); // admins, event managers, workers, vendors
+router.use("/users", userRouter); // admins, event managers, workers, vendors
+router.use("/tenants", tenantRouter); // admins, event managers, workers, vendors
 router.use("/tasks", taskRouter); // tasks, status updates
 // router.use("/notofications"); // WhatsApp and email integration
 router.use("/redis-session", redisRouter);
