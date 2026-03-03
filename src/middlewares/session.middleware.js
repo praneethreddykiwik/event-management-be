@@ -10,7 +10,7 @@ if (!RedisStore && typeof connectRedisModule === "function") {
 
 if (!RedisStore) {
   throw new Error(
-    "Could not resolve RedisStore from connect-redis. Check connect-redis version."
+    "Could not resolve RedisStore from connect-redis. Check connect-redis version.",
   );
 }
 
@@ -22,28 +22,44 @@ async function buildSessionMiddleware() {
   const isProd = process.env.NODE_ENV === "production";
 
   return session({
-    store: new RedisStore({ client: redisClient }),
-    name: process.env.SESSION_COOKIE_NAME || "emdb.sid",
-    // secret: "super-secret",
+    store: new RedisStore({
+      client: redisClient,
+      prefix: "sess:",
+    }),
     secret: process.env.SESSION_SECRET,
+    name: process.env.SESSION_COOKIE_NAME || "emdb.sid",
     resave: false,
     saveUninitialized: false,
-
     cookie: {
-      httpOnly: true,
-
-      // App Runner is HTTPS behind proxy → in prod secure must be true.
-      // For local http://localhost, keep it false otherwise cookie won’t set.
-      secure: isProd,
-
-      // If FE and BE are on different domains: use "none".
-      // If same site: use "lax".
-      sameSite: process.env.SESSION_SAMESITE || (isProd ? "none" : "lax"),
-      // sameSite: "none",
-
-      maxAge: Number(process.env.SESSION_MAX_AGE_MS || 86400000), // 1 day
+      secure: process.env.SESSION_SECURE === "true",
+      httpOnly: process.env.SESSION_HTTP_ONLY === "true",
+      maxAge: parseInt(process.env.SESSION_MAX_AGE) || 86400000,
+      sameSite: process.env.SESSION_SAMESITE || "lax",
     },
   });
+  // return session({
+  //   store: new RedisStore({ client: redisClient }),
+  //   name: process.env.SESSION_COOKIE_NAME || "emdb.sid",
+  //   // secret: "super-secret",
+  //   secret: process.env.SESSION_SECRET,
+  //   resave: false,
+  //   saveUninitialized: false,
+
+  //   cookie: {
+  //     httpOnly: true,
+
+  //     // App Runner is HTTPS behind proxy → in prod secure must be true.
+  //     // For local http://localhost, keep it false otherwise cookie won’t set.
+  //     secure: isProd,
+
+  //     // If FE and BE are on different domains: use "none".
+  //     // If same site: use "lax".
+  //     sameSite: process.env.SESSION_SAMESITE || (isProd ? "none" : "lax"),
+  //     // sameSite: "none",
+
+  //     maxAge: Number(process.env.SESSION_MAX_AGE_MS || 86400000), // 1 day
+  //   },
+  // });
 }
 
 module.exports = { buildSessionMiddleware };

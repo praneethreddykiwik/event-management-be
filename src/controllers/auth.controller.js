@@ -58,12 +58,32 @@ const authenticateUserCtrl = async (req, res, next) => {
       sessionData: req.session,
       user,
     });
-    res.status(200).json(
-      successRes("Login successful", {
-        sessionID: req.sessionID,
-      }),
-    );
-    next();
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json(errorRes("Session save error", err));
+      }
+
+      console.log("authenticateUserCtrl success", {
+        sessionData: req.session,
+        user,
+      });
+
+      res.status(200).json(
+        successRes("Login successful", {
+          sessionID: req.sessionID,
+        }),
+      );
+      next();
+    });
+
+    // checkHere
+    // res.status(200).json(
+    //   successRes("Login successful", {
+    //     sessionID: req.sessionID,
+    //   }),
+    // );
+    // next();
   } catch (error) {
     console.error("authenticateUserCtrl", error);
     res.status(401).json(errorRes("Authentication failed", error));

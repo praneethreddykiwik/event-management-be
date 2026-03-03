@@ -27,14 +27,22 @@ run:
     - name: DB_PORT
       value: "5432"
     - name: REDIS_HOST
-      value: redis://my-redis-cluster.y9cnnb.0001.aps1.cache.amazonaws.com
+      value: my-redis-cluster.y9cnnb.0001.aps1.cache.amazonaws.com
     - name: REDIS_PORT
       value: "6379"
+    - name: REDIS_URL
+      value: redis://my-redis-cluster.y9cnnb.0001.aps1.cache.amazonaws.com:6379
     - name: REDIS_TLS
-      value: false
+      value: "false"
     - name: SESSION_SECRET
-      value: "super-secret"
+      value: "super-secret-key-change-in-production"
     - name: SESSION_COOKIE_NAME
       value: "emdb.sid"
     - name: SESSION_SAMESITE
       value: "lax"
+    - name: SESSION_SECURE
+      value: "false"
+    - name: SESSION_HTTP_ONLY
+      value: "true"
+    - name: SESSION_MAX_AGE
+      value: "86400000"
