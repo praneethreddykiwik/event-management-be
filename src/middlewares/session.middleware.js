@@ -30,9 +30,10 @@ async function buildSessionMiddleware() {
     name: process.env.SESSION_COOKIE_NAME || "emdb.sid",
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       secure: process.env.SESSION_SECURE === "true",
-      httpOnly: process.env.SESSION_HTTP_ONLY === "true",
+      httpOnly: "true",
       maxAge: parseInt(process.env.SESSION_MAX_AGE) || 86400000,
       sameSite: process.env.SESSION_SAMESITE || "lax",
     },
