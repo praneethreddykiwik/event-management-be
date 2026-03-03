@@ -131,7 +131,7 @@ const getTaskService = async (query) => {
       from tasks t
       ${whereClause}
       `,
-    { ...params }
+    { ...params },
   );
   // join tenants t on t.uid = t.tenant_uid
 
@@ -147,16 +147,22 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
     e.scheduled_at,
     e.venue,
     e.status           AS "eventStatus",
+
     t.uid              AS "taskUid",
     t.title            AS "taskTitle",
     t.status           AS "taskStatus",
     t.priority,
-    t.due_at           AS "dueAt"
+    t.due_at           AS "taskDueAt",
+    t.description AS "taskDescription",
+    t.due_at AS "taskDueAt",
+    t.assigned_to_uid AS "taskAssignedToUid",
+    t.created_at AS "taskCreatedAt"
+
   FROM events e
   JOIN tasks t
     ON t.event_uid = e.uid
   JOIN users u
-    ON u.uid = t.assigned_to_uid
+    ON u.uid = e.assigned_to_uid
   WHERE e.uid = $(eventUid)
   ORDER BY
     e.scheduled_at DESC;

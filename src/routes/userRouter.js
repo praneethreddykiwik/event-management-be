@@ -5,13 +5,14 @@ const validations = require("../middlewares/validations.middleware");
 const router = express.Router();
 
 router.get("/", userController.getUsersCtrl);
+router.get("/event-managers", userController.getEventManagersCtrl);
 router.get("/me", userController.getMeCtrl);
 router.post("/", validations.createUserVal, userController.createUserCtrl);
 router.put("/", validations.updateUserVal, userController.updateUserCtrl);
 router.get(
   "/user-events-tasks",
   validations.userEventsTasksVal,
-  userController.userEventsTasksCtrl
+  userController.userEventsTasksCtrl,
 );
 router.delete("/delete-user", userController.deleteUserCtrl);
 

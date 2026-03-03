@@ -1,12 +1,12 @@
 /** @format */
 
-const { getDb } = require('../db/db');
+const { getDb } = require("../db/db");
 
 const deleteEventService = async (eventId) => {
   const deleted = await Event.findOneAndDelete({ eventId });
 
   if (!deleted) {
-    const err = new Error('Event not found');
+    const err = new Error("Event not found");
     err.statusCode = 404;
     throw err;
   }
@@ -25,7 +25,7 @@ const createUserService = async (payload) => {
       returning
         uid, username, email, role, status
     `,
-    payload
+    payload,
   );
 
   return response;
@@ -56,8 +56,8 @@ const getUsersService = async (query, providePasswordHash) => {
   });
 
   const whereClause = conditions.length
-    ? `where ${conditions.join(' and ')}`
-    : '';
+    ? `where ${conditions.join(" and ")}`
+    : "";
 
   const db = getDb();
   const users = await db.any(
@@ -71,7 +71,7 @@ const getUsersService = async (query, providePasswordHash) => {
         u.first_name as "firstName",
         u.last_name as "lastName", 
         u.mobile,
-        ${providePasswordHash ? 'u.password_hash,' : ''}
+        ${providePasswordHash ? "u.password_hash," : ""}
         t.tenant_id,
         t.uid as "tenantUid"
       from users u
@@ -79,7 +79,60 @@ const getUsersService = async (query, providePasswordHash) => {
       ${whereClause}
       limit $(limit) offset $(offset)
     `,
-    { ...params, limit, offset }
+    { ...params, limit, offset },
+  );
+
+  return users;
+};
+
+const getEventManagersService = async (query, providePasswordHash) => {
+  const limit = query.limit || 50;
+  const offset = query.offset || 0;
+
+  console.log("abdul query", query);
+
+  const conditions = [];
+  const params = {};
+
+  const queries = [
+    { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
+    { query: "username", condition: "u.username = $(username)" },
+    { query: "email", condition: "lower(u.email) = lower($(email))" },
+    { query: "status", condition: "u.status = $(status)" },
+    { query: "role", condition: "u.role = $(role)" },
+  ];
+
+  queries.forEach((el) => {
+    if (query[el.query]) {
+      conditions.push(el.condition);
+      params[el.query] = query[el.query];
+    }
+  });
+
+  const whereClause = conditions.length
+    ? `where ${conditions.join(" and ")}`
+    : "";
+
+  const db = getDb();
+  const users = await db.any(
+    `
+      select
+        u.uid,
+        u.username,
+        u.email,
+        u.role,
+        u.status,
+        u.first_name as "firstName",
+        u.last_name as "lastName", 
+        u.mobile,
+        ${providePasswordHash ? "u.password_hash," : ""}
+        t.tenant_id,
+        t.uid as "tenantUid"
+      from users u
+      join tenants t on t.uid = u.tenant_uid
+      where t.tenant_id = $(tenantId) and u.role in ('event_manager', 'admin')
+    `,
+    { tenantId: query.tenantId },
   );
 
   return users;
@@ -105,7 +158,7 @@ const updateUserService = async (data) => {
     WHERE uid = $(uid)
     RETURNING *;
     `,
-    { email, username, role, status, uid, firstName, lastName, mobile }
+    { email, username, role, status, uid, firstName, lastName, mobile },
   );
 
   return response;
@@ -155,7 +208,7 @@ ORDER BY e.created_at DESC, t.created_at ASC;
 `;
   const db = getDb();
   const rows = await db.any(sql, { tenantUid, assignedToUid });
-
+  console.log("abdul rows", { tenantUid, assignedToUid });
   return rows;
 };
 
@@ -173,11 +226,11 @@ const deleteUserService = async (uid) => {
         SELECT 1 FROM tasks WHERE assigned_to_uid = $(uid)
       ) AS in_tasks
     `,
-    { uid }
+    { uid },
   );
 
   if (involvement.in_events || involvement.in_tasks) {
-    const err = new Error('User is involved in event or tasks');
+    const err = new Error("User is involved in event or tasks");
     err.code = 409; // Conflict
     throw err;
   }
@@ -189,11 +242,11 @@ const deleteUserService = async (uid) => {
     WHERE uid = $(uid)
     RETURNING uid, username, email;
     `,
-    { uid }
+    { uid },
   );
 
   if (!deletedUser) {
-    const err = new Error('User not found');
+    const err = new Error("User not found");
     err.code = 404;
     throw err;
   }
@@ -208,4 +261,5 @@ module.exports = {
   updateUserService,
   userEventsTasksService,
   deleteUserService,
+  getEventManagersService,
 };
