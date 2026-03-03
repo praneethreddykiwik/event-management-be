@@ -10,7 +10,7 @@ const loadUser = async (req, res, next) => {
 
     const users = await userServices.getUsersService(
       query,
-      "providePasswordHash"
+      "providePasswordHash",
     );
 
     if (!users || !users.length) {
@@ -35,7 +35,7 @@ const authenticateUserCtrl = async (req, res, next) => {
 
     const isValidPassword = await utils.comparePassword(
       req.body.password,
-      user.password_hash
+      user.password_hash,
     );
     console.log("authenticateUserCtrl isValidPassword", isValidPassword);
 
@@ -61,7 +61,7 @@ const authenticateUserCtrl = async (req, res, next) => {
     res.status(200).json(
       successRes("Login successful", {
         sessionID: req.sessionID,
-      })
+      }),
     );
     next();
   } catch (error) {
@@ -83,6 +83,11 @@ const logoutCtrl = (req, res) => {
 
 const loadUserFromSessionCtrl = (req, res) => {
   try {
+    console.log("abdul loadUserFromSessionCtrl", {
+      session: req.session,
+      sessionUser: req.session.user,
+    });
+
     if (!req.session || !req.session.user) {
       return res
         .status(401)

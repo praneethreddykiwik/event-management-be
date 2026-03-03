@@ -6,7 +6,6 @@ const taskRouter = require("./taskRouter");
 const authRouter = require("./authRouter");
 const eventsRouter = require("./eventsRouter");
 const { redisRouter } = require("./redisRouter");
-const { requireAuth } = require("../middlewares/middlewares");
 
 const router = express.Router();
 
