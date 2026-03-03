@@ -11,36 +11,50 @@ function getRedisClient() {
   if (client) {
     return client;
   }
+  console.log("Redis Configuration:", {
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: process.env.REDIS_PORT,
+    REDIS_URL: process.env.REDIS_URL,
+  });
 
-  const redisUrl = process.env.REDIS_HOST;
-  // const redisUrl =
-  //   "rediss://master.cache-cluster-on-support.3xkamd.aps1.cache.amazonaws.com:6379";
-
-  if (!redisUrl) {
-    throw new Error("REDIS_HOST is missing");
-  }
-
-  // const isTls = true;
-  const isTls =
-    process.env.REDIS_TLS === "true" || redisUrl.startsWith("rediss://");
-
-  client = createClient({
-    url: redisUrl,
+  // Use host/port configuration (recommended for ElastiCache)
+  const redisClient = createClient({
     socket: {
-      tls: isTls,
-      // For ElastiCache TLS, many teams set this false.
-      // If you want strict validation later, set it to true and use proper CA/certs.
-      rejectUnauthorized: false,
-      // rejectUnauthorized: process.env.REDIS_REJECT_UNAUTHORIZED !== "false",
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT) || 6379,
+      // No TLS needed since the cluster has encryption disabled
+      tls: false,
+      connectTimeout: 10000,
+      lazyConnect: true,
+    },
+    // Add retry strategy
+    retry_strategy: (options) => {
+      if (options.error && options.error.code === "ECONNREFUSED") {
+        return new Error("The server refused the connection");
+      }
+      if (options.total_retry_time > 1000 * 60 * 60) {
+        return new Error("Retry time exhausted");
+      }
+      if (options.attempt > 10) {
+        return undefined;
+      }
+      return Math.min(options.attempt * 100, 3000);
     },
   });
 
-  client.on("error", (err) => {
-    console.error("Redis error:", err);
-    process.exit(1);
+  redisClient.on("error", (err) => {
+    console.error("Redis Client Error:", err);
   });
 
-  return client;
+  redisClient.on("connect", () => {
+    console.log("Redis connection Starting");
+  });
+
+  redisClient.on("ready", () => {
+    console.log("Redis connection Success");
+  });
+
+  return redisClient;
 }
 
 async function connectRedis() {
