@@ -69,13 +69,6 @@ const loginUser = (req, res) => {
   });
 };
 
-const getMeCtrl = (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json(errorRes("Not authenticated"));
-  }
-  return res.status(200).json(successRes("Current user", req.session.user));
-};
-
 const updateUserCtrl = async (req, res) => {
   try {
     const { uid, mobile, status, role, username, email, firstName, lastName } =
@@ -163,7 +156,6 @@ const userEventsTasksCtrl = async (req, res) => {
       tenantUid,
       assignedToUid,
     );
-    console.log("abdul data", data);
 
     const eventIds = data
       .map((el) => el.eventUid)
@@ -243,7 +235,6 @@ module.exports = {
   getUserById,
   createUser,
   loginUser,
-  getMeCtrl,
   updateUserCtrl,
   createUserCtrl,
   userEventsTasksCtrl,

@@ -32,6 +32,7 @@ const loadUser = async (req, res, next) => {
 const authenticateUserCtrl = async (req, res, next) => {
   try {
     const { user } = req.ctx;
+    console.log("abdul user", user);
 
     const isValidPassword = await utils.comparePassword(
       req.body.password,
@@ -52,6 +53,8 @@ const authenticateUserCtrl = async (req, res, next) => {
       status: user.status,
       tenantId: user.tenant_id,
       tenantUid: user.tenantUid,
+      firstName: user.firstName,
+      lastName: user.firstName,
     };
 
     console.log("authenticateUserCtrl success", {
@@ -76,14 +79,6 @@ const authenticateUserCtrl = async (req, res, next) => {
       );
       next();
     });
-
-    // checkHere
-    // res.status(200).json(
-    //   successRes("Login successful", {
-    //     sessionID: req.sessionID,
-    //   }),
-    // );
-    // next();
   } catch (error) {
     console.error("authenticateUserCtrl", error);
     res.status(401).json(errorRes("Authentication failed", error));
@@ -103,7 +98,7 @@ const logoutCtrl = (req, res) => {
 
 const loadUserFromSessionCtrl = (req, res) => {
   try {
-    console.log("abdul loadUserFromSessionCtrl", {
+    console.log("loadUserFromSessionCtrl", {
       session: req.session,
       sessionUser: req.session.user,
     });

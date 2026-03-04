@@ -35,8 +35,6 @@ const getUsersService = async (query, providePasswordHash) => {
   const limit = query.limit || 50;
   const offset = query.offset || 0;
 
-  console.log("abdul query", query);
-
   const conditions = [];
   const params = {};
 
@@ -86,11 +84,6 @@ const getUsersService = async (query, providePasswordHash) => {
 };
 
 const getEventManagersService = async (query, providePasswordHash) => {
-  const limit = query.limit || 50;
-  const offset = query.offset || 0;
-
-  console.log("abdul query", query);
-
   const conditions = [];
   const params = {};
 
@@ -208,7 +201,6 @@ ORDER BY e.created_at DESC, t.created_at ASC;
 `;
   const db = getDb();
   const rows = await db.any(sql, { tenantUid, assignedToUid });
-  console.log("abdul rows", { tenantUid, assignedToUid });
   return rows;
 };
 
