@@ -156,49 +156,52 @@ const updateUserService = async (data) => {
 
   return response;
 };
-
 const userEventsTasksService = async (tenantUid, assignedToUid) => {
   const sql = `
-  SELECT
-  e.uid AS "eventUid",
-  e.event_name AS "eventName",
-  e.event_type AS "eventType",
-  e.scheduled_at AS "evenScheduledAt",
-  e.venue AS "eventVenue",
-  e.expected_attendees AS "expectedAttendees",
-  e.status AS "eventStatus",
-  e.assigned_to_uid AS "eventAssignedToUid",
-  e.created_at AS "eventCreatedAt",
+    SELECT
+      e.uid AS "eventUid",
+      e.event_name AS "eventName",
+      e.event_type AS "eventType",
+      e.scheduled_at AS "eventScheduledAt",
+      e.venue AS "eventVenue",
+      e.expected_attendees AS "expectedAttendees",
+      e.status AS "eventStatus",
+      e.assigned_to_uid AS "eventAssignedToUid",
+      e.created_at AS "eventCreatedAt",
 
-  u.first_name AS "eventAssignedToFirstName",
-  u.last_name AS "eventAssignedToLastName",
-  u.username AS "eventAssignedToUsername",
+      assigned.first_name AS "eventAssignedToFirstName",
+      assigned.last_name AS "eventAssignedToLastName",
+      assigned.username AS "eventAssignedToUsername",
 
+      t.uid AS "taskUid",
+      t.title AS "taskTitle",
+      t.status AS "taskStatus",
+      t.description AS "taskDescription",
+      t.due_at AS "taskDueAt",
+      t.assigned_to_uid AS "taskAssignedToUid",
+      t.created_at AS "taskCreatedAt"
 
-  t.uid AS "taskUid",
-  t.title AS "taskTitle",
-  t.status AS "taskStatus",
-  t.description AS "taskDescription",
-  t.due_at AS "taskDueAt",
-  t.assigned_to_uid AS "taskAssignedToUid",
-  t.created_at AS "taskCreatedAt"
+    FROM events e
 
-FROM events e
+    LEFT JOIN users assigned
+      ON assigned.uid = e.assigned_to_uid
 
+    JOIN users me
+      ON me.uid = $(assignedToUid)
 
-LEFT JOIN users u
-  ON u.uid = e.assigned_to_uid
+    LEFT JOIN tasks t
+      ON t.event_uid = e.uid
+      AND t.status <> 'deleted'
 
-LEFT JOIN tasks t
-  ON t.event_uid = e.uid
-  AND t.status <> 'deleted'
+    WHERE e.tenant_uid = $(tenantUid)
+      AND e.status <> 'deleted'
+      AND (
+        me.role = 'admin'
+        OR e.assigned_to_uid = $(assignedToUid)
+      )
 
-WHERE e.tenant_uid = $(tenantUid)
-  AND e.assigned_to_uid = $(assignedToUid)
-  AND e.status <> 'deleted'
-
-ORDER BY e.created_at DESC, t.created_at ASC;
-`;
+    ORDER BY e.created_at DESC, t.created_at ASC;
+  `;
   const db = getDb();
   const rows = await db.any(sql, { tenantUid, assignedToUid });
   return rows;
