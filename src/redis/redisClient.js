@@ -59,7 +59,9 @@ function getRedisClient() {
 
 async function connectRedis() {
   const c = getRedisClient();
-  if (!c.isOpen) await c.connect();
+  if (!c.isOpen) {
+    await c.connect();
+  }
   return c;
 }
 

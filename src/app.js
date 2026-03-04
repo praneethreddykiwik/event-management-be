@@ -14,5 +14,6 @@ app.use(
 
 app.use(express.json());
 app.use(morgan("combined"));
+app.set("trust proxy", 1);
 
 module.exports = app;

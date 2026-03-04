@@ -33,7 +33,7 @@ async function buildSessionMiddleware() {
     proxy: true,
     cookie: {
       secure: process.env.SESSION_SECURE === "true",
-      httpOnly: "true",
+      httpOnly: true,
       maxAge: parseInt(process.env.SESSION_MAX_AGE) || 86400000,
       sameSite: process.env.SESSION_SAMESITE || "lax",
     },
