@@ -161,22 +161,39 @@ const userEventsTasksCtrl = async (req, res) => {
       .map((el) => el.eventUid)
       .filter((fl, i, arr) => i === arr.findIndex((fi) => fi === fl));
 
+    const countObj = {
+      totalTaskCount: 0,
+
+      notStarted: 0,
+      assigned: 0,
+      inProgress: 0,
+      completed: 0,
+      cancelled: 0,
+      deleted: 0,
+    };
+
     const userEventsAndTasks = eventIds.map((eventId) => {
       const eventObj = data.find((fn) => fn.eventUid === eventId);
       const tasks = data
         .filter((fl) => fl.eventUid === eventId && fl.taskUid)
-        .map((m) => ({
-          taskUid: m.taskUid,
-          taskTitle: m.taskTitle,
-          taskStatus: m.taskStatus,
-          taskDescription: m.taskDescription,
-          taskDueAt: m.taskDueAt,
-          taskAssignedToUid: m.taskAssignedToUid,
-          taskCreatedAt: m.taskCreatedAt,
-          eventVenue: m.eventVenue,
-          taskPriority: m.taskPriority,
-        }));
+        .map((m) => {
+          const countKey = utils.snakeToCamel(m.taskStatus);
+          ++countObj[countKey];
+          return {
+            taskUid: m.taskUid,
+            taskTitle: m.taskTitle,
+            taskStatus: m.taskStatus,
+            taskDescription: m.taskDescription,
+            taskDueAt: m.taskDueAt,
+            taskAssignedToUid: m.taskAssignedToUid,
+            taskAssignedToFirstName: m.taskAssignedToFirstName,
+            taskCreatedAt: m.taskCreatedAt,
+            eventVenue: m.eventVenue,
+            taskPriority: m.taskPriority,
+          };
+        });
 
+      countObj.totalTaskCount += tasks.length;
       return {
         eventUid: eventObj.eventUid,
         eventName: eventObj.eventName,
@@ -195,7 +212,9 @@ const userEventsTasksCtrl = async (req, res) => {
       };
     });
 
-    res.status(200).json(successRes("Success", userEventsAndTasks));
+    res
+      .status(200)
+      .json(successRes("Success", { countObj, data: userEventsAndTasks }));
   } catch (error) {
     console.error("userEventsTasksCtrl", error);
     const erorRes = errorRes("getUsers Failed", {}, error.code, error);

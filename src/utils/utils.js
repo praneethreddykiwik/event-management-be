@@ -15,8 +15,18 @@ const comparePassword = async (plainPassword, hash) => {
   return isValid;
 };
 
+const snakeToCamel = (str) =>
+  str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+
+const camelToWords = (str) => {
+  const result = str.replace(/([A-Z])/g, " $1");
+  return result.charAt(0).toUpperCase() + result.slice(1);
+};
+
 module.exports = {
   hashPassword,
   verifyPassword,
   comparePassword,
+  snakeToCamel,
+  camelToWords,
 };

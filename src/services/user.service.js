@@ -179,7 +179,11 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
       t.description AS "taskDescription",
       t.due_at AS "taskDueAt",
       t.assigned_to_uid AS "taskAssignedToUid",
-      t.created_at AS "taskCreatedAt"
+      t.created_at AS "taskCreatedAt",
+
+      taskAssigned.first_name AS "taskAssignedToFirstName",
+      taskAssigned.last_name AS "taskAssignedToLastName",
+      taskAssigned.username AS "taskAssignedToUsername"
 
     FROM events e
 
@@ -193,8 +197,10 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
       ON t.event_uid = e.uid
       AND t.status <> 'deleted'
 
+    LEFT JOIN users taskAssigned
+      ON taskAssigned.uid = t.assigned_to_uid
+
     WHERE e.tenant_uid = $(tenantUid)
-      AND e.status <> 'deleted'
       AND (
         me.role = 'admin'
         OR e.assigned_to_uid = $(assignedToUid)
@@ -202,6 +208,7 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
 
     ORDER BY e.created_at DESC, t.created_at ASC;
   `;
+
   const db = getDb();
   const rows = await db.any(sql, { tenantUid, assignedToUid });
   return rows;
