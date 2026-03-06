@@ -40,10 +40,10 @@ async function createTaskCtrl(req, res) {
     tenantUid: req.body.tenantUid,
     eventUid: req.body.eventUid,
     title: req.body.title,
-    description: null,
-    priority: "medium",
-    dueAt: null,
-    assignedToUid: null,
+    description: req.body.description || null,
+    priority: req.body.priority || "medium",
+    dueAt: req.body.dueAt || null,
+    assignedToUid: req.body.assignedToUid || null,
     createdByUid: req.body.createdByUid || req.session.user.uid,
     updatedByUid: req.body.updatedByUid || req.session.user.uid,
   };
@@ -89,7 +89,7 @@ async function updateTaskCtrl(req, res) {
       error.message || "Failed to update task",
       {},
       error.code,
-      error
+      error,
     );
     return res.status(400).json(errRes);
   }
@@ -104,7 +104,7 @@ const assignTaskCtrl = async (req, res) => {
     const createEventRes = await services.assignTaskService(
       taskUid,
       assignedToUid,
-      updatedByUid
+      updatedByUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -121,7 +121,7 @@ const acceptTaskCtrl = async (req, res) => {
 
     const createEventRes = await services.acceptTaskService(
       taskUid,
-      assignedToUid
+      assignedToUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -138,7 +138,7 @@ const declineTaskCtrl = async (req, res) => {
 
     const createEventRes = await services.declineTaskService(
       taskUid,
-      declinedByUid
+      declinedByUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
