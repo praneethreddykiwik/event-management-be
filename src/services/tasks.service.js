@@ -142,9 +142,9 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
   const sql = `
   SELECT
     e.uid              AS "eventUid",
-    e.event_name,
-    e.event_type,
-    e.scheduled_at,
+    e.event_name       AS "eventName",
+    e.event_type       AS "eventType",
+    e.scheduled_at     AS scheduledAt,
     e.venue,
     e.status           AS "eventStatus",
 
@@ -156,7 +156,11 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
     t.description AS "taskDescription",
     t.due_at AS "taskDueAt",
     t.assigned_to_uid AS "taskAssignedToUid",
-    t.created_at AS "taskCreatedAt"
+    t.created_at AS "taskCreatedAt",
+
+    u.username,
+    u.first_name      AS "firstName",
+    u.last_name      AS "lastName"
 
   FROM events e
   JOIN tasks t
