@@ -159,8 +159,7 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
     t.created_at AS "taskCreatedAt",
 
     u.username,
-    u.first_name      AS "firstName",
-    u.last_name      AS "lastName"
+    CONCAT(u.first_name, ' ', u.last_name) as "taskAssignedTo"
 
   FROM events e
   JOIN tasks t

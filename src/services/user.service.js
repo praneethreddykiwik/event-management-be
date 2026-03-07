@@ -183,6 +183,7 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
 
       taskAssigned.first_name AS "taskAssignedToFirstName",
       taskAssigned.last_name AS "taskAssignedToLastName",
+      CONCAT(taskAssigned.first_name, ' ', taskAssigned.last_name) as "taskAssignedTo",
       taskAssigned.username AS "taskAssignedToUsername"
 
     FROM events e
