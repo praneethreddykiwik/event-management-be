@@ -103,7 +103,6 @@ async function listEvents(tenantUid, role, userUid, filters) {
   return db.any(sql, params);
 }
 
-// aadil
 async function getEventsService(query, includeDeleted = false) {
   const conditions = [];
   const params = {};
@@ -165,7 +164,7 @@ async function getEventsService(query, includeDeleted = false) {
       eventUid: query.eventUid,
       assignedToUid: query.assignedToUid,
       include_deleted: includeDeleted,
-    }
+    },
   );
 
   return events;
@@ -181,11 +180,11 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
       venue = COALESCE($(venue), venue),
       expected_attendees = COALESCE($(expected_attendees), expected_attendees),
       comments = COALESCE($(comments), comments),
+      status = COALESCE($(status), status),
       updated_at = now(),
       updated_by_uid = $(actor_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND status <> 'deleted'
     RETURNING *;
   `;
 
@@ -198,6 +197,7 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
     event_type: patch.event_type ?? null,
     scheduled_at: patch.scheduled_at ?? null,
     venue: patch.venue ?? null,
+    status: patch.status,
     expected_attendees:
       patch.expected_attendees !== undefined
         ? Number(patch.expected_attendees)
@@ -220,6 +220,7 @@ async function updateEventService({
     venue: updateFields.venue,
     expected_attendees: updateFields.expectedAttendees,
     comments: updateFields.comments,
+    status: updateFields.status,
   };
 
   return updateEvent(tenantUid, eventUid, patch, updatedByUid);
@@ -229,7 +230,7 @@ async function assignEventService(
   tenantUid,
   eventUid,
   assignedToUid,
-  updatedByUid
+  updatedByUid,
 ) {
   const sql = `
     UPDATE events
@@ -241,7 +242,6 @@ async function assignEventService(
       updated_by_uid = $(updated_by_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND status <> 'deleted'
     RETURNING *;
   `;
 
@@ -341,7 +341,7 @@ const deleteEvent = async (
   tenantUid,
   eventUid,
   actorUid,
-  deleteReason = null
+  deleteReason = null,
 ) => {
   const sql = `
     UPDATE events
