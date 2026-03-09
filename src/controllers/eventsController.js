@@ -2,6 +2,7 @@ const {
   createEventReqModel,
   acceptEventReqModel,
   declineEventReqModel,
+  updateEventReqModel,
 } = require("../models/request.model");
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
@@ -75,29 +76,13 @@ const acceptEventCtrl = async (req, res) => {
 
 const updateEventCtrl = async (req, res) => {
   try {
-    const {
-      eventUid,
-      tenantUid: bodyTenantUid,
-      updatedByUid: bodyUpdatedByUid,
-      ...updateFields
-    } = req.body;
-
-    const tenantUid = bodyTenantUid || req.session?.user?.tenantUid;
-    const updatedByUid = bodyUpdatedByUid || req.session?.user?.uid;
-
-    const payload = {
-      tenantUid,
-      eventUid,
-      updatedByUid,
-      updateFields,
-    };
+    const payload = updateEventReqModel(req);
 
     const updateEventRes = await services.updateEventService(payload);
 
     if (!updateEventRes) {
       return res.status(404).json(errorRes("Event not found or not updatable"));
     }
-
     return res
       .status(200)
       .json(successRes("Event updated successfully", updateEventRes));
@@ -118,7 +103,7 @@ const deleteEventCtrl = async (req, res) => {
       tenantUid,
       eventUid,
       actorUid,
-      deleteReason
+      deleteReason,
     );
 
     return res
@@ -144,7 +129,7 @@ const assignEventCtrl = async (req, res) => {
       tenantUid,
       eventUid,
       assignedToUid,
-      updatedByUid
+      updatedByUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {

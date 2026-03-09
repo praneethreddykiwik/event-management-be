@@ -1,26 +1,24 @@
 const { getDb } = require("../db/db");
 
-const createTaskService = ({
-  tenantUid,
-  eventUid,
-  title,
-  description = null,
-  priority = "medium",
-  dueAt = null,
-  assignedToUid = null,
-  createdByUid,
-  updatedByUid,
-}) => {
+const createTaskService = (payload) => {
+  const {
+    tenantUid,
+    eventUid,
+    createdByUid,
+    updatedByUid,
+    assignedToUid = null,
+  } = payload;
+
   const sql = `
     INSERT INTO tasks (
       tenant_uid, event_uid, title, description,
       priority, due_at, assigned_to_uid,
-      created_by_uid, updated_by_uid
+      created_by_uid, updated_by_uid, status
     )
     VALUES (
       $(tenant_uid), $(event_uid), $(title), $(description),
       $(priority), $(due_at), $(assigned_to_uid),
-      $(created_by_uid), $(updated_by_uid)
+      $(created_by_uid), $(updated_by_uid), $(status)
     )
     RETURNING *;
   `;
@@ -29,10 +27,11 @@ const createTaskService = ({
   return db.one(sql, {
     tenant_uid: tenantUid,
     event_uid: eventUid,
-    title,
-    description,
-    priority,
-    due_at: dueAt,
+    title: payload.title,
+    description: payload.description,
+    priority: payload.priority,
+    due_at: payload.dueAt,
+    status: payload.status,
     assigned_to_uid: assignedToUid,
     created_by_uid: createdByUid,
     updated_by_uid: updatedByUid,
@@ -47,7 +46,7 @@ const updateTaskService = ({
   priority, // optional
   dueAt, // optional (can be null)
   assignedToUid, // optional (can be null)
-  status, // optional (if you have status column)
+  status, // optional
   updatedByUid, // required
 }) => {
   const sql = `

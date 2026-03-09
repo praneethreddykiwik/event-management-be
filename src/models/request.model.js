@@ -6,7 +6,7 @@ const createUserReqModel = (
   role,
   firstName,
   lastName,
-  mobile
+  mobile,
 ) => {
   return {
     tenant_uid: tenantUid,
@@ -19,6 +19,25 @@ const createUserReqModel = (
     mobile,
   };
 };
+
+// ======================= Tasks Section models =======================
+
+const createTaskReqModel = (req) => {
+  return {
+    tenantUid: req.body.tenantUid,
+    eventUid: req.body.eventUid,
+    title: req.body.title,
+    description: req.body.description || null,
+    priority: req.body.priority || "medium",
+    dueAt: req.body.dueAt || null,
+    assignedToUid: req.body.assignedToUid || null,
+    createdByUid: req.body.createdByUid || req.session.user.uid,
+    updatedByUid: req.body.updatedByUid || req.session.user.uid,
+    status: req.body.status,
+  };
+};
+
+// ======================= Events Section models =======================
 
 const createEventReqModel = (req) => {
   return {
@@ -52,9 +71,42 @@ const declineEventReqModel = (req) => {
   };
 };
 
+const updateEventReqModel = (req) => {
+  const {
+    eventUid,
+    tenantUid: bodyTenantUid,
+    updatedByUid: bodyUpdatedByUid,
+    ...updateDetails
+  } = req.body;
+
+  const tenantUid = bodyTenantUid || req.session?.user?.tenantUid;
+  const updatedByUid = bodyUpdatedByUid || req.session?.user?.uid;
+
+  return {
+    tenantUid,
+    updatedByUid,
+    eventUid,
+    event_name: updateDetails.eventName,
+    comments: updateDetails.comments,
+    event_type: updateDetails.eventType,
+    scheduled_at: updateDetails.scheduledAt,
+    expected_attendees: updateDetails.expectedAttendees,
+    assigned_to_uid: updateDetails.assignedToUid,
+    status: updateDetails.status,
+    venue: updateDetails.venue,
+  };
+};
+
 module.exports = {
+  // User exports
   createUserReqModel,
+
+  // Task exports
+  createTaskReqModel,
+
+  // Event exports
   createEventReqModel,
   declineEventReqModel,
+  updateEventReqModel,
   acceptEventReqModel,
 };

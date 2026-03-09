@@ -154,10 +154,12 @@ async function getEventsService(query, includeDeleted = false) {
         e.updated_by_uid as "updatedByUid",
         e.deleted_at as "deletedAt",
         e.delete_reason as "deleteReason",
-        u.first_name as "firstName"
+        u.first_name as "firstName",
+        u.username as "userName"
         from events e
         left join users u on u.uid = e.assigned_to_uid
         ${whereClause}
+        ORDER BY e.created_at DESC;
         `,
     {
       tenant_uid: query.tenantUid,
@@ -170,17 +172,20 @@ async function getEventsService(query, includeDeleted = false) {
   return events;
 }
 
-async function updateEvent(tenantUid, eventUid, patch, actorUid) {
+async function updateEventService(updatePayload) {
+  const { tenantUid, eventUid, updatedByUid: actorUid } = updatePayload;
+
   const sql = `
     UPDATE events
     SET
       event_name = COALESCE($(event_name), event_name),
+      comments = COALESCE($(comments), comments),
       event_type = COALESCE($(event_type), event_type),
       scheduled_at = COALESCE($(scheduled_at), scheduled_at),
-      venue = COALESCE($(venue), venue),
       expected_attendees = COALESCE($(expected_attendees), expected_attendees),
-      comments = COALESCE($(comments), comments),
+      assigned_to_uid = COALESCE($(assigned_to_uid), assigned_to_uid),
       status = COALESCE($(status), status),
+      venue = COALESCE($(venue), venue),
       updated_at = now(),
       updated_by_uid = $(actor_uid)
     WHERE tenant_uid = $(tenant_uid)
@@ -193,37 +198,18 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
     tenant_uid: tenantUid,
     event_uid: eventUid,
     actor_uid: actorUid,
-    event_name: patch.event_name ?? null,
-    event_type: patch.event_type ?? null,
-    scheduled_at: patch.scheduled_at ?? null,
-    venue: patch.venue ?? null,
-    status: patch.status,
+    event_name: updatePayload.event_name ?? null,
+    event_type: updatePayload.event_type ?? null,
+    scheduled_at: updatePayload.scheduled_at ?? null,
+    venue: updatePayload.venue ?? null,
+    status: updatePayload.status,
     expected_attendees:
-      patch.expected_attendees !== undefined
-        ? Number(patch.expected_attendees)
+      updatePayload.expected_attendees !== undefined
+        ? Number(updatePayload.expected_attendees)
         : null,
-    comments: patch.comments ?? null,
+    comments: updatePayload.comments ?? null,
+    assigned_to_uid: updatePayload.assigned_to_uid,
   });
-}
-
-async function updateEventService({
-  tenantUid,
-  eventUid,
-  updatedByUid,
-  updateFields,
-}) {
-  // whitelist + map camelCase → snake_case
-  const patch = {
-    event_name: updateFields.eventName,
-    event_type: updateFields.eventType,
-    scheduled_at: updateFields.scheduledAt,
-    venue: updateFields.venue,
-    expected_attendees: updateFields.expectedAttendees,
-    comments: updateFields.comments,
-    status: updateFields.status,
-  };
-
-  return updateEvent(tenantUid, eventUid, patch, updatedByUid);
 }
 
 async function assignEventService(
@@ -379,7 +365,6 @@ module.exports = {
   createEventService,
   listEvents,
   getEventsService,
-  updateEvent,
   updateEventService,
   assignEventService,
   acceptEvent,

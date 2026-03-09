@@ -1,3 +1,4 @@
+const { createTaskReqModel } = require("../models/request.model");
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tasks.service");
 
@@ -36,18 +37,7 @@ async function getTaskById(req, res) {
 }
 
 async function createTaskCtrl(req, res) {
-  const payload = {
-    tenantUid: req.body.tenantUid,
-    eventUid: req.body.eventUid,
-    title: req.body.title,
-    description: req.body.description || null,
-    priority: req.body.priority || "medium",
-    dueAt: req.body.dueAt || null,
-    assignedToUid: req.body.assignedToUid || null,
-    createdByUid: req.body.createdByUid || req.session.user.uid,
-    updatedByUid: req.body.updatedByUid || req.session.user.uid,
-  };
-  console.log("shahid", payload);
+  const payload = createTaskReqModel(req);
   try {
     const response = await services.createTaskService(payload);
     console.log("Success: createTaskCtrl response", response);
