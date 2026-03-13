@@ -205,6 +205,7 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
       AND (
         me.role = 'admin'
         OR e.assigned_to_uid = $(assignedToUid)
+        OR t.assigned_to_uid = $(assignedToUid)
       )
 
     ORDER BY e.created_at DESC, t.created_at ASC;

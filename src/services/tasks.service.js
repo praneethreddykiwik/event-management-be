@@ -137,6 +137,7 @@ const getTaskService = async (query) => {
   return users;
 };
 
+// checkHere
 const getTasksByEventService = async (tenantUid, eventUid) => {
   const sql = `
   SELECT
@@ -164,7 +165,7 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
   JOIN tasks t
     ON t.event_uid = e.uid
   JOIN users u
-    ON u.uid = e.assigned_to_uid
+    ON u.uid = t.assigned_to_uid
   WHERE e.uid = $(eventUid)
   ORDER BY
     e.scheduled_at DESC;
