@@ -111,7 +111,12 @@ const loadUserFromSessionCtrl = (req, res) => {
 
     return res
       .status(200)
-      .json({ ...req.session.user, sessionID: req.sessionID });
+      .json(
+        successRes("Success", {
+          ...req.session.user,
+          sessionID: req.sessionID,
+        }),
+      );
   } catch (error) {
     return res
       .status(401)
