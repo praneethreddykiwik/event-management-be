@@ -18,7 +18,7 @@ function getRedisClient() {
   });
 
   // Use host/port configuration (recommended for ElastiCache)
-  const redisClient = createClient({
+  client = createClient({
     socket: {
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT) || 6379,
@@ -28,37 +28,39 @@ function getRedisClient() {
       lazyConnect: true,
     },
     // Add retry strategy
-    retry_strategy: (options) => {
-      if (options.error && options.error.code === "ECONNREFUSED") {
-        return new Error("The server refused the connection");
-      }
-      if (options.total_retry_time > 1000 * 60 * 60) {
-        return new Error("Retry time exhausted");
-      }
-      if (options.attempt > 10) {
-        return undefined;
-      }
-      return Math.min(options.attempt * 100, 3000);
-    },
+    // retry_strategy: (options) => {
+    //   if (options.error && options.error.code === "ECONNREFUSED") {
+    //     return new Error("The server refused the connection");
+    //   }
+    //   if (options.total_retry_time > 1000 * 60 * 60) {
+    //     return new Error("Retry time exhausted");
+    //   }
+    //   if (options.attempt > 10) {
+    //     return undefined;
+    //   }
+    //   return Math.min(options.attempt * 100, 3000);
+    // },
   });
 
-  redisClient.on("error", (err) => {
+  client.on("error", (err) => {
     console.error("Redis Client Error:", err);
+    process.exit(1);
   });
 
-  redisClient.on("connect", () => {
+  client.on("connect", () => {
     console.log("Redis connection Starting");
   });
 
-  redisClient.on("ready", () => {
+  client.on("ready", () => {
     console.log("Redis connection Success");
   });
 
-  return redisClient;
+  return client;
 }
 
 async function connectRedis() {
   const c = getRedisClient();
+
   if (!c.isOpen) {
     await c.connect();
   }

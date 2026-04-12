@@ -32,7 +32,6 @@ const loadUser = async (req, res, next) => {
 const authenticateUserCtrl = async (req, res, next) => {
   try {
     const { user } = req.ctx;
-    console.log("abdul user", user);
 
     const isValidPassword = await utils.comparePassword(
       req.body.password,
@@ -109,14 +108,12 @@ const loadUserFromSessionCtrl = (req, res) => {
         .json(errorRes("Unauthorized", "Please login", errorCodes.UN_AUTH));
     }
 
-    return res
-      .status(200)
-      .json(
-        successRes("Success", {
-          ...req.session.user,
-          sessionID: req.sessionID,
-        }),
-      );
+    return res.status(200).json(
+      successRes("Success", {
+        ...req.session.user,
+        sessionID: req.sessionID,
+      }),
+    );
   } catch (error) {
     return res
       .status(401)

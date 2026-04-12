@@ -156,7 +156,6 @@ const userEventsTasksCtrl = async (req, res) => {
       tenantUid,
       assignedToUid,
     );
-    console.log("abdul data", data);
 
     const eventIds = data
       .map((el) => el.eventUid)

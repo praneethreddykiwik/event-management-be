@@ -103,35 +103,60 @@ async function listEvents(tenantUid, role, userUid, filters) {
   return db.any(sql, params);
 }
 
-async function getEventsService(query, includeDeleted = false) {
+async function getEventsService(query) {
   const conditions = [];
-  const params = {};
+  const params = {
+    tenant_uid: query.tenantUid, // required
+  };
+
+  const generateStatusFilters = () => {
+    if (!query.status) {
+      return "";
+    }
+    const statusArr = query.status
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    return statusArr;
+  };
 
   const queries = [
-    // { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
-    { query: "eventUid", condition: "e.uid = $(eventUid)" },
+    // {
+    //   query: "tenantUid",
+    //   condition: "t.tenant_uid = $(tenantUid)",
+    //   value: query.tenantUid,
+    // },
+    {
+      query: "eventUid",
+      condition: "e.uid = $(eventUid)",
+      value: query.eventUid,
+    },
     {
       query: "assignedToUid",
       condition: "e.assigned_to_uid = $(assignedToUid)",
+      value: query.assignedToUid,
+    },
+    {
+      query: "status",
+      condition: "e.status IN ($(status:csv))",
+      value: generateStatusFilters(),
     },
   ];
 
   queries.forEach((el) => {
     if (query[el.query]) {
       conditions.push(el.condition);
-      params[el.query] = query[el.query];
+      params[el.query] = el.value;
     }
   });
-  // conditions.push(
-  //   "($(events_status_check)::boolean = true OR status <> 'deleted')"
-  // );
 
   const whereClause = conditions.length
     ? `where ${conditions.join(" and ")}`
     : "";
 
   const db = getDb();
-  const events = await db.any(
+  const eventsSQLQuery = db.any(
     `
       select
         e.uid,
@@ -160,16 +185,74 @@ async function getEventsService(query, includeDeleted = false) {
         left join users u on u.uid = e.assigned_to_uid
         ${whereClause}
         ORDER BY e.created_at DESC;
-        `,
-    {
-      tenant_uid: query.tenantUid,
-      eventUid: query.eventUid,
-      assignedToUid: query.assignedToUid,
-      include_deleted: includeDeleted,
-    },
+      `,
+    params,
   );
 
-  return events;
+  const statusCountsSQLQuery = getEventStatusCount(db, params);
+
+  const responses = await Promise.all([eventsSQLQuery, statusCountsSQLQuery]);
+
+  const events = responses[0];
+  const statusCounts = responses[1];
+
+  return { events, statusCounts };
+}
+
+async function getEventStatusCount(db, params) {
+  const countResponse = await db.any(
+    `
+      SELECT 
+        e.status,
+        COUNT(*) as count
+      FROM events e
+      WHERE e.tenant_uid = $(tenant_uid)
+      GROUP BY e.status
+      `,
+    params,
+  );
+
+  const allStatuses = [
+    "pending",
+    "assigned",
+    "accepted",
+    "ready",
+    "in_progress",
+    "completed",
+    "declined",
+    "cancelled",
+    "deleted",
+  ];
+
+  console.log("abdul res", countResponse);
+
+  const statusCountMap = {};
+
+  // allStatuses.forEach((status) => {
+  //   statusCountMap[status] = 0;
+  // });
+
+  // statusCounts.forEach((row) => {
+  //   statusCountMap[row.status] = Number(row.count);
+  // });
+
+  const obj = allStatuses.reduce(
+    (acu, cur) => {
+      const groupObj = countResponse.find((el) => el.status === cur) || {};
+      const numberMod = Number(groupObj.count) || 0;
+
+      const restObj = { ...acu };
+      restObj[cur] = numberMod;
+
+      restObj.total = restObj.total + numberMod;
+      return restObj;
+    },
+    { total: 0 },
+  );
+
+  console.log("abdul statusCounts", obj);
+
+  return obj;
 }
 
 async function updateEventService(updatePayload) {

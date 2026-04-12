@@ -35,6 +35,31 @@ function errorRes(message, details = {}, optionalCode, error) {
   };
 }
 
+/*
+{
+  "code": "0000",
+  "message": "message",
+  "details": [
+    {
+      "uid": "e1",
+      "eventName": "Annual Meetup",
+      "status": "pending",
+      "assignedToUid": "1234"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "totalRecords": 125,
+    "totalPages": 7
+  },
+  "filtersApplied": {
+    "status": ["pending", "assigned"],
+    "assignedToUid": "1234"
+  }
+}
+*/
+
 module.exports = {
   successRes,
   errorRes,

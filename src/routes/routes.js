@@ -1,11 +1,11 @@
-const userRouter = require("./userRouter");
+const userRouter = require("./user.router");
 const express = require("express");
-const healthRouter = require("./healthRouter");
-const tenantRouter = require("./tenantRouter");
-const taskRouter = require("./taskRouter");
-const authRouter = require("./authRouter");
-const eventsRouter = require("./eventsRouter");
-const { redisRouter } = require("./redisRouter");
+const healthRouter = require("./health.router");
+const tenantRouter = require("./tenant.router");
+const taskRouter = require("./task.router");
+const authRouter = require("./auth.router");
+const eventsRouter = require("./events.router");
+const { redisRouter } = require("./redis.router");
 
 const router = express.Router();
 

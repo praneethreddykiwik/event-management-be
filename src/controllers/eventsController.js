@@ -1,7 +1,6 @@
 const {
   createEventReqModel,
   acceptEventReqModel,
-  declineEventReqModel,
   updateEventReqModel,
 } = require("../models/request.model");
 const { successRes, errorRes } = require("../models/response.model");
@@ -23,10 +22,11 @@ const getEventsCtrl = async (req, res) => {
       tenantUid: req.query.tenantUid || req.session?.user?.tenantUid,
       eventUid: req.query.eventUid,
       assignedToUid: req.query.assignedToUid,
+      status: req.query.status,
     };
     const getEventidRes = await services.getEventsService(obj);
 
-    return res.status(200).json(successRes("success", getEventidRes));
+    return res.status(200).json(successRes("success", getEventidRes, "0000"));
   } catch (err) {
     console.error("getEventsCtrl", err);
     return res.status(400).json(errorRes("server is not responing", err));
