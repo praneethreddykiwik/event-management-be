@@ -138,6 +138,25 @@ const declineTaskCtrl = async (req, res) => {
   }
 };
 
+const deleteTaskCtrl = async (req, res) => {
+  try {
+    const taskUid = req.body.taskUid;
+    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
+    const declinedByUid = req.body.declinedByUid || req.session?.user?.uid;
+
+    const createEventRes = await services.deleteTaskService(
+      tenantUid,
+      taskUid,
+      declinedByUid,
+    );
+    res.status(200).json(successRes("Success", createEventRes));
+  } catch (error) {
+    console.error("assignEventCtrl", error);
+    const erorRes = errorRes("Asssign Event Failed", error);
+    return res.status(400).json(erorRes);
+  }
+};
+
 module.exports = {
   getTasksByEventUidCtrl,
   getTaskById,
@@ -146,4 +165,5 @@ module.exports = {
   updateTaskCtrl,
   acceptTaskCtrl,
   declineTaskCtrl,
+  deleteTaskCtrl,
 };

@@ -79,13 +79,13 @@ const updateTaskService = ({
   });
 };
 
-async function deleteTask(tenantUid, taskUid, actorUid) {
+async function deleteTaskService(tenantUid, taskUid, declinedByUid) {
   const sql = `
     UPDATE tasks
     SET
       status = 'deleted',
       updated_at = now(),
-      updated_by_uid = $(actor_uid)
+      updated_by_uid = $(updated_by)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(task_uid)
       AND status <> 'deleted'
@@ -96,7 +96,7 @@ async function deleteTask(tenantUid, taskUid, actorUid) {
   return db.oneOrNone(sql, {
     tenant_uid: tenantUid,
     task_uid: taskUid,
-    actor_uid: actorUid,
+    updated_by: declinedByUid,
   });
 }
 
@@ -245,4 +245,5 @@ module.exports = {
   updateTaskService,
   acceptTaskService,
   declineTaskService,
+  deleteTaskService,
 };
