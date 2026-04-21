@@ -258,6 +258,69 @@ const deleteUserService = async (uid) => {
   return deletedUser;
 };
 
+async function listUsers(tenantUid, role, userUid, filters) {
+  const {
+    role: filterRole,
+    status,
+    limit = 20,
+    offset = 0,
+    includeInactive = false,
+  } = filters;
+
+  const safeLimit = Math.min(Number(limit) || 20, 100);
+  const safeOffset = Math.max(Number(offset) || 0, 0);
+
+  const baseWhere = [];
+  const params = {
+    tenant_uid: tenantUid,
+    limit: safeLimit,
+    offset: safeOffset,
+  };
+
+  baseWhere.push(`u.tenant_uid = $(tenant_uid)`);
+
+  if (!includeInactive) {
+    baseWhere.push(`u.status <> 'inactive'`);
+  }
+
+  if (role === "event_manager") {
+    baseWhere.push(`u.uid = $(me_uid)`);
+    params.me_uid = userUid;
+  }
+
+  if (filterRole) {
+    baseWhere.push(`u.role = $(filter_role)`);
+    params.filter_role = filterRole;
+  }
+
+  if (status) {
+    baseWhere.push(`u.status = $(status)`);
+    params.status = status;
+  }
+
+  const whereSql = baseWhere.length ? `WHERE ${baseWhere.join(" AND ")}` : "";
+
+  const sql = `
+    SELECT 
+      u.uid,
+      u.username,
+      u.email,
+      u.role,
+      u.status,
+      u.first_name AS "firstName",
+      u.last_name AS "lastName",
+      u.mobile,
+      u.created_at AS "createdAt"
+    FROM users u
+    ${whereSql}
+    ORDER BY u.created_at DESC
+    LIMIT $(limit) OFFSET $(offset);
+  `;
+
+  const db = getDb();
+  return db.any(sql, params);
+}
+
 module.exports = {
   createUserService,
   getUsersService,
@@ -266,4 +329,5 @@ module.exports = {
   userEventsTasksService,
   deleteUserService,
   getEventManagersService,
+  listUsers,
 };
