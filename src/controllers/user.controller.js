@@ -192,6 +192,12 @@ const userEventsTasksCtrl = async (req, res) => {
             taskCreatedAt: m.taskCreatedAt,
             eventVenue: m.eventVenue,
             taskPriority: m.taskPriority,
+
+            qaAssignedToUid: m.qaAssignedToUid,
+            qaAssignedToFirstName: m.qaAssignedToFirstName,
+            qaAssignedToLastName: m.qaAssignedToLastName,
+            qaAssignedTo: m.qaAssignedTo,
+            isQaApproved: m.isQaApproved,
           };
         });
 

@@ -1,6 +1,7 @@
 /** @format */
 
 const { getDb } = require("../db/db");
+const { convertQueryParams } = require("../utils/pg.utils");
 
 const deleteEventService = async (eventId) => {
   const deleted = await Event.findOneAndDelete({ eventId });
@@ -32,8 +33,7 @@ const createUserService = async (payload) => {
 };
 
 const getUsersService = async (query, providePasswordHash) => {
-  const limit = query.limit || 50;
-  const offset = query.offset || 0;
+  const limit = query.limit || 100;
 
   const conditions = [];
   const params = {};
@@ -42,20 +42,21 @@ const getUsersService = async (query, providePasswordHash) => {
     { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
     { query: "username", condition: "u.username = $(username)" },
     { query: "email", condition: "lower(u.email) = lower($(email))" },
-    { query: "status", condition: "u.status = $(status)" },
-    { query: "role", condition: "u.role = $(role)" },
+    { query: "status", condition: "u.status IN ($(status:csv))" },
+    { query: "role", condition: "u.role IN ($(role:csv))" },
   ];
 
   queries.forEach((el) => {
     if (query[el.query]) {
       conditions.push(el.condition);
-      params[el.query] = query[el.query];
+      params[el.query] = convertQueryParams(query[el.query]);
     }
   });
 
   const whereClause = conditions.length
     ? `where ${conditions.join(" and ")}`
     : "";
+  console.log("abdul whereClause", whereClause);
 
   const db = getDb();
   const users = await db.any(
@@ -75,9 +76,14 @@ const getUsersService = async (query, providePasswordHash) => {
       from users u
       join tenants t on t.uid = u.tenant_uid
       ${whereClause}
-      limit $(limit) offset $(offset)
+      limit $(limit)
     `,
-    { ...params, limit, offset },
+    { ...params, limit },
+  );
+
+  console.log(
+    "abdul res",
+    users.find((el) => el.username === "QA"),
   );
 
   return users;
@@ -156,6 +162,8 @@ const updateUserService = async (data) => {
 
   return response;
 };
+
+// qa_assigned_to_uid: qaAssignedTo,
 const userEventsTasksService = async (tenantUid, assignedToUid) => {
   const sql = `
     SELECT
@@ -181,6 +189,12 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
       t.assigned_to_uid AS "taskAssignedToUid",
       t.created_at AS "taskCreatedAt",
 
+      t.qa_assigned_to_uid AS "qaAssignedToUid",
+      t.is_qa_approved AS "isQaApproved",
+      qaAssigned.first_name AS "qaAssignedToFirstName",
+      qaAssigned.last_name AS "qaAssignedToLastName",
+      CONCAT(qaAssigned.first_name, ' ', qaAssigned.last_name) as "qaAssignedTo",
+
       taskAssigned.first_name AS "taskAssignedToFirstName",
       taskAssigned.last_name AS "taskAssignedToLastName",
       CONCAT(taskAssigned.first_name, ' ', taskAssigned.last_name) as "taskAssignedTo",
@@ -200,6 +214,9 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
 
     LEFT JOIN users taskAssigned
       ON taskAssigned.uid = t.assigned_to_uid
+
+    LEFT JOIN users qaAssigned
+      ON qaAssigned.uid = t.qa_assigned_to_uid
 
     WHERE e.tenant_uid = $(tenantUid)
       AND (

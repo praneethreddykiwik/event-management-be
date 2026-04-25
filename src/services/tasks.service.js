@@ -7,18 +7,20 @@ const createTaskService = (payload) => {
     createdByUid,
     updatedByUid,
     assignedToUid = null,
+    qaAssignedTo,
   } = payload;
 
   const sql = `
     INSERT INTO tasks (
       tenant_uid, event_uid, title, description,
       priority, due_at, assigned_to_uid,
-      created_by_uid, updated_by_uid, status
+      created_by_uid, updated_by_uid, status,
+      qa_assigned_to_uid
     )
     VALUES (
       $(tenant_uid), $(event_uid), $(title), $(description),
       $(priority), $(due_at), $(assigned_to_uid),
-      $(created_by_uid), $(updated_by_uid), $(status)
+      $(created_by_uid), $(updated_by_uid), $(status), $(qa_assigned_to_uid)
     )
     RETURNING *;
   `;
@@ -35,6 +37,7 @@ const createTaskService = (payload) => {
     assigned_to_uid: assignedToUid,
     created_by_uid: createdByUid,
     updated_by_uid: updatedByUid,
+    qa_assigned_to_uid: qaAssignedTo,
   });
 };
 
@@ -47,7 +50,9 @@ const updateTaskService = ({
   dueAt, // optional (can be null)
   assignedToUid, // optional (can be null)
   status, // optional
+  qaAssignedTo,
   updatedByUid, // required
+  isQaApproved,
 }) => {
   const sql = `
     UPDATE tasks
@@ -58,6 +63,8 @@ const updateTaskService = ({
       due_at = COALESCE($(due_at), due_at),
       assigned_to_uid = COALESCE($(assigned_to_uid), assigned_to_uid),
       status = COALESCE($(status), status),
+      qa_assigned_to_uid = COALESCE($(qa_assigned_to_uid), qa_assigned_to_uid),
+      is_qa_approved = COALESCE($(is_qa_approved), is_qa_approved),
       updated_by_uid = $(updated_by_uid),
       updated_at = NOW()
     WHERE tenant_uid = $(tenant_uid)
@@ -76,6 +83,8 @@ const updateTaskService = ({
     assigned_to_uid: assignedToUid ?? null,
     status: status ?? null,
     updated_by_uid: updatedByUid,
+    qa_assigned_to_uid: qaAssignedTo,
+    is_qa_approved: isQaApproved,
   });
 };
 
@@ -157,6 +166,8 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
     t.due_at AS "taskDueAt",
     t.assigned_to_uid AS "taskAssignedToUid",
     t.created_at AS "taskCreatedAt",
+    t.qa_assigned_to_uid AS "qaAssignedTo",
+    t.is_qa_approved AS "isQaApproved",
 
     u.username,
     CONCAT(u.first_name, ' ', u.last_name) as "taskAssignedTo"

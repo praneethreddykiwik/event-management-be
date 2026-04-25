@@ -94,3 +94,31 @@ CREATE UNIQUE INDEX IF NOT EXISTS users_tenant_email_unique
 -- Unique: username per tenant (case-sensitive as you had)
 CREATE UNIQUE INDEX IF NOT EXISTS users_tenant_username_unique
   ON users (tenant_uid, username);`;
+
+const alterConstraint = `
+ALTER TABLE "EMDB_SCHEMA".users
+DROP CONSTRAINT users_role_check;
+
+ALTER TABLE "EMDB_SCHEMA".users
+ADD CONSTRAINT users_role_check
+CHECK (
+  role = ANY (
+    ARRAY[
+      'admin',
+      'event_manager',
+      'vendor',
+      'customer',
+      'supervisor',
+      'qa'
+    ]
+  )
+);
+`;
+
+module.exports = {
+  createUsersTable,
+  modification,
+  addFirstNameMobileColumns,
+  createTable,
+  alterConstraint,
+};

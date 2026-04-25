@@ -1,4 +1,5 @@
 const { getDb } = require("../db/db");
+const { convertQueryParams } = require("../utils/pg.utils");
 
 const createEventService = async (payload) => {
   const sql = `
@@ -109,18 +110,6 @@ async function getEventsService(query) {
     tenant_uid: query.tenantUid, // required
   };
 
-  const generateStatusFilters = () => {
-    if (!query.status) {
-      return "";
-    }
-    const statusArr = query.status
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-
-    return statusArr;
-  };
-
   const queries = [
     // {
     //   query: "tenantUid",
@@ -140,7 +129,7 @@ async function getEventsService(query) {
     {
       query: "status",
       condition: "e.status IN ($(status:csv))",
-      value: generateStatusFilters(),
+      value: convertQueryParams(query.status),
     },
   ];
 

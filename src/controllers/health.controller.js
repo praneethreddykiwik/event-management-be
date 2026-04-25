@@ -3,7 +3,7 @@ const { successRes, errorRes } = require("../models/response.model");
 
 const healthPost = (req, res) => {
   res.status(200).json({
-    success: "success post call",
+    success: "success post call Abdul",
   });
 };
 

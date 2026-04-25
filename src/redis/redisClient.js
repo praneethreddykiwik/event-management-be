@@ -14,7 +14,6 @@ function getRedisClient() {
   console.log("Redis Configuration:", {
     REDIS_HOST: process.env.REDIS_HOST,
     REDIS_PORT: process.env.REDIS_PORT,
-    REDIS_URL: process.env.REDIS_URL,
   });
 
   // Use host/port configuration (recommended for ElastiCache)
