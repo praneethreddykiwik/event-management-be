@@ -56,7 +56,6 @@ const getUsersService = async (query, providePasswordHash) => {
   const whereClause = conditions.length
     ? `where ${conditions.join(" and ")}`
     : "";
-  console.log("abdul whereClause", whereClause);
 
   const db = getDb();
   const users = await db.any(
@@ -79,11 +78,6 @@ const getUsersService = async (query, providePasswordHash) => {
       limit $(limit)
     `,
     { ...params, limit },
-  );
-
-  console.log(
-    "abdul res",
-    users.find((el) => el.username === "QA"),
   );
 
   return users;

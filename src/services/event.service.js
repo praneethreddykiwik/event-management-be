@@ -213,18 +213,6 @@ async function getEventStatusCount(db, params) {
     "deleted",
   ];
 
-  console.log("abdul res", countResponse);
-
-  const statusCountMap = {};
-
-  // allStatuses.forEach((status) => {
-  //   statusCountMap[status] = 0;
-  // });
-
-  // statusCounts.forEach((row) => {
-  //   statusCountMap[row.status] = Number(row.count);
-  // });
-
   const obj = allStatuses.reduce(
     (acu, cur) => {
       const groupObj = countResponse.find((el) => el.status === cur) || {};
@@ -238,8 +226,6 @@ async function getEventStatusCount(db, params) {
     },
     { total: 0 },
   );
-
-  console.log("abdul statusCounts", obj);
 
   return obj;
 }
