@@ -151,6 +151,26 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "health",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4001/v1/health",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4001",
+									"path": [
+										"v1",
+										"health"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
