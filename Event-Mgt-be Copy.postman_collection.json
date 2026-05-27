@@ -1,160 +1,177 @@
 {
-	"info": {
-		"_postman_id": "c00142bf-dffc-4ff3-933e-fc10aee22e06",
-		"name": "Event-Mgt-be Copy",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "49464830",
-		"_collection_link": "https://prassi-y2003-5735701.postman.co/workspace/Prasanna-Yanamala's-Workspace~fb400db8-4e9a-4960-8b3f-1847565029e4/collection/49464830-c00142bf-dffc-4ff3-933e-fc10aee22e06?action=share&source=collection_link&creator=49464830"
-	},
-	"item": [
-		{
-			"name": "Local",
-			"item": [
-				{
-					"name": "user",
-					"item": [
-						{
-							"name": "USER - registration",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/user/registration",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"user",
-										"registration"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "USER - login",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"password\": \"Ashai@k212\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/user/login",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"user",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "User-me",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}"
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/users/me",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"users",
-										"me"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "health",
-					"item": [
-						{
-							"name": "health",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"user\": \"Adnan\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/health",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"health"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "health",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:4001/v1/health",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"health"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "c45db988-676a-4535-a3e9-a81e67c22cfe",
+    "name": "Event-Mgt-be Copy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53195113",
+    "_collection_link": "https://go.postman.co/collection/53195113-c45db988-676a-4535-a3e9-a81e67c22cfe?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Local",
+      "item": [
+        {
+          "name": "user",
+          "item": [
+            {
+              "name": "USER - registration",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/user/registration",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "user", "registration"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "USER - login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"password\": \"Ashai@k212\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/user/login",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "user", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User-me",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/users/me",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "users", "me"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "health",
+          "item": [
+            {
+              "name": "health",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"user\": \"Adnan\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/health",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "health"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "health",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4001/v1/health",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "health"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "auth_api's",
+          "item": [
+            {
+              "name": "auth_login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/auth/logout",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "auth", "logout"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_me",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
