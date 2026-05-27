@@ -1,161 +1,376 @@
 {
-	"info": {
-		"_postman_id": "c00142bf-dffc-4ff3-933e-fc10aee22e06",
-		"name": "Event-Mgt-be Copy",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "49464830",
-		"_collection_link": "https://prassi-y2003-5735701.postman.co/workspace/Prasanna-Yanamala's-Workspace~fb400db8-4e9a-4960-8b3f-1847565029e4/collection/49464830-c00142bf-dffc-4ff3-933e-fc10aee22e06?action=share&source=collection_link&creator=49464830"
-	},
-	"item": [
-		{
-			"name": "Local",
-			"item": [
-				{
-					"name": "user",
-					"item": [
-						{
-							"name": "USER - registration",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/user/registration",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"user",
-										"registration"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "USER - login",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"password\": \"Ashai@k212\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/user/login",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"user",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "User-me",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}"
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/users/me",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"users",
-										"me"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "health",
-					"item": [
-						{
-							"name": "health",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"user\": \"Adnan\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/health",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"health"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "health",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:4001/v1/health",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"health"
-									]
-								}
-							},
-							"response": []
-						}
-						
-					]
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "1fd14d5d-5e31-4e3b-8d3c-cb738f45999f",
+    "name": "Event-Mgt-be Copy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53197441",
+    "_collection_link": "https://go.postman.co/collection/53197441-1fd14d5d-5e31-4e3b-8d3c-cb738f45999f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Local",
+      "item": [
+        {
+          "name": "user",
+          "item": [
+            {
+              "name": "USER - registration",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/user/registration",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "v1",
+                    "user",
+                    "registration"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "USER - login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"password\": \"Ashai@k212\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/user/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "v1",
+                    "user",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User-me",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/users/me",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "v1",
+                    "users",
+                    "me"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "health",
+          "item": [
+            {
+              "name": "health",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"user\": \"Adnan\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/health",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "v1",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "health",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4001/v1/health",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4001",
+                  "path": [
+                    "v1",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "event",
+          "item": [
+            {
+              "name": "event-get",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/events?tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-create",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"eventName\":\"Rohith's Bike Test\",\r\n     \"eventType\":\"private\",\r\n      \"scheduledAt\":\"2026-05-05 17:25:00.000 +0530\",\r\n      \"status\":\"pending\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/create-event",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "events",
+                    "create-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-assign",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"assignedToUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/assign-event",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "events",
+                    "assign-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "accept-event",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\", \r\n  \"eventUid\": \"ef1319e8-df42-4694-b06d-b043b2302566\",\r\n  \"eventManagerUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/accept-event",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "events",
+                    "accept-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "decline-event",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n     \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n            \"eventUid\":\"c81e79f4-bb5f-45af-a606-bd984703ccff\",\r\n            \"eventManagerUid\":\"e3c49c84-62b3-415b-b34e-eb06fa780051\",\r\n            \"declineReason\":\"due to rain\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/decline-event",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "events",
+                    "decline-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update-event",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"\",\r\n    \"tenantUid\":\"\",\r\n    \"updatedByUid\":\"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/decline-event",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "events",
+                    "decline-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete-event",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"deletedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/delete-event",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "events",
+                    "delete-event"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

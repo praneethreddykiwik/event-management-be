@@ -298,7 +298,7 @@ async function assignEventService(
   });
 }
 
-async function acceptEvent({ tenantUid, eventUid, eventManagerUid }) {
+async function  acceptEvent({ tenantUid, eventUid, eventManagerUid }) {
   const sql = `
     UPDATE events
     SET
