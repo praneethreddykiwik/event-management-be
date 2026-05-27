@@ -204,120 +204,120 @@
               "response": []
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "user_api's",
-      "item": [
-        {
-          "name": "get_users",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
         },
         {
-          "name": "get_events_managers",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "create_user",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"tharunreddy\",\r\n    \"email\":\"tharun@123\",\r\n    \"password\":\"tharun123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"tharun\",\r\n    \"mobile\":\"7995840745\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+          "name": "user_api's",
+          "item": [
+            {
+              "name": "get_users",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "get_events_managers",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "create_user",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"tharunreddy\",\r\n    \"email\":\"tharun@123\",\r\n    \"password\":\"tharun123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"tharun\",\r\n    \"mobile\":\"7995840745\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "users",
+                    ""
+                  ]
                 }
-              }
+              },
+              "response": []
             },
-            "url": {
-              "raw": "http://localhost:4000/v1/users/",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "4000",
-              "path": [
-                "v1",
-                "users",
-                ""
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "update_users",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"tharunreddy\",\r\n    \"email\":\"tharun@123\",\r\n    \"password\":\"tharun123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"tharun\",\r\n    \"mobile\":\"7995840745\"\r\n}"
-            },
-            "url": {
-              "raw": "http://localhost:4000/v1/users/",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "4000",
-              "path": [
-                "v1",
-                "users",
-                ""
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "events_tasks",
-          "request": {
-            "method": "GET",
-            "header": []
-          },
-          "response": []
-        },
-        {
-          "name": "dele_user",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"uid\":\"27d17935-8128-4580-a27b-1afd791a192c\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            {
+              "name": "update_users",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"tharunreddy\",\r\n    \"email\":\"tharun@123\",\r\n    \"password\":\"tharun123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"tharun\",\r\n    \"mobile\":\"7995840745\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "users",
+                    ""
+                  ]
                 }
-              }
+              },
+              "response": []
             },
-            "url": {
-              "raw": "http://localhost:4000/v1/users/delete-user",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "4000",
-              "path": [
-                "v1",
-                "users",
-                "delete-user"
-              ]
+            {
+              "name": "events_tasks",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "dele_user",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uid\":\"27d17935-8128-4580-a27b-1afd791a192c\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/delete-user",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "users",
+                    "delete-user"
+                  ]
+                }
+              },
+              "response": []
             }
-          },
-          "response": []
+          ]
         }
       ]
     }
