@@ -3,6 +3,9 @@ const {
   acceptEventReqModel,
   updateEventReqModel,
 } = require("../models/request.model");
+const {
+  generateGetEventReq,
+} = require("../models/requestModels/events.req.models");
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
 
@@ -18,12 +21,7 @@ const deleteEventController = async (req, res) => {
 
 const getEventsCtrl = async (req, res) => {
   try {
-    const obj = {
-      tenantUid: req.query.tenantUid || req.session?.user?.tenantUid,
-      eventUid: req.query.eventUid,
-      assignedToUid: req.query.assignedToUid,
-      status: req.query.status,
-    };
+    const obj = generateGetEventReq(req.query, req.session);
     const getEventidRes = await services.getEventsService(obj);
 
     return res.status(200).json(successRes("success", getEventidRes, "0000"));
