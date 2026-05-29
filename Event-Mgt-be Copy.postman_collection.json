@@ -315,7 +315,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"eventUid\":\"\",\r\n    \"tenantUid\":\"\",\r\n    \"updatedByUid\":\"\"\r\n}",
+                  "raw": "{\r\n    \"eventUid\":\"994557f9-bdf6-4521-b591-b69528306f28\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\",\r\n    \"status\":\"pending\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -323,7 +323,7 @@
                   }
                 },
                 "url": {
-                  "raw": "http://localhost:4000/v1/events/decline-event",
+                  "raw": "http://localhost:4000/v1/events/update-event",
                   "protocol": "http",
                   "host": [
                     "localhost"
@@ -332,7 +332,7 @@
                   "path": [
                     "v1",
                     "events",
-                    "decline-event"
+                    "update-event"
                   ]
                 }
               },
@@ -359,6 +359,237 @@
                     "localhost"
                   ],
                   "port": "4000",
+                  "path": [
+                    "v1",
+                    "events",
+                    "delete-event"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Prod",
+      "item": [
+        {
+          "name": "event",
+          "item": [
+            {
+              "name": "event-get",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"assignedToUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://api.helm.events/v1/events?tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "http",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-create",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"eventName\":\"Rohith Car Test\",\r\n     \"eventType\":\"public\",\r\n      \"scheduledAt\":\"2026-05-05 17:25:00.000 +0530\",\r\n      \"status\": \"assigned\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://api.helm.events/v1/events/create-event",
+                  "protocol": "http",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "events",
+                    "create-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-assign",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"assignedToUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/assign-event",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "events",
+                    "assign-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-accept",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\", \r\n  \"eventUid\": \"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"eventManagerUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/accept-event",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "events",
+                    "accept-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-decline",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n     \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n            \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n            \"eventManagerUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f3613\",\r\n            \"declineReason\":\"due to rain\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/decline-event",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "events",
+                    "decline-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-update",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"994557f9-bdf6-4521-b591-b69528306f28\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\",\r\n    \"status\":\"assigned\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/update-event",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "events",
+                    "update-event"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-delete",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"994557f9-bdf6-4521-b591-b69528306f28\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"deletedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/delete-event",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
                   "path": [
                     "v1",
                     "events",
