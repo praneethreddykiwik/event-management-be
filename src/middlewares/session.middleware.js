@@ -63,4 +63,32 @@ async function buildSessionMiddleware() {
   // });
 }
 
-module.exports = { buildSessionMiddleware };
+const validateSession = (req, res, next) => {
+  try {
+
+    console.log("SESSION USER:", req.session?.user);
+    console.log("SESSION ID:", req.sessionID);
+
+    if (!req.session || !req.session.user) {
+
+      return res.status(401).json({
+        success: false,
+        message: "Session expired. Please login again",
+      });
+
+    }
+
+    next();
+
+  } catch (error) {
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+
+  }
+};
+
+
+module.exports = { buildSessionMiddleware, validateSession };
