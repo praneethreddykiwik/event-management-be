@@ -318,6 +318,225 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "tasks",
+          "item": [
+            {
+              "name": "get - tasks",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks?eventUid=994557f9-bdf6-4521-b591-b69528306f28&tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "eventUid",
+                      "value": "994557f9-bdf6-4521-b591-b69528306f28",
+                      "type": "text"
+                    },
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign - Task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"taskUid\": \"10238c66-641b-42b8-b84c-636d462f1113\",\r\n  \"assignedToUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n  \"updatedByUid\": \"c6d1cfdd-2b6e-4fd0-8a8e-b6d13427233a\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/assign-task",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "assign-task"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Accept - Task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"taskUid\": \"b508aa69-8c4d-4fda-873b-8ba9bb6d4d8c\",\r\n  \"assignedToUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/accept-task",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "accept-task"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create - task",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n  \"eventUid\": \"994557f9-bdf6-4521-b591-b69528306f28\",\r\n  \"title\": \"decoration\",\r\n  \"createdByUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n  \"status\": \"assigned\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "tasks"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "decline - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"declinedByUid\":\"2e41f6f9-a284-4c3c-a249-6dfac2031566\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/decline-task",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "decline-task"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"declinedByUid\":\"45f9662d-5368-4cb7-9b0f-f1021cc58bb9\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/delete-task",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "delete-task"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"f12b1553-5f01-4212-bb8c-48de5c26b6be\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/edit",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "edit"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ]
     },
@@ -438,6 +657,226 @@
               "request": {
                 "method": "DELETE",
                 "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "tasks",
+          "item": [
+            {
+              "name": "get - tasks",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks?eventUid=994557f9-bdf6-4521-b591-b69528306f28&tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "eventUid",
+                      "value": "994557f9-bdf6-4521-b591-b69528306f28"
+                    },
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"taskUid\": \"33298c85-31d2-4934-aa38-d4ca3e222fae\",\r\n  \"updatedByUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n  \"assignedToUid\": \"ae41bc9b-5ebb-415b-883c-6ea4ca447445\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/assign-task",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "assign-task"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Accept - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\": \"10238c66-641b-42b8-b84c-636d462f1113\",\r\n  \"assignedToUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/accept-task",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "accept-task"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n  \"eventUid\": \"d817b254-95ae-419b-a3a5-904f9fed4f5e\",\r\n  \"title\": \"decoration chairs\",\r\n  \"createdByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\",\r\n  \"updatedByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\", \r\n  \"status\": \"assigned\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "tasks"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "decline - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n  \"eventUid\": \"d817b254-95ae-419b-a3a5-904f9fed4f5e\",\r\n  \"title\": \"decoration chairs\",\r\n  \"createdByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\",\r\n  \"updatedByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\", \r\n  \"status\": \"assigned\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "tasks"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"987d19d9-73ad-4997-84e7-bdc18d51bb85\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"declinedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/delete-task",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "delete-task"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"f12b1553-5f01-4212-bb8c-48de5c26b6be\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/edit",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "helm",
+                    "events"
+                  ],
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "edit"
+                  ]
+                }
               },
               "response": []
             }
