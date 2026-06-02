@@ -6,15 +6,14 @@ const { validateSession } = require("../middlewares/session.middleware");
 const router = express.Router();
 
 router.get("/", validateSession, userController.getUsersCtrl);
-router.get("/event-managers", validateSession, userController.getEventManagersCtrl);
-router.post("/", validateSession, validations.createUserVal, userController.createUserCtrl);
-router.put("/", validateSession,validations.updateUserVal, userController.updateUserCtrl);
+router.get("/event-managers", userController.getEventManagersCtrl);
+router.post("/", validations.createUserVal, userController.createUserCtrl);
+router.put("/", validations.updateUserVal, userController.updateUserCtrl);
 router.get(
   "/user-events-tasks",
-  validateSession,
   validations.userEventsTasksVal,
   userController.userEventsTasksCtrl,
 );
-router.delete("/delete-user",validateSession, userController.deleteUserCtrl);
+router.delete("/delete-user", userController.deleteUserCtrl);
 
 module.exports = router;
