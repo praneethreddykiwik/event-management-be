@@ -38,7 +38,7 @@ const createEventCtrl = async (req, res) => {
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
     console.error("createEventCtrl", error);
-    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    const erorRes = errorRes("createEvent Failed", {}, error.code, error);
     return res.status(400).json(erorRes);
   }
 };

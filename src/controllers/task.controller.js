@@ -1,6 +1,8 @@
+// const { utils } = require("pg-promise");
 const { createTaskReqModel } = require("../models/request.model");
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tasks.service");
+const utils = require("../utils/utils");
 
 async function getTasksByEventUidCtrl(req, res) {
   try {
@@ -65,6 +67,7 @@ async function updateTaskCtrl(req, res) {
       assignedToUid: req.body.assignedToUid,
       status: req.body.status,
       updatedByUid,
+      qaAssignedTo: req.body.qaAssignedTo,
     });
 
     if (!response) {
@@ -157,6 +160,137 @@ const deleteTaskCtrl = async (req, res) => {
   }
 };
 
+const qaEventsAndTasksCtrl = async (req, res) => {
+  try {
+    const tenantUid = req.query.tenantUid;
+    const assignedToUid = req.query.assignedToUid;
+
+    const data = await services.qaEventsAndTasksService(
+      tenantUid,
+      assignedToUid,
+    );
+
+    const eventIds = data
+      .map((el) => el.eventUid)
+      .filter((fl, i, arr) => i === arr.findIndex((fi) => fi === fl));
+
+    const countObj = {
+      totalTaskCount: 0,
+      notStarted: 0,
+      assigned: 0,
+      inProgress: 0,
+
+      readyForQa: 0,
+      qaInProgress: 0,
+
+      completed: 0,
+      cancelled: 0,
+      deleted: 0,
+    };
+
+    const kpiCounts = {
+      assignedToMe: 0,
+      readyForQA: 0,
+      QAInProgress: 0,
+      approvedToday: 0,
+      // rejectedToday: 0,
+      pendingReview: 0,
+    };
+
+    const priorityCounts = {
+      low: 0,
+      medium: 0,
+      high: 0,
+    };
+
+    const userEventsAndTasks = eventIds.map((eventId) => {
+      const eventObj = data.find((fn) => fn.eventUid === eventId);
+      const tasks = data
+        .filter((fl) => fl.eventUid === eventId && fl.taskUid)
+        .map((m) => {
+          const statusKey = utils.snakeToCamel(m.taskStatus);
+          ++countObj[statusKey];
+
+          const kpiConditions = {
+            readyForQA: m.taskStatus === "ready_for_qa",
+            QAInProgress: m.taskStatus === "qa_in_progress",
+            approvedToday: utils.isToday(m.qa_approved_at),
+            pendingReview:
+              m.taskStatus === "ready_for_qa" ||
+              m.taskStatus === "qa_in_progress",
+          };
+          for (const kpiKey in kpiConditions) {
+            if (kpiConditions[kpiKey]) {
+              kpiCounts[kpiKey] += 1;
+            }
+          }
+
+          priorityCounts[m.taskPriority] += 1;
+
+          return {
+            taskUid: m.taskUid,
+            taskTitle: m.taskTitle,
+            taskStatus: m.taskStatus,
+            taskDescription: m.taskDescription,
+            taskDueAt: m.taskDueAt,
+            taskAssignedToUid: m.taskAssignedToUid,
+            taskAssignedToFirstName: m.taskAssignedToFirstName,
+            taskAssignedToLastName: m.taskAssignedToLastName,
+            taskAssignedTo: m.taskAssignedTo,
+            taskCreatedAt: m.taskCreatedAt,
+            taskUpdatedAt: m.taskUpdatedAt,
+            eventVenue: m.eventVenue,
+            taskPriority: m.taskPriority,
+
+            qaAssignedToUid: m.qaAssignedToUid,
+            qaAssignedToFirstName: m.qaAssignedToFirstName,
+            qaAssignedToLastName: m.qaAssignedToLastName,
+            qaAssignedTo: m.qaAssignedTo,
+            isQaApproved: m.isQaApproved,
+          };
+        });
+
+      countObj.totalTaskCount += tasks.length;
+      kpiCounts.assignedToMe += tasks.length;
+
+      return {
+        eventUid: eventObj.eventUid,
+        eventName: eventObj.eventName,
+        eventType: eventObj.eventType,
+        evenScheduledAt: eventObj.evenScheduledAt,
+        eventVenue: eventObj.eventVenue,
+        expectedAttendees: eventObj.expectedAttendees,
+        eventStatus: eventObj.eventStatus,
+        eventAssignedToUid: eventObj.eventAssignedToUid,
+        eventCreatedAt: eventObj.eventCreatedAt,
+        eventAssignedToFirstName: eventObj.eventAssignedToFirstName,
+        eventAssignedToLastName: eventObj.eventAssignedToLastName,
+        eventAssignedToUsername: eventObj.eventAssignedToUsername,
+
+        tasks,
+      };
+    });
+
+    res.status(200).json(
+      successRes("Success", {
+        countObj,
+        kpiCounts,
+        priorityCounts,
+        data: userEventsAndTasks,
+      }),
+    );
+  } catch (error) {
+    console.error("qaEventsAndTasksCtrl", error);
+    const erorRes = errorRes(
+      "Qa Events and Tasks Failed",
+      {},
+      error.code,
+      error,
+    );
+    return res.status(400).json(erorRes);
+  }
+};
+
 module.exports = {
   getTasksByEventUidCtrl,
   getTaskById,
@@ -166,4 +300,5 @@ module.exports = {
   acceptTaskCtrl,
   declineTaskCtrl,
   deleteTaskCtrl,
+  qaEventsAndTasksCtrl,
 };
