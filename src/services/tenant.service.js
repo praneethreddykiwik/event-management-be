@@ -25,8 +25,8 @@ const getTenantByIdService = async (tenantId) => {
   return response;
 };
 
-const createTenantService = async (req) => {
-  const { tenantId, name, updatedBy } = req.body;
+const createTenantService = async (payload) => {
+  const { tenantId, name, updatedBy } = payload;
   // const name = req.body.name;
 
   const db = getDb();

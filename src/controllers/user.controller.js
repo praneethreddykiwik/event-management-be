@@ -5,10 +5,13 @@ const { successRes, errorRes } = require("../models/response.model");
 const userServices = require("../services/user.service");
 const reqModels = require("../models/request.model");
 const utils = require("../utils/utils");
+const { generateGetUsersReq, generateGetEventManagersReq, generateUpdateUserReq, generateUserEventsTasksReq, generateDeleteUserReq } = require("../models/requestModels/user.req.model");
 
 const getUsersCtrl = async (req, res) => {
   try {
-    const users = await userServices.getUsersService(req.query);
+    const payload = generateGetUsersReq(req.query);
+
+    const users = await userServices.getUsersService(payload);
     res.status(200).json(successRes("Success", users));
   } catch (error) {
     console.error("getUsersCtrl", error);
@@ -19,7 +22,9 @@ const getUsersCtrl = async (req, res) => {
 
 const getEventManagersCtrl = async (req, res) => {
   try {
-    const users = await userServices.getEventManagersService(req.query);
+    const payload = generateGetEventManagersReq(req.query);
+
+    const users = await userServices.getEventManagersService(payload);
     res.status(200).json(successRes("Success", users));
   } catch (error) {
     console.error("getEventManagersCtrl", error);
@@ -71,23 +76,15 @@ const loginUser = (req, res) => {
 
 const updateUserCtrl = async (req, res) => {
   try {
-    const { uid, mobile, status, role, username, email, firstName, lastName } =
-      req.body;
+    const payload = generateUpdateUserReq(req.body);
+
+    const { uid } = payload;
 
     if (!uid) {
       return res.status(400).json(errorRes("uid is required"));
     }
 
-    const updatedUser = await userServices.updateUserService({
-      uid,
-      mobile,
-      status,
-      role,
-      username,
-      email,
-      firstName,
-      lastName,
-    });
+    const updatedUser = await userServices.updateUserService(payload);
 
     if (!updatedUser) {
       return res.status(404).json(errorRes("User not found"));
@@ -149,12 +146,11 @@ const createUserCtrl = async (req, res) => {
 
 const userEventsTasksCtrl = async (req, res) => {
   try {
-    const tenantUid = req.query.tenantUid;
-    const assignedToUid = req.query.assignedToUid;
+    const payload = generateUserEventsTasksReq(req.query);
 
     const data = await userServices.userEventsTasksService(
-      tenantUid,
-      assignedToUid,
+      payload.tenantUid,
+      payload.assignedToUid,
     );
 
     const eventIds = data
@@ -232,13 +228,13 @@ const userEventsTasksCtrl = async (req, res) => {
 
 const deleteUserCtrl = async (req, res) => {
   try {
-    const { uid } = req.query;
+    const payload = generateDeleteUserReq(req.query);
 
-    if (!uid) {
+    if (!payload.uid) {
       return res.status(400).json(errorRes("uid is required"));
     }
 
-    const deletedUser = await userServices.deleteUserService(uid);
+    const deletedUser = await userServices.deleteUserService(payload.uid);
 
     return res
       .status(200)
