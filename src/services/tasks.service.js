@@ -166,8 +166,12 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
     t.due_at AS "taskDueAt",
     t.assigned_to_uid AS "taskAssignedToUid",
     t.created_at AS "taskCreatedAt",
-    t.qa_assigned_to_uid AS "qaAssignedTo",
+
+    t.qa_assigned_to_uid AS "qaAssignedToUid",
     t.is_qa_approved AS "isQaApproved",
+    qaAssigned.first_name AS "qaAssignedToFirstName",
+    qaAssigned.last_name AS "qaAssignedToLastName",
+    CONCAT(qaAssigned.first_name, ' ', qaAssigned.last_name) as "qaAssignedTo",
 
     u.username,
     CONCAT(u.first_name, ' ', u.last_name) as "taskAssignedTo"
@@ -175,8 +179,13 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
   FROM events e
   JOIN tasks t
     ON t.event_uid = e.uid
+
   JOIN users u
     ON u.uid = t.assigned_to_uid
+
+  LEFT JOIN users qaAssigned
+  ON qaAssigned.uid = t.qa_assigned_to_uid
+
   WHERE e.uid = $(eventUid)
   ORDER BY
     e.scheduled_at DESC;
@@ -187,6 +196,7 @@ const getTasksByEventService = async (tenantUid, eventUid) => {
     eventUid,
     tenant_uid: tenantUid,
   });
+
   return rows;
 };
 
@@ -248,6 +258,193 @@ async function declineTaskService(taskUid, assignedToUid) {
   });
 }
 
+// 'low'::text, 'medium'::text, 'high'::text])))
+const qaEventsAndTasksService = async (tenantUid, assignedToUid) => {
+  const sql = `
+    SELECT
+      e.uid AS "eventUid",
+      e.event_name AS "eventName",
+      e.event_type AS "eventType",
+      e.scheduled_at AS "eventScheduledAt",
+      e.venue AS "eventVenue",
+      e.expected_attendees AS "expectedAttendees",
+      e.status AS "eventStatus",
+      e.assigned_to_uid AS "eventAssignedToUid",
+      e.created_at AS "eventCreatedAt",
+
+      assigned.first_name AS "eventAssignedToFirstName",
+      assigned.last_name AS "eventAssignedToLastName",
+      assigned.username AS "eventAssignedToUsername",
+
+      t.uid AS "taskUid",
+      t.title AS "taskTitle",
+      t.status AS "taskStatus",
+      t.description AS "taskDescription",
+      t.due_at AS "taskDueAt",
+      t.assigned_to_uid AS "taskAssignedToUid",
+      t.created_at AS "taskCreatedAt",
+      t.updated_at AS "taskUpdatedAt",
+      t.priority AS "taskPriority",
+
+      t.qa_assigned_to_uid AS "qaAssignedToUid",
+      t.is_qa_approved AS "isQaApproved",
+      qaAssigned.first_name AS "qaAssignedToFirstName",
+      qaAssigned.last_name AS "qaAssignedToLastName",
+      CONCAT(qaAssigned.first_name, ' ', qaAssigned.last_name) as "qaAssignedTo",
+
+      taskAssigned.first_name AS "taskAssignedToFirstName",
+      taskAssigned.last_name AS "taskAssignedToLastName",
+      CONCAT(taskAssigned.first_name, ' ', taskAssigned.last_name) as "taskAssignedTo",
+      taskAssigned.username AS "taskAssignedToUsername"
+
+    FROM events e
+
+    LEFT JOIN users assigned
+      ON assigned.uid = e.assigned_to_uid
+
+    JOIN users me
+      ON me.uid = $(assignedToUid)
+
+    LEFT JOIN tasks t
+      ON t.event_uid = e.uid
+      AND t.status <> 'deleted'
+
+    LEFT JOIN users taskAssigned
+      ON taskAssigned.uid = t.qa_assigned_to_uid
+
+    LEFT JOIN users qaAssigned
+      ON qaAssigned.uid = t.qa_assigned_to_uid
+
+    WHERE e.tenant_uid = $(tenantUid)
+      AND (
+        me.role = 'admin'
+        OR e.assigned_to_uid = $(assignedToUid)
+        OR t.qa_assigned_to_uid = $(assignedToUid)
+      )
+
+    ORDER BY e.created_at DESC, t.created_at ASC;
+  `;
+
+  const db = getDb();
+  const rows = await db.any(sql, { tenantUid, assignedToUid });
+  return rows;
+};
+
+// _______________________________________________new____________________________
+async function taskCompletedService(taskUid) {
+  const db = await getDb();
+  const sql = `
+    UPDATE tasks
+    SET 
+      status = 'completed',
+      is_qa_approved = false
+    WHERE uid = $(task_uid);
+  `;
+
+  const k = await db.one(sql, { task_uid: taskUid });
+  return k;
+}
+// new
+// add single transaction
+async function qaRejectTaskService(
+  tenantUid,
+  eventUid,
+  taskUid,
+  qaUserUid,
+  comments,
+) {
+  const db = await getDb();
+  const reviewSql = `
+    INSERT INTO task_qa_reviews (
+      tenant_uid,
+      event_uid,
+      task_uid,
+      qa_user_uid,
+      review_status,
+      comments
+    )
+    VALUES (
+      $(tenant_uid),
+      $(event_uid),
+      $(task_uid),
+      $(qa_user_uid),
+      'rejected',
+      $(comments)
+    );
+  `;
+  const reviewsUpdateRes = db.one(reviewSql, {
+    tenant_uid: tenantUid,
+    event_uid: eventUid,
+    task_uid: taskUid,
+    qa_user_uid: qaUserUid,
+    comments,
+  });
+
+  const updateTasksSql = `
+    UPDATE tasks
+    SET
+      is_qa_approved = false,
+      status = 'in_progress'
+    WHERE uid = $(task_uid);
+  `;
+  const updateTasksRes = db.one(reviewSql, {
+    task_uid: taskUid,
+  });
+
+  const res = Promise.all([reviewsUpdateRes, updateTasksRes]);
+}
+// new
+// add single transaction
+async function qaApprovesTaskService(
+  tenantUid,
+  eventUid,
+  taskUid,
+  qaUserUid,
+  comments,
+) {
+  const db = await getDb();
+  const reviewSql = `
+    INSERT INTO task_qa_reviews (
+      tenant_uid,
+      event_uid,
+      task_uid,
+      qa_user_uid,
+      review_status,
+      comments
+    )
+    VALUES (
+      $(tenant_uid),
+      $(event_uid),
+      $(task_uid),
+      $(qa_user_uid),
+      'approved',
+      $(comments)
+    );
+  `;
+  const reviewsUpdateRes = db.one(reviewSql, {
+    tenant_uid: tenantUid,
+    event_uid: eventUid,
+    task_uid: taskUid,
+    qa_user_uid: qaUserUid,
+    comments,
+  });
+
+  const updateTasksSql = `
+    UPDATE tasks
+    SET
+      is_qa_approved = true,
+      qa_approved_by = $(qa_user_uid),
+      qa_approved_at = now()
+    WHERE uid = $(task_uid);
+  `;
+  const updateTasksRes = db.one(updateTasksSql, {
+    task_uid: taskUid,
+    qa_user_uid: qaUserUid,
+  });
+
+  const res = Promise.all([reviewsUpdateRes, updateTasksRes]);
+}
+
 module.exports = {
   createTaskService,
   getTaskService,
@@ -257,4 +454,5 @@ module.exports = {
   acceptTaskService,
   declineTaskService,
   deleteTaskService,
+  qaEventsAndTasksService,
 };
