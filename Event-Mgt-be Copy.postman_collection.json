@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "1fd14d5d-5e31-4e3b-8d3c-cb738f45999f",
+    "_postman_id": "c45db988-676a-4535-a3e9-a81e67c22cfe",
     "name": "Event-Mgt-be Copy",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "53197441",
-    "_collection_link": "https://go.postman.co/collection/53197441-1fd14d5d-5e31-4e3b-8d3c-cb738f45999f?source=collection_link"
+    "_exporter_id": "53195113",
+    "_collection_link": "https://go.postman.co/collection/53195113-c45db988-676a-4535-a3e9-a81e67c22cfe?source=collection_link"
   },
   "item": [
     {
@@ -80,12 +80,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "text"
-                    }
-                  }
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}"
                 },
                 "url": {
                   "raw": "http://localhost:4001/v1/users/me",

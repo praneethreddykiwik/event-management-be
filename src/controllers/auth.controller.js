@@ -5,8 +5,8 @@ const utils = require("../utils/utils");
 
 const loadUser = async (req, res, next) => {
   try {
-    const { tenantId, username, password } = req.body;
-    const query = { tenantId, username, password };
+    const { tenantId, username } = req.body;
+    const query = { tenantId, username };
 
     const users = await userServices.getUsersService(
       query,
