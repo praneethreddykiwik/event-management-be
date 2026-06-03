@@ -23,10 +23,54 @@ const camelToWords = (str) => {
   return result.charAt(0).toUpperCase() + result.slice(1);
 };
 
+const isToday = (dbDate) => {
+  if (!dbDate) {
+    return false;
+  }
+
+  const date = new Date(dbDate);
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+};
+
+const sortByDbDateDesc = (arr, dateKey) => {
+  if (!Array.isArray(arr)) {
+    return [];
+  }
+
+  return [...arr].sort((a, b) => {
+    const dateA = new Date(a[dateKey]).getTime();
+    const dateB = new Date(b[dateKey]).getTime();
+
+    return dateB - dateA;
+  });
+};
+
+const sortByDbDateAsc = (arr, dateKey) => {
+  if (!Array.isArray(arr)) {
+    return [];
+  }
+
+  return [...arr].sort((a, b) => {
+    const dateA = new Date(a[dateKey]).getTime();
+    const dateB = new Date(b[dateKey]).getTime();
+
+    return dateA - dateB;
+  });
+};
+
 module.exports = {
   hashPassword,
   verifyPassword,
   comparePassword,
   snakeToCamel,
   camelToWords,
+  isToday,
+  sortByDbDateDesc,
+  sortByDbDateAsc,
 };

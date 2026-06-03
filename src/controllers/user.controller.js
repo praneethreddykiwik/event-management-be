@@ -159,7 +159,6 @@ const userEventsTasksCtrl = async (req, res) => {
 
     const countObj = {
       totalTaskCount: 0,
-
       notStarted: 0,
       assigned: 0,
       inProgress: 0,
@@ -221,7 +220,12 @@ const userEventsTasksCtrl = async (req, res) => {
       .json(successRes("Success", { countObj, data: userEventsAndTasks }));
   } catch (error) {
     console.error("userEventsTasksCtrl", error);
-    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    const erorRes = errorRes(
+      "userEventsTasksCtrl Failed",
+      {},
+      error.code,
+      error,
+    );
     return res.status(400).json(erorRes);
   }
 };

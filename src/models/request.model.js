@@ -34,6 +34,7 @@ const createTaskReqModel = (req) => {
     createdByUid: req.body.createdByUid || req.session.user.uid,
     updatedByUid: req.body.updatedByUid || req.session.user.uid,
     status: req.body.status,
+    qaAssignedTo: req.body.qaAssignedTo,
   };
 };
 
