@@ -115,15 +115,32 @@ const getTaskService = async (query) => {
   const params = {};
 
   const queries = [
-    { query: "tenantId", condition: "t.tenant_uid = $(tenantUid)" },
-    { query: "eventUid", condition: "t.event_uid = $(eventUid)" },
-    { query: "username", condition: "u.username = $(username)" },
+    {
+      query: "taskUid",
+      condition: "t.uid = $(taskUid)",
+      value: query.taskUid,
+    },
+    {
+      query: "tenant_d",
+      condition: "t.tenant_uid = $(tenantUid)",
+      value: query.tenantId,
+    },
+    {
+      query: "event_id",
+      condition: "t.event_uid = $(eventUid)",
+      value: query.eventUid,
+    },
+    {
+      query: "username",
+      condition: "u.username = $(username)",
+      value: query.username,
+    },
   ];
 
   queries.forEach((el) => {
     if (query[el.query]) {
       conditions.push(el.condition);
-      params[el.query] = query[el.query];
+      params[el.query] = el.value;
     }
   });
 
@@ -135,8 +152,47 @@ const getTaskService = async (query) => {
   const users = await db.any(
     `
       select
-        *
+        t.uid as "taskUid",
+        t.tenant_uid as "tenantUid",
+        t.event_uid as "eventUid",
+        t.title as "taskTitle",
+        t.description as "taskDescription",
+        t.status as "taskStatus",
+        t.priority as "taskPriority",
+        t.due_at as "taskDueAt",
+        t.assigned_to_uid as "taskAssignedToUid",
+        t.created_at as "taskCreatedAt",
+        t.updated_at as "taskUpdatedAt",
+        t.created_by_uid as "taskCreatedByUid",
+        t.updated_by_uid as "taskUpdatedByUid",
+        t.qa_assigned_to_uid as "qaAssignedToUid",
+        t.is_qa_approved as "taskIsQaApproved",
+        t.qa_approved_by as "taskQaApprovedBy",
+        t.qa_approved_at as "taskQaApprovedAt",
+
+        CONCAT_WS(' ', taskAssignedTo.first_name, taskAssignedTo.last_name) as "taskAssignedTo",
+
+        e.event_name as "eventName",
+        CONCAT_WS(' ', eventAssignedTo.first_name, eventAssignedTo.last_name) as "eventAssignedTo",
+        CONCAT_WS(' ', qaAssignedTo.first_name, qaAssignedTo.last_name) as "qaAssignedTo",
+        e.venue as "eventVenue",
+        eventStatus.status as "eventStatus"
+
       from tasks t
+      LEFT JOIN events e
+        ON t.event_uid = e.uid
+
+      LEFT JOIN users taskAssignedTo
+        ON t.assigned_to_uid = taskAssignedTo.uid
+
+      LEFT JOIN users eventAssignedTo
+        ON e.assigned_to_uid = eventAssignedTo.uid
+
+      LEFT JOIN events eventStatus
+        ON t.event_uid = eventStatus.uid
+
+      LEFT JOIN users qaAssignedTo
+       ON t.qa_assigned_to_uid = qaAssignedTo.uid
       ${whereClause}
       `,
     { ...params },

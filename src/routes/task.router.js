@@ -10,7 +10,7 @@ taskRouter.get(
   controllers.getTasksByEventUidCtrl,
 );
 // taskRouter.get('/getByQuery', )
-// taskRouter.get("/:taskId", validations.getTaskByIdVal, controllers.getTaskById);
+taskRouter.get("/task", validations.getTaskByIdVal, controllers.getTaskCtrl);
 taskRouter.post("/", validations.createTaskVal, controllers.createTaskCtrl);
 taskRouter.post(
   "/assign-task",

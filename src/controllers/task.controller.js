@@ -21,10 +21,10 @@ async function getTasksByEventUidCtrl(req, res) {
   }
 }
 
-async function getTaskById(req, res) {
-  const { taskId } = req.params;
+async function getTaskCtrl(req, res) {
   try {
-    const task = await services.getTaskByIdService(taskId);
+    console.log("abdul query", req.query);
+    const task = await services.getTaskService(req.query);
 
     if (!task) {
       const invalidTaskRes = errorRes("Task not found");
@@ -293,7 +293,7 @@ const qaEventsAndTasksCtrl = async (req, res) => {
 
 module.exports = {
   getTasksByEventUidCtrl,
-  getTaskById,
+  getTaskCtrl,
   createTaskCtrl,
   assignTaskCtrl,
   updateTaskCtrl,

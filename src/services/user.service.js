@@ -182,6 +182,7 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
       t.due_at AS "taskDueAt",
       t.assigned_to_uid AS "taskAssignedToUid",
       t.created_at AS "taskCreatedAt",
+      t.priority AS "taskPriority",
 
       t.qa_assigned_to_uid AS "qaAssignedToUid",
       t.is_qa_approved AS "isQaApproved",

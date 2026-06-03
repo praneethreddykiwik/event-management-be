@@ -369,6 +369,11 @@ const qaEventsAndTasksVal = (req, res, next) => {
   next();
 };
 
+const getTaskByIdVal = (req, res, next) => {
+  // checkHere
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -392,4 +397,5 @@ module.exports = {
   editTaskVal,
   deleteTaskVal,
   qaEventsAndTasksVal,
+  getTaskByIdVal,
 };
