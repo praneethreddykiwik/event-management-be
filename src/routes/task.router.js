@@ -38,7 +38,7 @@ taskRouter.post(
 );
 
 // swagger not added
-taskRouter.post("/edit", validations.editTaskVal, controllers.updateTaskCtrl);
+taskRouter.post("/edit", validateSession, validations.editTaskVal, controllers.updateTaskCtrl);
 
 taskRouter.get(
   "/qa-events-tasks",
