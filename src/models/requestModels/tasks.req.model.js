@@ -9,6 +9,22 @@ const generateGetTasksByEventReq = (query, session) => {
   };
 };
 
+const generateCreateTaskReq = (req) => {
+  return {
+    tenantUid: req.body.tenantUid,
+    eventUid: req.body.eventUid,
+    title: req.body.title,
+    description: req.body.description || null,
+    priority: req.body.priority || "medium",
+    dueAt: req.body.dueAt || null,
+    assignedToUid: req.body.assignedToUid || null,
+    createdByUid: req.body.createdByUid || req.session.user.uid,
+    updatedByUid: req.body.updatedByUid || req.session.user.uid,
+    status: req.body.status,
+    qaAssignedTo: req.body.qaAssignedTo,
+  };
+};
+
 const generateUpdateTaskReq = (body, session) => {
   if (!body || !session) {
     console.error("[generateUpdateTaskReq]", "Missing body or session");
@@ -80,4 +96,5 @@ module.exports = {
   generateAcceptTaskReq,
   generateDeclineTaskReq,
   generateDeleteTaskReq,
+  generateCreateTaskReq,
 };

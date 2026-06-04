@@ -1,5 +1,4 @@
 // const { utils } = require("pg-promise");
-const { createTaskReqModel } = require("../models/request.model");
 const {
   generateGetTasksByEventReq,
   generateUpdateTaskReq,
@@ -7,6 +6,7 @@ const {
   generateAssignTaskReq,
   generateDeclineTaskReq,
   generateDeleteTaskReq,
+  generateCreateTaskReq,
 } = require("../models/requestModels/tasks.req.model");
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tasks.service");
@@ -50,7 +50,7 @@ async function getTaskById(req, res) {
 }
 
 async function createTaskCtrl(req, res) {
-  const payload = createTaskReqModel(req);
+  const payload = generateCreateTaskReq(req);
   try {
     const response = await services.createTaskService(payload);
     console.log("Success: createTaskCtrl response", response);

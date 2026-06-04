@@ -1,16 +1,15 @@
 const {
-  createEventReqModel,
-  acceptEventReqModel,
-  updateEventReqModel,
-} = require("../models/request.model");
-const {
   generateGetEventReq,
   generateAssignEventReq,
   generateDeleteEventReq,
+  generatecreateEventReq,
+  generateAcceptEventReq,
+  generateUpdateEventReq,
 } = require("../models/requestModels/events.req.models");
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
 
+// check here -> Function not used anywhere.
 const deleteEventController = async (req, res) => {
   try {
     return res.status(200).json(successRes("Event deleted successfully"));
@@ -35,7 +34,7 @@ const getEventsCtrl = async (req, res) => {
 
 const createEventCtrl = async (req, res) => {
   try {
-    const payload = createEventReqModel(req);
+    const payload = generatecreateEventReq(req);
     const createEventRes = await services.createEventService(payload);
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -47,7 +46,7 @@ const createEventCtrl = async (req, res) => {
 
 const acceptEventCtrl = async (req, res) => {
   try {
-    const payload = acceptEventReqModel(req);
+    const payload = generateAcceptEventReq(req);
     const acceptEventRes = await services.acceptEvent(payload);
 
     console.log("acceptEventRes", acceptEventRes);
@@ -76,7 +75,7 @@ const acceptEventCtrl = async (req, res) => {
 
 const updateEventCtrl = async (req, res) => {
   try {
-    const payload = updateEventReqModel(req);
+    const payload = generateUpdateEventReq(req);
 
     const updateEventRes = await services.updateEventService(payload);
 
