@@ -3,9 +3,15 @@
 const tenantServices = require("../services/tenant.service");
 const { successRes, errorRes } = require("../models/response.model");
 const userServices = require("../services/user.service");
-const reqModels = require("../models/request.model");
 const utils = require("../utils/utils");
-const { generateGetUsersReq, generateGetEventManagersReq, generateUpdateUserReq, generateUserEventsTasksReq, generateDeleteUserReq } = require("../models/requestModels/user.req.model");
+const {
+  generateGetUsersReq,
+  generateGetEventManagersReq,
+  generateUpdateUserReq,
+  generateUserEventsTasksReq,
+  generateDeleteUserReq,
+  generateCreateUserReq,
+} = require("../models/requestModels/user.req.model");
 
 const getUsersCtrl = async (req, res) => {
   try {
@@ -122,7 +128,7 @@ const createUserCtrl = async (req, res) => {
     const tenantUid = tenant.uid;
     const passwordHash = await utils.hashPassword(password);
 
-    const payload = reqModels.createUserReqModel(
+    const payload = generateCreateUserReq(
       tenantUid,
       username,
       email,

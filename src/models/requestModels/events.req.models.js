@@ -86,6 +86,15 @@ const generateAssignEventReq = (body, session) => {
   };
 };
 
+const generateDeclineEventReq = (req) => {
+  return {
+    tenantUid: req.body.tenantUid,
+    eventUid: req.body.eventUid,
+    eventManagerUid: req.body.eventManagerUid,
+    declineReason: req.body.declineReason,
+  };
+};
+
 module.exports = {
   generateGetEventReq,
   generateDeleteEventReq,
@@ -93,4 +102,5 @@ module.exports = {
   generatecreateEventReq,
   generateAcceptEventReq,
   generateUpdateEventReq,
+  generateDeclineEventReq,
 };

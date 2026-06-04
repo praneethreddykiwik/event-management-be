@@ -63,10 +63,33 @@ const generateDeleteUserReq = (query) => {
   };
 };
 
+const generateCreateUserReq = (
+  tenantUid,
+  username,
+  email,
+  passwordHash,
+  role,
+  firstName,
+  lastName,
+  mobile,
+) => {
+  return {
+    tenant_uid: tenantUid,
+    username,
+    email,
+    password_hash: passwordHash,
+    role,
+    first_name: firstName,
+    last_name: lastName,
+    mobile,
+  };
+};
+
 module.exports = {
   generateGetUsersReq,
   generateGetEventManagersReq,
   generateUpdateUserReq,
   generateUserEventsTasksReq,
   generateDeleteUserReq,
+  generateCreateUserReq,
 };

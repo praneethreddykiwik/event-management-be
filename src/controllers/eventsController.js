@@ -9,17 +9,6 @@ const {
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
 
-// check here -> Function not used anywhere.
-const deleteEventController = async (req, res) => {
-  try {
-    return res.status(200).json(successRes("Event deleted successfully"));
-  } catch (err) {
-    return res
-      .status(500)
-      .json(successRes(err.message || "Internal server error", err));
-  }
-};
-
 const getEventsCtrl = async (req, res) => {
   try {
     const obj = generateGetEventReq(req.query, req.session);
@@ -133,7 +122,6 @@ const assignEventCtrl = async (req, res) => {
 };
 
 module.exports = {
-  deleteEventController,
   createEventCtrl,
   getEventsCtrl,
   assignEventCtrl,
