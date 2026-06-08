@@ -1,3 +1,6 @@
+const {
+  generateCreateTenantReq,
+} = require("../models/requestModels/tenant.req.model");
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tenant.service");
 
@@ -31,7 +34,9 @@ async function getTenantById(req, res) {
 
 async function createTenantCtrl(req, res) {
   try {
-    const response = await services.createTenantService(req);
+    const payload = generateCreateTenantReq(req.body);
+
+    const response = await services.createTenantService(payload);
     console.log("Success: createTenantCtrl response", response);
     return res.status(201).json(successRes("Tenant created", response));
   } catch (error) {

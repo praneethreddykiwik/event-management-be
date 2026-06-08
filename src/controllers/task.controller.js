@@ -1,17 +1,28 @@
 // const { utils } = require("pg-promise");
-const { createTaskReqModel } = require("../models/request.model");
+const {
+  generateGetTasksByEventReq,
+  generateUpdateTaskReq,
+  generateAcceptTaskReq,
+  generateAssignTaskReq,
+  generateDeclineTaskReq,
+  generateDeleteTaskReq,
+  generateCreateTaskReq,
+} = require("../models/requestModels/tasks.req.model");
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tasks.service");
 const utils = require("../utils/utils");
 
 async function getTasksByEventUidCtrl(req, res) {
   try {
-    const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
-    const eventUid = req.query.eventUid;
+    const payload = generateGetTasksByEventReq(req.query, req.session);
 
-    console.log("getTasksByEventUidCtrl req", { tenantUid, eventUid });
+    console.log("getTasksByEventUidCtrl req", payload);
 
-    const response = await services.getTasksByEventService(tenantUid, eventUid);
+    const response = await services.getTasksByEventService(
+      payload.tenantUid,
+      payload.eventUid,
+    );
+    // console.log("getTasksByEventUidCtrl req", { tenantUid, eventUid });
     console.log("Success: getTasksByEventUidCtrl response", response);
     return res.status(200).json(successRes("Tasks", response));
   } catch (error) {
@@ -39,7 +50,7 @@ async function getTaskCtrl(req, res) {
 }
 
 async function createTaskCtrl(req, res) {
-  const payload = createTaskReqModel(req);
+  const payload = generateCreateTaskReq(req);
   try {
     const response = await services.createTaskService(payload);
     console.log("Success: createTaskCtrl response", response);
@@ -53,22 +64,9 @@ async function createTaskCtrl(req, res) {
 
 async function updateTaskCtrl(req, res) {
   try {
-    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
-    const taskUid = req.body.taskUid;
-    const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
+    const payload = generateUpdateTaskReq(req.body, req.session);
 
-    const response = await services.updateTaskService({
-      tenantUid,
-      taskUid,
-      title: req.body.title,
-      description: req.body.description,
-      priority: req.body.priority,
-      dueAt: req.body.dueAt,
-      assignedToUid: req.body.assignedToUid,
-      status: req.body.status,
-      updatedByUid,
-      qaAssignedTo: req.body.qaAssignedTo,
-    });
+    const response = await services.updateTaskService(payload);
 
     if (!response) {
       return res.status(404).json(errorRes("Task not found"));
@@ -90,14 +88,12 @@ async function updateTaskCtrl(req, res) {
 
 const assignTaskCtrl = async (req, res) => {
   try {
-    const taskUid = req.body.taskUid;
-    const assignedToUid = req.body.assignedToUid;
-    const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
+    const payload = generateAssignTaskReq(req.body, req.session);
 
     const createEventRes = await services.assignTaskService(
-      taskUid,
-      assignedToUid,
-      updatedByUid,
+      payload.taskUid,
+      payload.assignedToUid,
+      payload.updatedByUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -109,12 +105,11 @@ const assignTaskCtrl = async (req, res) => {
 
 const acceptTaskCtrl = async (req, res) => {
   try {
-    const taskUid = req.body.taskUid;
-    const assignedToUid = req.body.assignedToUid || req.session?.user?.uid;
+    const payload = generateAcceptTaskReq(req.body, req.session);
 
     const createEventRes = await services.acceptTaskService(
-      taskUid,
-      assignedToUid,
+      payload.taskUid,
+      payload.assignedToUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -126,12 +121,11 @@ const acceptTaskCtrl = async (req, res) => {
 
 const declineTaskCtrl = async (req, res) => {
   try {
-    const taskUid = req.body.taskUid;
-    const declinedByUid = req.body.declinedByUid || req.session?.user?.uid;
+    const payload = generateDeclineTaskReq(req.body, req.session);
 
     const createEventRes = await services.declineTaskService(
-      taskUid,
-      declinedByUid,
+      payload.taskUid,
+      payload.declinedByUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -143,16 +137,15 @@ const declineTaskCtrl = async (req, res) => {
 
 const deleteTaskCtrl = async (req, res) => {
   try {
-    const taskUid = req.body.taskUid;
-    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
-    const declinedByUid = req.body.declinedByUid || req.session?.user?.uid;
+    const payload = generateDeleteTaskReq(req.body, req.session);
 
-    const createEventRes = await services.deleteTaskService(
-      tenantUid,
-      taskUid,
-      declinedByUid,
+    const deleteTaskRes = await services.deleteTaskService(
+      payload.tenantUid,
+      payload.taskUid,
+      payload.declinedByUid,
     );
-    res.status(200).json(successRes("Success", createEventRes));
+
+    res.status(200).json(successRes("Success", deleteTaskRes));
   } catch (error) {
     console.error("assignEventCtrl", error);
     const erorRes = errorRes("Asssign Event Failed", error);

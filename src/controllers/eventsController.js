@@ -1,23 +1,13 @@
 const {
-  createEventReqModel,
-  acceptEventReqModel,
-  updateEventReqModel,
-} = require("../models/request.model");
-const {
   generateGetEventReq,
+  generateAssignEventReq,
+  generateDeleteEventReq,
+  generatecreateEventReq,
+  generateAcceptEventReq,
+  generateUpdateEventReq,
 } = require("../models/requestModels/events.req.models");
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
-
-const deleteEventController = async (req, res) => {
-  try {
-    return res.status(200).json(successRes("Event deleted successfully"));
-  } catch (err) {
-    return res
-      .status(500)
-      .json(successRes(err.message || "Internal server error", err));
-  }
-};
 
 const getEventsCtrl = async (req, res) => {
   try {
@@ -33,7 +23,7 @@ const getEventsCtrl = async (req, res) => {
 
 const createEventCtrl = async (req, res) => {
   try {
-    const payload = createEventReqModel(req);
+    const payload = generatecreateEventReq(req);
     const createEventRes = await services.createEventService(payload);
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -45,7 +35,7 @@ const createEventCtrl = async (req, res) => {
 
 const acceptEventCtrl = async (req, res) => {
   try {
-    const payload = acceptEventReqModel(req);
+    const payload = generateAcceptEventReq(req);
     const acceptEventRes = await services.acceptEvent(payload);
 
     console.log("acceptEventRes", acceptEventRes);
@@ -74,7 +64,7 @@ const acceptEventCtrl = async (req, res) => {
 
 const updateEventCtrl = async (req, res) => {
   try {
-    const payload = updateEventReqModel(req);
+    const payload = generateUpdateEventReq(req);
 
     const updateEventRes = await services.updateEventService(payload);
 
@@ -92,16 +82,13 @@ const updateEventCtrl = async (req, res) => {
 
 const deleteEventCtrl = async (req, res) => {
   try {
-    const eventUid = req.body.eventUid;
-    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
-    const actorUid = req.body.deletedByUid || req.session?.user?.uid;
-    const deleteReason = req.body.deleteReason || null;
+    const payload = generateDeleteEventReq(req.body, req.session);
 
     const deletedEvent = await services.deleteEvent(
-      tenantUid,
-      eventUid,
-      actorUid,
-      deleteReason,
+      payload.tenantUid,
+      payload.eventUid,
+      payload.actorUid,
+      payload.deleteReason,
     );
 
     return res
@@ -118,16 +105,13 @@ const deleteEventCtrl = async (req, res) => {
 
 const assignEventCtrl = async (req, res) => {
   try {
-    const eventUid = req.body.eventUid;
-    const assignedToUid = req.body.assignedToUid;
-    const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
-    const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
+    const payload = generateAssignEventReq(req.body, req.session);
 
     const createEventRes = await services.assignEventService(
-      tenantUid,
-      eventUid,
-      assignedToUid,
-      updatedByUid,
+      payload.tenantUid,
+      payload.eventUid,
+      payload.assignedToUid,
+      payload.updatedByUid,
     );
     res.status(200).json(successRes("Success", createEventRes));
   } catch (error) {
@@ -138,7 +122,6 @@ const assignEventCtrl = async (req, res) => {
 };
 
 module.exports = {
-  deleteEventController,
   createEventCtrl,
   getEventsCtrl,
   assignEventCtrl,

@@ -1,13 +1,14 @@
 const errorCodes = require("../constants/errorCodes.constants");
+const {
+  generateLoadUserReq,
+} = require("../models/requestModels/auth.req.model");
 const { successRes, errorRes } = require("../models/response.model");
 const userServices = require("../services/user.service");
 const utils = require("../utils/utils");
 
 const loadUser = async (req, res, next) => {
   try {
-    const { tenantId, username } = req.body;
-    const query = { tenantId, username };
-
+    const query = generateLoadUserReq(req.body);
     const users = await userServices.getUsersService(
       query,
       "providePasswordHash",
