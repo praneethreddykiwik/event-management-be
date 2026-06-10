@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "c45db988-676a-4535-a3e9-a81e67c22cfe",
-    "name": "Event-Mgt-be Copy",
+    "_postman_id": "91df90e7-8079-4489-9374-50e95d9b8cfb",
+    "name": "Event-Mgt-be Copy 2",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "53195113",
-    "_collection_link": "https://go.postman.co/collection/53195113-c45db988-676a-4535-a3e9-a81e67c22cfe?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/53195113-91df90e7-8079-4489-9374-50e95d9b8cfb?source=collection_link"
   },
   "item": [
     {
@@ -30,15 +30,9 @@
                 "url": {
                   "raw": "http://localhost:4001/v1/user/registration",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4001",
-                  "path": [
-                    "v1",
-                    "user",
-                    "registration"
-                  ]
+                  "path": ["v1", "user", "registration"]
                 }
               },
               "response": []
@@ -60,15 +54,9 @@
                 "url": {
                   "raw": "http://localhost:4001/v1/user/login",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4001",
-                  "path": [
-                    "v1",
-                    "user",
-                    "login"
-                  ]
+                  "path": ["v1", "user", "login"]
                 }
               },
               "response": []
@@ -85,15 +73,9 @@
                 "url": {
                   "raw": "http://localhost:4001/v1/users/me",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4001",
-                  "path": [
-                    "v1",
-                    "users",
-                    "me"
-                  ]
+                  "path": ["v1", "users", "me"]
                 }
               },
               "response": []
@@ -120,14 +102,9 @@
                 "url": {
                   "raw": "http://localhost:4001/v1/health",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4001",
-                  "path": [
-                    "v1",
-                    "health"
-                  ]
+                  "path": ["v1", "health"]
                 }
               },
               "response": []
@@ -140,14 +117,9 @@
                 "url": {
                   "raw": "http://localhost:4001/v1/health",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4001",
-                  "path": [
-                    "v1",
-                    "health"
-                  ]
+                  "path": ["v1", "health"]
                 }
               },
               "response": []
@@ -165,14 +137,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/events?tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "events"
-                  ],
+                  "path": ["v1", "events"],
                   "query": [
                     {
                       "key": "tenantUid",
@@ -200,15 +167,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/events/create-event",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "events",
-                    "create-event"
-                  ]
+                  "path": ["v1", "events", "create-event"]
                 }
               },
               "response": []
@@ -230,15 +191,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/events/assign-event",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "events",
-                    "assign-event"
-                  ]
+                  "path": ["v1", "events", "assign-event"]
                 }
               },
               "response": []
@@ -260,15 +215,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/events/accept-event",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "events",
-                    "accept-event"
-                  ]
+                  "path": ["v1", "events", "accept-event"]
                 }
               },
               "response": []
@@ -290,15 +239,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/events/decline-event",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "events",
-                    "decline-event"
-                  ]
+                  "path": ["v1", "events", "decline-event"]
                 }
               },
               "response": []
@@ -320,15 +263,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/events/update-event",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "events",
-                    "update-event"
-                  ]
+                  "path": ["v1", "events", "update-event"]
                 }
               },
               "response": []
@@ -350,15 +287,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/events/delete-event",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "events",
-                    "delete-event"
-                  ]
+                  "path": ["v1", "events", "delete-event"]
                 }
               },
               "response": []
@@ -376,14 +307,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/tasks?eventUid=994557f9-bdf6-4521-b591-b69528306f28&tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "tasks"
-                  ],
+                  "path": ["v1", "tasks"],
                   "query": [
                     {
                       "key": "eventUid",
@@ -417,15 +343,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/tasks/assign-task",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "assign-task"
-                  ]
+                  "path": ["v1", "tasks", "assign-task"]
                 }
               },
               "response": []
@@ -447,15 +367,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/tasks/accept-task",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "accept-task"
-                  ]
+                  "path": ["v1", "tasks", "accept-task"]
                 }
               },
               "response": []
@@ -480,14 +394,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/tasks",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "tasks"
-                  ]
+                  "path": ["v1", "tasks"]
                 }
               },
               "response": []
@@ -509,15 +418,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/tasks/decline-task",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "decline-task"
-                  ]
+                  "path": ["v1", "tasks", "decline-task"]
                 }
               },
               "response": []
@@ -539,15 +442,9 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/tasks/delete-task",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "delete-task"
-                  ]
+                  "path": ["v1", "tasks", "delete-task"]
                 }
               },
               "response": []
@@ -569,14 +466,221 @@
                 "url": {
                   "raw": "http://localhost:4000/v1/tasks/edit",
                   "protocol": "http",
-                  "host": [
-                    "localhost"
-                  ],
+                  "host": ["localhost"],
                   "port": "4000",
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "edit"
+                  "path": ["v1", "tasks", "edit"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "auth_api's",
+          "item": [
+            {
+              "name": "auth_login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"mukheshreddy\",\r\n    \"password\":\"mukhesh@123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/auth/login",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/auth/logout",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "auth", "logout"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_me",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/auth/me",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "auth", "me"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "users_api's",
+          "item": [
+            {
+              "name": "get_users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get_events_managers",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/event-managers",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", "event-managers"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create_user",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"rothit1\",\r\n    \"email\":\"rohit@420\",\r\n    \"password\":\"rothit123\",\r\n    \"role\":\"event_manager\",\r\n    \"firstName\":\"rohit\",\r\n    \"mobile\":\"1234657890\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update_user",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uid\":\"10b3f6de-91cf-4d80-aefb-b47a16aac0f4\",\r\n      \"mobile\":\"7995840745\",\r\n      \"status\":\"ACTIVE\",\r\n      \"role\":\"event_manager\",\r\n      \"username\":\"tharunreddy\",\r\n      \"email\":\"tharu@143\",\r\n      \"firstName\":\"tharun\",\r\n      \"lastName\":\"reddy\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user_events_tasks",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"tharunreddy\",\r\n    \"email\":\"tharun@123\",\r\n    \"password\":\"tharun123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"tharun\",\r\n    \"mobile\":\"7995840745\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/user-events-tasks?tenantUid=10b3f6de-91cf-4d80-aefb-b47a16aac0f4&assignedToUid=0502d8af-f552-4895-aec0-2b18a910e324",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", "user-events-tasks"],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "10b3f6de-91cf-4d80-aefb-b47a16aac0f4"
+                    },
+                    {
+                      "key": "assignedToUid",
+                      "value": "0502d8af-f552-4895-aec0-2b18a910e324"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "dele_user",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/delete-user?uid=27d17935-8128-4580-a27b-1afd791a192c",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", "delete-user"],
+                  "query": [
+                    {
+                      "key": "uid",
+                      "value": "27d17935-8128-4580-a27b-1afd791a192c"
+                    }
                   ]
                 }
               },
@@ -607,15 +711,8 @@
                 "url": {
                   "raw": "http://api.helm.events/v1/events?tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
                   "protocol": "http",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "events"
-                  ],
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events"],
                   "query": [
                     {
                       "key": "tenantUid",
@@ -644,16 +741,8 @@
                 "url": {
                   "raw": "http://api.helm.events/v1/events/create-event",
                   "protocol": "http",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "events",
-                    "create-event"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "create-event"]
                 }
               },
               "response": []
@@ -675,16 +764,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/events/assign-event",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "events",
-                    "assign-event"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "assign-event"]
                 }
               },
               "response": []
@@ -706,16 +787,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/events/accept-event",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "events",
-                    "accept-event"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "accept-event"]
                 }
               },
               "response": []
@@ -737,16 +810,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/events/decline-event",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "events",
-                    "decline-event"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "decline-event"]
                 }
               },
               "response": []
@@ -768,16 +833,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/events/update-event",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "events",
-                    "update-event"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "update-event"]
                 }
               },
               "response": []
@@ -799,16 +856,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/events/delete-event",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "events",
-                    "delete-event"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "delete-event"]
                 }
               },
               "response": []
@@ -826,15 +875,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/tasks?eventUid=994557f9-bdf6-4521-b591-b69528306f28&tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "tasks"
-                  ],
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks"],
                   "query": [
                     {
                       "key": "eventUid",
@@ -866,16 +908,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/tasks/assign-task",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "assign-task"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "assign-task"]
                 }
               },
               "response": []
@@ -897,16 +931,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/tasks/accept-task",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "accept-task"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "accept-task"]
                 }
               },
               "response": []
@@ -928,15 +954,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/tasks",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "tasks"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks"]
                 }
               },
               "response": []
@@ -958,15 +977,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/tasks",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "tasks"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks"]
                 }
               },
               "response": []
@@ -988,16 +1000,8 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/tasks/delete-task",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "delete-task"
-                  ]
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "delete-task"]
                 }
               },
               "response": []
@@ -1019,15 +1023,186 @@
                 "url": {
                   "raw": "https://api.helm.events/v1/tasks/edit",
                   "protocol": "https",
-                  "host": [
-                    "api",
-                    "helm",
-                    "events"
-                  ],
-                  "path": [
-                    "v1",
-                    "tasks",
-                    "edit"
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "edit"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "auth_api's",
+          "item": [
+            {
+              "name": "auth_login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\": \"helm\",\r\n    \"username\": \"tharunreddy\",\r\n    \"password\": \"tharun123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/auth/login",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/auth/logout",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "auth", "logout"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_me",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/auth/me",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "auth", "me"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "users_api's",
+          "item": [
+            {
+              "name": "get_users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get_events_managers",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/event-managers",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", "event-managers"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create_user",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"rohit\",\r\n    \"email\":\"rohit@123\",\r\n    \"password\":\"rohit123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"rohit\",\r\n    \"mobile\":\"7989124470\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/users",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update_user",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uid\":\"10b3f6de-91cf-4d80-aefb-b47a16aac0f4\",\r\n      \"mobile\":\"7989124470\",\r\n      \"status\":\"ACTIVE\",\r\n      \"role\":\"event_manager\",\r\n      \"username\":\"rothi\",\r\n      \"email\":\"trohit@143\",\r\n      \"firstName\":\"rohit\",\r\n      \"lastName\":\"ro\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user_events_tasks",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/user-events-tasks?tenantUid=10b3f6de-91cf-4d80-aefb-b47a16aac0f4&assignedToUid=0502d8af-f552-4895-aec0-2b18a910e324",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", "user-events-tasks"],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "10b3f6de-91cf-4d80-aefb-b47a16aac0f4"
+                    },
+                    {
+                      "key": "assignedToUid",
+                      "value": "0502d8af-f552-4895-aec0-2b18a910e324"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "dele_user",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/delete-user?uid=10b3f6de-91cf-4d80-aefb-b47a16aac0f4",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", "delete-user"],
+                  "query": [
+                    {
+                      "key": "uid",
+                      "value": "10b3f6de-91cf-4d80-aefb-b47a16aac0f4"
+                    }
                   ]
                 }
               },
