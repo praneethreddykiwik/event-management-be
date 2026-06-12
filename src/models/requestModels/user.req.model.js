@@ -19,7 +19,7 @@ const generateGetEventManagersReq = (query) => {
   }
 
   return {
-    tenantUid: query.tenantUid,
+    tenantId: query.tenantId,
     role: query.role,
     status: query.status,
   };
