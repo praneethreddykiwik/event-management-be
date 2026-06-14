@@ -69,7 +69,10 @@ const updateTaskService = ({
       updated_at = NOW()
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(task_uid)
-    RETURNING *;
+    RETURNING
+      uid AS "taskUid",
+      status AS "taskStatus",
+      updated_at AS "taskUpdatedAt";
   `;
 
   const db = getDb();
