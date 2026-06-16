@@ -37,7 +37,7 @@ const createTaskService = (payload) => {
     assigned_to_uid: assignedToUid,
     created_by_uid: createdByUid,
     updated_by_uid: updatedByUid,
-    qa_assigned_to_uid: qaAssignedTo,
+    qa_assigned_to_uid: qaAssignedTo || null,
   });
 };
 
