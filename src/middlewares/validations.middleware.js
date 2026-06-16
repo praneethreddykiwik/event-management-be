@@ -374,6 +374,88 @@ const getTaskByIdVal = (req, res, next) => {
   next();
 };
 
+const getTaskCommentsVal = (req, res, next) => {
+  const { taskUid } = req.params;
+
+  const tenantUid = req.session?.user?.tenantUid;
+
+  if (!tenantUid) {
+    return res.status(401).json(errorRes("Tenant uid is required", {}));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  next();
+};
+
+const createTaskCommentsVal = (req, res, next) => {
+  const { taskUid, commentText } = req.body;
+
+  // Change sessionData to sessiondata if your app uses lowercase
+  const tenantUid = req.session?.user?.tenantUid;
+  const createdByUid = req.session?.user?.uid;
+
+  if (!tenantUid || !createdByUid) {
+    return res.status(401).json(errorRes("Tenant uid is missing"));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  if (!commentText || !commentText.trim()) {
+    return res.status(400).json(errorRes("Comment text is required"));
+  }
+  next();
+};
+
+const updateTaskCommentsVal = (req, res, next) => {
+  const { taskUid, commentUid, commentText } = req.body;
+
+  const tenantUid = req.session?.user.tenantUid;
+  const updatedByUid = req.session?.user.userUid;
+
+  if (!tenantUid || !updatedByUid) {
+    return res.status(401).json(errorRes("Tenant uid required"));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  if (!commentUid) {
+    return res.status(400).json(errorRes("Comment uid is required"));
+  }
+
+  if (!commentText || !commentText.trim()) {
+    return res.status(400).json(errorRes("Comment text is required"));
+  }
+
+  next();
+};
+
+const deleteTaskCommentsVal = (req, res, next) => {
+  const { taskUid, commentUid } = req.body;
+
+  const tenantUid = req.session?.user.tenantUid;
+  const deletedByUid = req.session?.user.userUid;
+
+  if (!tenantUid || !deletedByUid) {
+    return res.status(401).json(errorRes("Tenant uid required"));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  if (!commentUid) {
+    return res.status(400).json(errorRes("Comment uid is required"));
+  }
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -398,4 +480,8 @@ module.exports = {
   deleteTaskVal,
   qaEventsAndTasksVal,
   getTaskByIdVal,
+  getTaskCommentsVal,
+  createTaskCommentsVal,
+  updateTaskCommentsVal,
+  deleteTaskCommentsVal,
 };
