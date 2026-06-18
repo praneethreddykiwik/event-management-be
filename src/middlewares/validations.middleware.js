@@ -456,6 +456,25 @@ const deleteTaskCommentsVal = (req, res, next) => {
   next();
 };
 
+const bookmarkEventVal = (req, res, next) => {
+  const { uid, type, bookmark } = req.body;
+
+  if (!uid) {
+    return res.status(400).json(errorRes("Event uid or Task uid is required"));
+  }
+
+  if (!type) {
+    return res
+      .status(400)
+      .json(errorRes("Event type or Task type is required"));
+  }
+
+  if(!bookmark) {
+        return res.status(400).json(errorRes("bookmark is required"));
+  }
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -484,4 +503,5 @@ module.exports = {
   createTaskCommentsVal,
   updateTaskCommentsVal,
   deleteTaskCommentsVal,
+  bookmarkEventVal
 };
