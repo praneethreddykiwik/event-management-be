@@ -7,6 +7,7 @@ const authRouter = require("./auth.router");
 const eventsRouter = require("./events.router");
 const { redisRouter } = require("./redis.router");
 const taskCommentsRouter = require("./taskComments.router");
+const bookmarkRouter = require("./base.router");
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use("/tasks", taskRouter); // tasks, status updates
 router.use("/tasks-comments", taskCommentsRouter); // tasks comments
 // router.use("/notofications"); // WhatsApp and email integration
 router.use("/redis-session", redisRouter);
+router.use("/bookmark-event", bookmarkRouter);
 
 module.exports = router;
