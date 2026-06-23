@@ -17,4 +17,23 @@ const bookmarkReqCtrl = async (req, res) => {
   }
 };
 
-module.exports = { bookmarkReqCtrl };
+const getBookmarkByEntityCtrl = async (req, res) => {
+  try {
+    const payload = {
+      entity_id: req.query.entity_id,
+      entity_type: req.query.entity_type,
+      user_id: req.session?.user?.uid,
+    };
+
+    console.log(payload);
+
+    const data = await services.getBookmarkByEntityService(payload);
+
+    return res.status(200).json(successRes(data));
+  } catch (error) {
+    console.error("getBookmarkByEntityCtrl error:", error);
+    return res.status(500).json(errorRes("Failed to fetch bookmark"));
+  }
+};
+
+module.exports = { bookmarkReqCtrl, getBookmarkByEntityCtrl };

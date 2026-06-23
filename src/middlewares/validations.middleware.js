@@ -469,9 +469,29 @@ const bookmarkReqVal = (req, res, next) => {
       .json(errorRes("Event type or Task type is required"));
   }
 
-  if(!bookmark_name) {
-        return res.status(400).json(errorRes("bookmark is required"));
+  if (!bookmark_name) {
+    return res.status(400).json(errorRes("bookmark is required"));
   }
+  next();
+};
+
+const getBookmarkVal = (req, res, next) => {
+  const { entity_id, entity_type } = req.query;
+
+  if (!entity_id) {
+    return res.status(400).json(errorRes("Entity id is required"));
+  }
+
+  if (!entity_type) {
+    return res.status(400).json(errorRes("Entity type is required"));
+  }
+
+  // if (entity_type !== "event" || entity_type !== "task") {
+  //   return res
+  //     .status(400)
+  //     .json(errorRes("Entity type must be either 'event' or 'task'"));
+  // }
+
   next();
 };
 
@@ -503,5 +523,6 @@ module.exports = {
   createTaskCommentsVal,
   updateTaskCommentsVal,
   deleteTaskCommentsVal,
-  bookmarkReqVal
+  bookmarkReqVal,
+  getBookmarkVal,
 };
