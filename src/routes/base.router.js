@@ -5,8 +5,8 @@ const controllers = require("../controllers/bookmarks.controller");
 
 bookmarkRouter.post(
   "/",
-  validations.bookmarkEventVal,
-  controllers.bookmarkEvent1Ctrl,
+  validations.bookmarkReqVal,
+  controllers.bookmarkReqCtrl,
 );
 
 module.exports = bookmarkRouter;

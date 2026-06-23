@@ -1,27 +1,15 @@
-const {
-  bookmarkEventReq,
-} = require("../models/requestModels/bookmark.req.model");
 const { errorRes, successRes } = require("../models/response.model");
-const services = require("../services/event.service");
+const {
+  generateBookmarkReq,
+} = require("../models/requestModels/bookmark.req.model");
+const services = require("../services/bookmark.service");
 
-// const bookmarkEventCtrl = async (req, res) => {
-//   try {
-//     const payload = bookmarkEventReq(req);
-//     const bookmarkEventRes = await services.bookmark(payload);
-//     res.status(200).json(successRes("Success", bookmarkEventRes));
-//   } catch (error) {
-//     console.error("bookmarkEventCtrl", error);
-//     const erorRes = errorRes("Bookmark Event Failed", {}, error.code, error);
-//     return res.status(400).json(erorRes);
-//   }
-// };
-
-const bookmarkEvent1Ctrl = async (req, res) => {
+const bookmarkReqCtrl = async (req, res) => {
   try {
-    // const payload = bookmarkEventReq(req);
-    // const bookmarkEventRes = await services.bookmark(payload);
-
-    res.status(200).json(successRes("Success"));
+    const payload = generateBookmarkReq(req);
+    console.log("payload", payload);
+    const bookmarkEventRes = await services.bookmarkReqService(payload);
+    res.status(200).json(successRes("Success", bookmarkEventRes));
   } catch (error) {
     console.error("bookmarkEventCtrl", error);
     const erorRes = errorRes("Bookmark Event Failed", {}, error.code, error);
@@ -29,4 +17,4 @@ const bookmarkEvent1Ctrl = async (req, res) => {
   }
 };
 
-module.exports = { bookmarkEvent1Ctrl };
+module.exports = { bookmarkReqCtrl };

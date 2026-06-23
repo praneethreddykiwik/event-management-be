@@ -1,9 +1,10 @@
-const bookmarkEventReq = (req) => {
+const generateBookmarkReq = (req) => {
   return {
-    uid: req.body.uid,
-    type: req.body.type,
-    bookmark: req.body.bookmark,
+    entity_id: req.body.entity_id,
+    entity_type: req.body.entity_type,
+    bookmark_name: req.body.bookmark_name,
+    user_id: req.session?.user?.uid,
   };
 };
 
-module.exports = { bookmarkEventReq };
+module.exports = {generateBookmarkReq};
