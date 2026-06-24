@@ -50,6 +50,7 @@ const generateUserEventsTasksReq = (query) => {
   return {
     tenantUid: query.tenantUid,
     assignedToUid: query.assignedToUid,
+    status: query.status,
   };
 };
 
