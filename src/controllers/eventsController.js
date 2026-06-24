@@ -5,6 +5,7 @@ const {
   generatecreateEventReq,
   generateAcceptEventReq,
   generateUpdateEventReq,
+  generateGetFilterEventReq,
 } = require("../models/requestModels/events.req.models");
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
@@ -121,6 +122,19 @@ const assignEventCtrl = async (req, res) => {
   }
 };
 
+const getFilteredEventsCtrl = async (req, res) => {
+  try {
+    const obj = generateGetFilterEventReq(req.query, req.session);
+    const filteredEventsRes = await services.getFilteredEventsService(obj);
+
+    return res
+      .status(200)
+      .json(successRes("success", filteredEventsRes, "0000"));
+  } catch (err) {
+    console.error("getFilteredEventsCtrl", err);
+    return res.status(400).json({ message: "server not respondhing" });
+  }
+};
 module.exports = {
   createEventCtrl,
   getEventsCtrl,
@@ -128,4 +142,5 @@ module.exports = {
   acceptEventCtrl,
   deleteEventCtrl,
   updateEventCtrl,
+  getFilteredEventsCtrl,
 };

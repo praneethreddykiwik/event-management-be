@@ -11,6 +11,31 @@ const generateGetEventReq = (query, session) => {
   };
 };
 
+const generateGetFilterEventReq = (query, session) => {
+  if (!query || !session) {
+    console.error("[generateGetEventReq]", "Missing query or session");
+  }
+  // console.log("Filter Request:", obj);
+  return {
+    tenantUid: query.tenantUid || session?.user?.tenantUid,
+    searchText: query.searchText,
+  };
+};
+
+const generateGetFilterEventsReq = (query, session, next) => {
+  if (!query || !session) {
+    console.error("[generateGetFilterEventsReq]", "Missing query or session");
+  }
+
+  return {
+    tenantUid: query.tenantUid || session?.user?.tenantUid,
+    eventUid: query.eventUid,
+    assignedToUid: query.assignedToUid,
+    status: query.status,
+  };
+  next();
+};
+
 const generatecreateEventReq = (req) => {
   return {
     tenant_uid: req.body.tenantUid || req.session?.user?.tenantUid,
@@ -103,4 +128,5 @@ module.exports = {
   generateAcceptEventReq,
   generateUpdateEventReq,
   generateDeclineEventReq,
+  generateGetFilterEventReq,
 };

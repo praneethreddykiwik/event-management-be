@@ -147,7 +147,84 @@ async function getEventsService(query) {
   const db = getDb();
   const eventsSQLQuery = db.any(
     `
-      select
+        select
+        e.uid,
+        e.tenant_uid as "tenantUid",
+        e.event_name as "eventName",
+        e.event_type as "eventType",
+        e.scheduled_at as "scheduledAt",
+        e.venue,
+        e.expected_attendees as "expectedAttendees",
+        e.status,
+        e.assigned_to_uid as "assignedToUid",
+        e.assigned_at as "assignedAt",
+        e.accepted_at as "acceptedAt",
+        e.declined_at as "declinedAt",
+        e.decline_reason as "declineReason",
+        e.comments,
+        e.created_at as "createdAt",
+        e.updated_at as "updatedAt",
+        e.created_by_uid as "createdByUid",
+        e.updated_by_uid as "updatedByUid",
+        e.deleted_at as "deletedAt",
+        e.delete_reason as "deleteReason",
+        u.first_name as "firstName",
+        u.username as "userName"
+        from events e
+        left join users u on u.uid = e.assigned_to_uid
+        ${whereClause}
+        ORDER BY e.created_at DESC;
+      `,
+    params,
+  );
+
+  const statusCountsSQLQuery = getEventStatusCount(db, params);
+
+  const responses = await Promise.all([eventsSQLQuery, statusCountsSQLQuery]);
+
+  const events = responses[0];
+  const statusCounts = responses[1];
+
+  return { events, statusCounts };
+}
+
+async function getFilteredEventsService(query) {
+  const conditions = [];
+  const params = {
+    tenant_uid: query.tenantUid, // required
+  };
+
+  const queries = [
+    {
+      query: "searchText",
+      condition: `(
+        LOWER(e.event_name) LIKE LOWER($(searchText))
+        OR LOWER(e.venue) LIKE LOWER($(searchText))
+        OR LOWER(e.status) LIKE LOWER($(searchText))
+        OR LOWER(u.username) LIKE LOWER($(searchText))
+        OR TO_CHAR(e.scheduled_at, 'DD Mon YYYY HH12:MIAM') ILIKE $(searchText)
+      )`,
+      value: `%${query.searchText}%`,
+    },
+  ];
+
+  queries.forEach((el) => {
+    if (query[el.query]) {
+      conditions.push(el.condition);
+      params[el.query] = el.value;
+    }
+  });
+
+  console.log(params, "In service");
+
+  const whereClause = conditions.length
+    ? `where ${conditions.join(" and ")}`
+    : "";
+
+  const db = getDb();
+  const eventsSQLQuery = db.any(
+    `
+        select
         e.uid,
         e.tenant_uid as "tenantUid",
         e.event_name as "eventName",
@@ -430,4 +507,5 @@ module.exports = {
   getAllEvents,
   eventsAssignedToMe,
   deleteEvent,
+  getFilteredEventsService,
 };
