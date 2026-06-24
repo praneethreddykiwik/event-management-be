@@ -1,11 +1,10 @@
 const express = require("express");
 const eventController = require("../controllers/eventsController");
 const validations = require("../middlewares/validations.middleware");
-const { validateSession }  = require("../middlewares/session.middleware");
 
 const router = express.Router();
 
-router.get("/",  validateSession, validations.getEventsVal, eventController.getEventsCtrl);
+router.get("/", validations.getEventsVal, eventController.getEventsCtrl);
 
 router.post(
   "/create-event",

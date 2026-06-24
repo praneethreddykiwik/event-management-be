@@ -66,6 +66,18 @@ async function buildSessionMiddleware() {
 const validateSession = (req, res, next) => {
   console.log("SESSION USER:", req.session?.user);
   console.log("SESSION ID:", req.sessionID);
+  console.log("PATH:", req.path);
+  console.log("ORIGINAL URL:", req.originalUrl);
+
+  const exemptionRoutes = ["/health", "/login", "/logout","/registration"];
+
+  const isExempt =
+    exemptionRoutes.includes(req.path) ||
+    exemptionRoutes.some((route) => req.originalUrl.includes(route));
+
+  if (isExempt) {
+    return next();
+  }
 
   if (!req.session || !req.session.user) {
     return res

@@ -1,11 +1,10 @@
 const express = require("express");
 const userController = require("../controllers/user.controller");
 const validations = require("../middlewares/validations.middleware");
-const { validateSession } = require("../middlewares/session.middleware");
 
 const router = express.Router();
 
-router.get("/", validateSession, userController.getUsersCtrl);
+router.get("/", userController.getUsersCtrl);
 router.get("/event-managers", userController.getEventManagersCtrl);
 router.post("/", validations.createUserVal, userController.createUserCtrl);
 router.put("/", validations.updateUserVal, userController.updateUserCtrl);

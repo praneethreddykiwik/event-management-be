@@ -1,13 +1,11 @@
 const express = require("express");
 const controllers = require("../controllers/task.controller");
 const validations = require("../middlewares/validations.middleware");
-const { validateSession }  = require("../middlewares/session.middleware");
 
 const taskRouter = express.Router();
 
 taskRouter.get(
   "/",
-  validateSession,
   validations.getTasksByEventUidVal,
   controllers.getTasksByEventUidCtrl,
 );
@@ -38,7 +36,7 @@ taskRouter.post(
 );
 
 // swagger not added
-taskRouter.post("/edit", validateSession, validations.editTaskVal, controllers.updateTaskCtrl);
+taskRouter.post("/edit", validations.editTaskVal, controllers.updateTaskCtrl);
 
 taskRouter.get(
   "/qa-events-tasks",
