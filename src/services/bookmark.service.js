@@ -36,24 +36,18 @@ RETURNING *;`;
   return createdRes;
 };
 
-const getBookmarkByEntityService = async ({
-  entity_id,
-  entity_type,
-  user_id,
-}) => {
-  const values = [entity_id, entity_type, user_id];
+const getAllBookmarksByUserService = async ({ user_id }) => {
+  const values = [user_id];
   const sql = `
-  SELECT uid, entity_type, bookmark_name, entity_id, user_id
-  FROM bookmarks
-  WHERE entity_id = $1
-  AND entity_type = $2
-  AND user_id = $3
-  LIMIT 1;
+    SELECT uid, entity_type, bookmark_name, entity_id, user_id
+    FROM bookmarks
+    WHERE user_id = $1
+    ORDER BY created_at DESC;
   `;
 
   const db = getDb();
-  const responseEntity = await db.one(sql, values);
+  const responseEntity = await db.any(sql, values);
   return responseEntity;
 };
 
-module.exports = { bookmarkReqService, getBookmarkByEntityService };
+module.exports = { bookmarkReqService, getAllBookmarksByUserService };

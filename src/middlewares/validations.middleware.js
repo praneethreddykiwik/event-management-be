@@ -475,22 +475,14 @@ const bookmarkReqVal = (req, res, next) => {
   next();
 };
 
-const getBookmarkVal = (req, res, next) => {
-  const { entity_id, entity_type } = req.query;
+const getAllBookmarksByUserVal = (req, res, next) => {
+  const user_id = req.session?.user?.uid;
 
-  if (!entity_id) {
-    return res.status(400).json(errorRes("Entity id is required"));
+  if (!user_id) {
+    return res
+      .status(401)
+      .json(errorRes("Unauthorized - user session not found"));
   }
-
-  if (!entity_type) {
-    return res.status(400).json(errorRes("Entity type is required"));
-  }
-
-  // if (entity_type !== "event" || entity_type !== "task") {
-  //   return res
-  //     .status(400)
-  //     .json(errorRes("Entity type must be either 'event' or 'task'"));
-  // }
 
   next();
 };
@@ -524,5 +516,5 @@ module.exports = {
   updateTaskCommentsVal,
   deleteTaskCommentsVal,
   bookmarkReqVal,
-  getBookmarkVal,
+  getAllBookmarksByUserVal,
 };

@@ -20,6 +20,6 @@ router.use("/tasks", taskRouter); // tasks, status updates
 router.use("/tasks-comments", taskCommentsRouter); // tasks comments
 // router.use("/notofications"); // WhatsApp and email integration
 router.use("/redis-session", redisRouter);
-router.use("/bookmark-event", bookmarkRouter);
+router.use("/bookmark", bookmarkRouter);
 
 module.exports = router;
