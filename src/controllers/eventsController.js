@@ -5,7 +5,6 @@ const {
   generatecreateEventReq,
   generateAcceptEventReq,
   generateUpdateEventReq,
-  generateGetFilterEventReq,
 } = require("../models/requestModels/events.req.models");
 const { successRes, errorRes } = require("../models/response.model");
 const services = require("../services/event.service");
