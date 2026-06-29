@@ -1,5 +1,6 @@
 const session = require("express-session");
 const connectRedisModule = require("connect-redis");
+const { errorRes } = require("../models/response.model");
 
 // If it's new versions: { RedisStore } or { default }
 let RedisStore = connectRedisModule.RedisStore || connectRedisModule.default;
@@ -62,5 +63,28 @@ async function buildSessionMiddleware() {
   //   },
   // });
 }
+const validateSession = (req, res, next) => {
+  console.log("SESSION USER:", req.session?.user);
+  console.log("SESSION ID:", req.sessionID);
+  console.log("PATH:", req.path);
+  console.log("ORIGINAL URL:", req.originalUrl);
 
-module.exports = { buildSessionMiddleware };
+  const exemptionRoutes = ["/health", "/login", "/logout","/registration"];
+
+  const isExempt =
+    exemptionRoutes.includes(req.path) ||
+    exemptionRoutes.some((route) => req.originalUrl.includes(route));
+
+  if (isExempt) {
+    return next();
+  }
+
+  if (!req.session || !req.session.user) {
+    return res
+      .status(401)
+      .json(errorRes("Session expired. Please login again"));
+  }
+
+  next();
+};
+module.exports = { buildSessionMiddleware, validateSession };
