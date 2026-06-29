@@ -121,20 +121,6 @@ const assignEventCtrl = async (req, res) => {
     return res.status(400).json(erorRes);
   }
 };
-
-const getFilteredEventsCtrl = async (req, res) => {
-  try {
-    const obj = generateGetFilterEventReq(req.query, req.session);
-    const filteredEventsRes = await services.getFilteredEventsService(obj);
-
-    return res
-      .status(200)
-      .json(successRes("success", filteredEventsRes, "0000"));
-  } catch (err) {
-    console.error("getFilteredEventsCtrl", err);
-    return res.status(400).json({ message: "server not respondhing" });
-  }
-};
 module.exports = {
   createEventCtrl,
   getEventsCtrl,
@@ -142,5 +128,4 @@ module.exports = {
   acceptEventCtrl,
   deleteEventCtrl,
   updateEventCtrl,
-  getFilteredEventsCtrl,
 };

@@ -40,12 +40,4 @@ router.delete(
   validations.deleteEventVal,
   eventController.deleteEventCtrl,
 );
-
-router.get(
-  "/filter",
-  validations.getFilteredEvents,
-  eventController.getFilteredEventsCtrl,
-);
-
-
 module.exports = router;
