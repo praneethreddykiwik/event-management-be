@@ -21,30 +21,30 @@ const bookmarkReqService = async (payload) => {
     $1,         
     $2,         
     $3,         
-    ARRAY[$4::uuid] -- Wraps the incoming ID in an array for the initial insert
+    ARRAY[$4::uuid]
   )
-  ON CONFLICT (user_id, entity_type) 
+  ON CONFLICT (user_id, bookmark_name, entity_type) 
   DO UPDATE SET
-    bookmark_name = EXCLUDED.bookmark_name,
     entity_ids = CASE 
-        WHEN NOT ($4::uuid = ANY(bookmarks.entity_ids)) 
-        THEN array_append(bookmarks.entity_ids, $4::uuid)
-        ELSE bookmarks.entity_ids
+        WHEN $4::uuid = ANY(bookmarks.entity_ids) 
+        THEN array_remove(bookmarks.entity_ids, $4::uuid)
+        ELSE array_append(bookmarks.entity_ids, $4::uuid)
     END
   RETURNING *;`;
 
   const db = getDb();
-  const createdRes = await db.one(sql, values);
-  return createdRes;
+  const response = await db.one(sql, values);
+
+  return response;
 };
+
 
 const getAllBookmarksByUserService = async ({ user_id }) => {
   const values = [user_id];
   const sql = `
-    SELECT uid, entity_type, bookmark_name, entity_id, user_id
+    SELECT uid, entity_type, bookmark_name, entity_ids, user_id
     FROM bookmarks
     WHERE user_id = $1
-    ORDER BY created_at DESC;
   `;
 
   const db = getDb();
