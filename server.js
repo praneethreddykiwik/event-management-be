@@ -10,6 +10,7 @@ const router = require("./src/routes/routes");
 const middlewares = require("./src/middlewares/middlewares");
 const utils = require("./src/utils/server.utils");
 const { mainHealth } = require("./src/controllers/health.controller");
+const { validateSession } = require("./src/middlewares/session.middleware");
 
 const port = process.env.PORT || 8080;
 const version = "/v1";
@@ -22,7 +23,7 @@ const startServer = async () => {
 
     // Mount routes AFTER session middleware
     app.use("/health", mainHealth);
-    app.use(version, middlewares.logRoute, router);
+    app.use(version, middlewares.logRoute, validateSession, router);
     console.log("Routes mounted");
 
     // Mount swagger

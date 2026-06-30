@@ -157,6 +157,7 @@ const userEventsTasksCtrl = async (req, res) => {
     const data = await userServices.userEventsTasksService(
       payload.tenantUid,
       payload.assignedToUid,
+      payload.status,
     );
 
     const eventIds = data
@@ -168,6 +169,8 @@ const userEventsTasksCtrl = async (req, res) => {
       notStarted: 0,
       assigned: 0,
       inProgress: 0,
+      readyForQa: 0,
+      qaInProgress: 0,
       completed: 0,
       cancelled: 0,
       deleted: 0,

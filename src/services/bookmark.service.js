@@ -4,33 +4,35 @@ const bookmarkReqService = async (payload) => {
   const values = [
     payload.entity_type,
     payload.bookmark_name,
-    payload.entity_id,
     payload.user_id,
+    payload.entity_id,
   ];
+
   const sql = `
   INSERT INTO bookmarks (
     uid,
     entity_type,
     bookmark_name,
-    entity_id,
     user_id,
-    created_at,
-    updated_at
-)
-VALUES (
+    entity_ids
+  )
+  VALUES (
     gen_random_uuid(),
     $1,         
     $2,         
     $3,         
-    $4,         
-    now(),
-    now()
-)
-ON CONFLICT (user_id, entity_type, entity_id)
-DO UPDATE SET
+    ARRAY[$4::uuid] -- Wraps the incoming ID in an array for the initial insert
+  )
+  ON CONFLICT (user_id, entity_type) 
+  DO UPDATE SET
     bookmark_name = EXCLUDED.bookmark_name,
-    updated_at = now()
-RETURNING *;`;
+    entity_ids = CASE 
+        WHEN NOT ($4::uuid = ANY(bookmarks.entity_ids)) 
+        THEN array_append(bookmarks.entity_ids, $4::uuid)
+        ELSE bookmarks.entity_ids
+    END
+  RETURNING *;`;
+
   const db = getDb();
   const createdRes = await db.one(sql, values);
   return createdRes;

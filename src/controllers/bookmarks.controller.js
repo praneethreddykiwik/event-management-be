@@ -22,7 +22,6 @@ const getAllBookmarksByUserCtrl = async (req, res) => {
     const payload = {
       user_id: req.session?.user?.uid,
     };
-
     const data = await services.getAllBookmarksByUserService(payload);
     return res.status(200).json(successRes(data));
   } catch (error) {

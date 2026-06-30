@@ -158,7 +158,12 @@ const updateUserService = async (data) => {
 };
 
 // qa_assigned_to_uid: qaAssignedTo,
-const userEventsTasksService = async (tenantUid, assignedToUid) => {
+const userEventsTasksService = async (tenantUid, assignedToUid, status) => {
+  const statusArr = status?.split(",") || [];
+  const taskJoinType = statusArr.length ? "INNER JOIN" : "LEFT JOIN";
+  const statusCondition = statusArr.length
+    ? "AND t.status IN ($(statusArr:csv))"
+    : "";
   const sql = `
     SELECT
       e.uid AS "eventUid",
@@ -203,9 +208,10 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
     JOIN users me
       ON me.uid = $(assignedToUid)
 
-    LEFT JOIN tasks t
+    ${taskJoinType} tasks t
       ON t.event_uid = e.uid
       AND t.status <> 'deleted'
+      ${statusCondition}
 
     LEFT JOIN users taskAssigned
       ON taskAssigned.uid = t.assigned_to_uid
@@ -224,7 +230,7 @@ const userEventsTasksService = async (tenantUid, assignedToUid) => {
   `;
 
   const db = getDb();
-  const rows = await db.any(sql, { tenantUid, assignedToUid });
+  const rows = await db.any(sql, { tenantUid, assignedToUid, statusArr });
   return rows;
 };
 
