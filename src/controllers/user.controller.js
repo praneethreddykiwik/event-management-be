@@ -154,35 +154,24 @@ const userEventsTasksCtrl = async (req, res) => {
   try {
     const payload = generateUserEventsTasksReq(req.query);
 
-    const data = await userServices.userEventsTasksService(
+    const response = await userServices.userEventsTasksService(
       payload.tenantUid,
       payload.assignedToUid,
       payload.status,
     );
 
+    const data = response.rows;
+    const countObj = response.countObj;
+
     const eventIds = data
       .map((el) => el.eventUid)
       .filter((fl, i, arr) => i === arr.findIndex((fi) => fi === fl));
-
-    const countObj = {
-      totalTaskCount: 0,
-      notStarted: 0,
-      assigned: 0,
-      inProgress: 0,
-      readyForQa: 0,
-      qaInProgress: 0,
-      completed: 0,
-      cancelled: 0,
-      deleted: 0,
-    };
 
     const userEventsAndTasks = eventIds.map((eventId) => {
       const eventObj = data.find((fn) => fn.eventUid === eventId);
       const tasks = data
         .filter((fl) => fl.eventUid === eventId && fl.taskUid)
         .map((m) => {
-          const countKey = utils.snakeToCamel(m.taskStatus);
-          ++countObj[countKey];
           return {
             taskUid: m.taskUid,
             taskTitle: m.taskTitle,
@@ -205,7 +194,6 @@ const userEventsTasksCtrl = async (req, res) => {
           };
         });
 
-      countObj.totalTaskCount += tasks.length;
       return {
         eventUid: eventObj.eventUid,
         eventName: eventObj.eventName,
