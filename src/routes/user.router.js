@@ -6,7 +6,11 @@ const router = express.Router();
 
 router.get("/", userController.getUsersCtrl);
 router.get("/event-managers", userController.getEventManagersCtrl);
-router.post("/", validations.createUserVal, userController.createUserCtrl);
+router.post(
+  "/register",
+  validations.createUserVal,
+  userController.createUserCtrl,
+);
 router.put("/", validations.updateUserVal, userController.updateUserCtrl);
 router.get(
   "/user-events-tasks",
