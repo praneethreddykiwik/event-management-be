@@ -69,7 +69,7 @@ const validateSession = (req, res, next) => {
   console.log("PATH:", req.path);
   console.log("ORIGINAL URL:", req.originalUrl);
 
-  const exemptionRoutes = ["/health", "/login", "/logout","/registration"];
+  const exemptionRoutes = ["/health", "/login", "/logout", "/register"];
 
   const isExempt =
     exemptionRoutes.includes(req.path) ||
