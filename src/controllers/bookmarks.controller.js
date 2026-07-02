@@ -7,11 +7,10 @@ const services = require("../services/bookmark.service");
 const bookmarkReqCtrl = async (req, res) => {
   try {
     const payload = generateBookmarkReq(req);
-    console.log("payload", payload);
     const bookmarkEventRes = await services.bookmarkReqService(payload);
     res.status(200).json(successRes("Success", bookmarkEventRes));
   } catch (error) {
-    console.error("bookmarkEventCtrl", error);
+    console.error("bookmarkReqCtrl", error);
     const erorRes = errorRes("Bookmark Event Failed", {}, error.code, error);
     return res.status(400).json(erorRes);
   }
@@ -23,7 +22,7 @@ const getAllBookmarksByUserCtrl = async (req, res) => {
       user_id: req.session?.user?.uid,
     };
     const data = await services.getAllBookmarksByUserService(payload);
-    return res.status(200).json(successRes(data));
+    return res.status(200).json(successRes("Success", data));
   } catch (error) {
     console.error("getAllBookmarksByUserCtrl error:", error);
     return res.status(500).json(errorRes("Failed to fetch bookmarks"));
