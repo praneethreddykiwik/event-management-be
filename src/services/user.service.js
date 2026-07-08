@@ -1,5 +1,6 @@
 /** @format */
 
+const utils = require("../utils/utils");
 const { getDb } = require("../db/db");
 const { convertQueryParams } = require("../utils/pg.utils");
 
@@ -230,8 +231,73 @@ const userEventsTasksService = async (tenantUid, assignedToUid, status) => {
   `;
 
   const db = getDb();
-  const rows = await db.any(sql, { tenantUid, assignedToUid, statusArr });
-  return rows;
+  const tasksQuery = db.any(sql, {
+    tenantUid,
+    assignedToUid,
+    statusArr,
+  });
+
+  const countQuery = getTaskStatusCount(db, tenantUid, assignedToUid);
+
+  const [rows, countObj] = await Promise.all([tasksQuery, countQuery]);
+
+  return {
+    rows,
+    countObj,
+  };
+};
+
+const getTaskStatusCount = async (db, tenantUid, assignedToUid) => {
+  const countResponse = await db.any(
+    `
+    SELECT
+      t.status,
+      COUNT(*) AS count
+    FROM tasks t
+
+    JOIN events e
+      ON e.uid = t.event_uid
+
+    JOIN users me
+      ON me.uid = $(assignedToUid)
+
+    WHERE
+      e.tenant_uid = $(tenantUid)
+      AND t.status <> 'deleted'
+      AND (
+        me.role = 'admin'
+        OR e.assigned_to_uid = $(assignedToUid)
+        OR t.assigned_to_uid = $(assignedToUid)
+      )
+
+    GROUP BY t.status;
+    `,
+    { tenantUid, assignedToUid },
+  );
+
+  const allStatuses = [
+    "not_started",
+    "assigned",
+    "in_progress",
+    "ready_for_qa",
+    "qa_in_progress",
+    "completed",
+    "cancelled",
+    "deleted",
+  ];
+
+  return allStatuses.reduce(
+    (acc, cur) => {
+      const groupObj = countResponse.find((el) => el.status === cur) || {};
+      const count = Number(groupObj?.count || 0);
+
+      acc[utils.snakeToCamel(cur)] = count;
+      acc.totalTaskCount += count;
+
+      return acc;
+    },
+    { totalTaskCount: 0 },
+  );
 };
 
 const deleteUserService = async (uid) => {
@@ -345,6 +411,7 @@ module.exports = {
   deleteEventService,
   updateUserService,
   userEventsTasksService,
+  getTaskStatusCount,
   deleteUserService,
   getEventManagersService,
   listUsers,
