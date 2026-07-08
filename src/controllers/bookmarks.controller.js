@@ -18,10 +18,8 @@ const bookmarkReqCtrl = async (req, res) => {
 
 const getAllBookmarksByUserCtrl = async (req, res) => {
   try {
-    const payload = {
-      user_id: req.session?.user?.uid,
-    };
-    const data = await services.getAllBookmarksByUserService(payload);
+    const userId = req.session?.user?.uid;
+    const data = await services.getAllBookmarksByUserService(userId);
     return res.status(200).json(successRes("Success", data));
   } catch (error) {
     console.error("getAllBookmarksByUserCtrl error:", error);

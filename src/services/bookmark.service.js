@@ -12,16 +12,15 @@ const bookmarkReqService = async (payload) => {
   return response;
 };
 
-const getAllBookmarksByUserService = async ({ user_id }) => {
-  const values = [user_id];
+const getAllBookmarksByUserService = async (userId) => {
   const sql = `
     SELECT uid, user_id, bookmarks
     FROM bookmarks
-    WHERE user_id = $1
+    WHERE user_id = $(user_id)
   `;
 
   const db = getDb();
-  const row = await db.oneOrNone(sql, values);
+  const row = await db.oneOrNone(sql, { user_id: userId });
 
   if (!row || !row.bookmarks) {
     return [];
