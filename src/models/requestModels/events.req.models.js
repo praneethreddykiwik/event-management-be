@@ -21,6 +21,7 @@ const generatecreateEventReq = (req) => {
     expected_attendees: Number(req.body.expectedAttendees || 0),
     status: req.body.status,
     assigned_to_uid: req.body.assignedToUid,
+    ending_at: req.body.endingAt,
     comments: req.body.comments || null,
     created_by_uid: req.body.uid || req.session?.user?.uid,
   };

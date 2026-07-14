@@ -14,7 +14,8 @@ const createEventService = async (payload) => {
     comments,
     assigned_to_uid,
     assigned_at,
-    created_by_uid
+    created_by_uid,
+    ending_at
   )
   VALUES (
     $(tenant_uid),
@@ -27,7 +28,8 @@ const createEventService = async (payload) => {
     $(comments),
     $(assigned_to_uid),
     now(),
-    $(created_by_uid)
+    $(created_by_uid),
+    $(ending_at)
   )
   RETURNING *;
 `;
@@ -168,6 +170,7 @@ async function getEventsService(query) {
         e.updated_by_uid as "updatedByUid",
         e.deleted_at as "deletedAt",
         e.delete_reason as "deleteReason",
+        e.ending_at as "endingAt",
         u.first_name as "firstName",
         u.username as "userName"
         from events e
