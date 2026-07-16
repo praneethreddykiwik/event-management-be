@@ -79,11 +79,11 @@ const validateSession = (req, res, next) => {
     return next();
   }
 
-  if (!req.session || !req.session.user) {
-    return res
-      .status(401)
-      .json(errorRes("Session expired. Please login again"));
-  }
+  // if (!req.session || !req.session.user) {
+  //   return res
+  //     .status(401)
+  //     .json(errorRes("Session expired. Please login again"));
+  // }
 
   next();
 };

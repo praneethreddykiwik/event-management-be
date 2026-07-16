@@ -178,9 +178,9 @@ const declineEventVal = (req, res, next) => {
 };
 
 const getEventsVal = (req, res, next) => {
-  if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
-    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
-  }
+  // if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
+  //   return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  // }
 
   next();
 };
