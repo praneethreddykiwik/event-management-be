@@ -292,11 +292,11 @@ const getTaskStatusCount = async (db, tenantUid, assignedToUid) => {
       const count = Number(groupObj?.count || 0);
 
       acc[utils.snakeToCamel(cur)] = count;
-      acc.totalTaskCount += count;
+      acc.total += count;
 
       return acc;
     },
-    { totalTaskCount: 0 },
+    { total: 0 },
   );
 };
 
