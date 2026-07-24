@@ -109,50 +109,45 @@ async function getEventsService(query) {
   const params = {
     tenant_uid: query.tenantUid, // required
   };
-  if (query.searchText) {
-    conditions.push(`(
-    LOWER(e.event_name) LIKE LOWER($(searchText))
-    OR LOWER(e.venue) LIKE LOWER($(searchText))
-    OR LOWER(e.status) LIKE LOWER($(searchText))
-    OR LOWER(u.username) LIKE LOWER($(searchText))
-    OR TO_CHAR(e.scheduled_at, 'DD Mon YYYY HH12:MIAM') ILIKE $(searchText)
-  )`);
+  const queries = [
+    // {
+    //   query: "tenantUid",
+    //   condition: "t.tenant_uid = $(tenantUid)",
+    //   value: query.tenantUid,
+    // },
+    {
+      query: "searchText",
+      condition:
+        "((LOWER(e.event_name) LIKE LOWER($(searchText))) OR (LOWER(e.venue) LIKE LOWER($(searchText))) OR (LOWER(e.status) LIKE LOWER($(searchText))) OR (LOWER(u.username) LIKE LOWER($(searchText))) OR (TO_CHAR(e.scheduled_at, 'DD Mon YYYY HH12:MIAM') ILIKE $(searchText)))",
+      value: `%${query.searchText}%`,
+    },
+    {
+      query: "eventUid",
+      condition: "e.uid = $(eventUid)",
+      value: query.eventUid,
+    },
+    {
+      query: "assignedToUid",
+      condition: "e.assigned_to_uid = $(assignedToUid)",
+      value: query.assignedToUid,
+    },
+    {
+      query: "status",
+      condition: "e.status IN ($(status:csv))",
+      value: convertQueryParams(query.status),
+    },
+  ];
+  queries.forEach((el) => {
+    if (query[el.query]) {
+      conditions.push(el.condition);
+      params[el.query] = el.value;
+    }
+  });
 
-    params.searchText = `%${query.searchText}%`;
-  } else {
-    const queries = [
-      // {
-      //   query: "tenantUid",
-      //   condition: "t.tenant_uid = $(tenantUid)",
-      //   value: query.tenantUid,
-      // },
-      {
-        query: "eventUid",
-        condition: "e.uid = $(eventUid)",
-        value: query.eventUid,
-      },
-      {
-        query: "assignedToUid",
-        condition: "e.assigned_to_uid = $(assignedToUid)",
-        value: query.assignedToUid,
-      },
-      {
-        query: "status",
-        condition: "e.status IN ($(status:csv))",
-        value: convertQueryParams(query.status),
-      },
-    ];
-    queries.forEach((el) => {
-      if (query[el.query]) {
-        conditions.push(el.condition);
-        params[el.query] = el.value;
-      }
-    });
-  }
   const whereClause = conditions.length
     ? `where ${conditions.join(" and ")}`
     : "";
-  
+
   const db = getDb();
   const eventsSQLQuery = db.any(
     `
