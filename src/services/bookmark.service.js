@@ -1,41 +1,34 @@
 const { getDb } = require("../db/db");
 
-const bookmarkReqService = async (payload) => {
-  const { user_id, bookmark_name, entity_type, entity_id } = payload;
+const bookmarkReqService = async ({entityId, entityType, bookmarkName, userId}) => {
 
-  const sql = `SELECT * FROM toggle_bookmark($1, $2, $3, $4)`;
-  const values = [user_id, bookmark_name, entity_type, entity_id];
-
+  const sql = `SELECT * FROM toggle_bookmark($(user_uid), $(entity_type), $(bookmark_name), $(entity_id))`;
   const db = getDb();
-  const response = await db.one(sql, values);
+
+  const response = await db.one(sql, {
+    user_uid: userId,
+    entity_type: entityType,
+    bookmark_name: bookmarkName,
+    entity_id: entityId
+  });
 
   return response;
 };
 
-const getAllBookmarksByUserService = async (userId) => {
+const getBookmarksByTypeService = async ({ userId, entityType }) => {
   const sql = `
-    SELECT uid, user_id, bookmarks
+    SELECT bookmarks
     FROM bookmarks
-    WHERE user_id = $(user_id)
+    WHERE user_id = $(user_uid) AND entity_type = $(entity_type)
   `;
 
   const db = getDb();
-  const row = await db.oneOrNone(sql, { user_id: userId });
+  const row = await db.oneOrNone(sql, {
+    user_uid: userId,
+    entity_type: entityType
+  });
 
-  if (!row || !row.bookmarks) {
-    return [];
-  }
-
-  const flattened = Object.entries(row.bookmarks).flatMap(
-    ([bookmark_name, byType]) =>
-      Object.entries(byType).map(([entity_type, entity_ids]) => ({
-        bookmark_name,
-        entity_type,
-        entity_ids,
-      })),
-  );
-
-  return flattened;
+  return row?.bookmarks ?? {};
 };
 
-module.exports = { bookmarkReqService, getAllBookmarksByUserService };
+module.exports = { bookmarkReqService, getBookmarksByTypeService };

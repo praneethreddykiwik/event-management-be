@@ -11,20 +11,24 @@ const bookmarkReqCtrl = async (req, res) => {
     res.status(200).json(successRes("Success", bookmarkEventRes));
   } catch (error) {
     console.error("bookmarkReqCtrl", error);
-    const erorRes = errorRes("Bookmark Event Failed", {}, error.code, error);
-    return res.status(400).json(erorRes);
+    const errRes = errorRes("Bookmark Event Failed", {}, error.code, error);
+    return res.status(400).json(errRes);
   }
 };
 
-const getAllBookmarksByUserCtrl = async (req, res) => {
+const getBookmarksByTypeCtrl = async (req, res) => {
   try {
-    const userId = req.session?.user?.uid;
-    const data = await services.getAllBookmarksByUserService(userId);
+    const payload = {
+      userId: req.session?.user?.uid,
+      entityType: req.params.entityType,
+    };
+
+    const data = await services.getBookmarksByTypeService(payload);
     return res.status(200).json(successRes("Success", data));
   } catch (error) {
-    console.error("getAllBookmarksByUserCtrl error:", error);
+    console.error("getBookmarksByTypeCtrl error:", error);
     return res.status(500).json(errorRes("Failed to fetch bookmarks"));
   }
 };
 
-module.exports = { bookmarkReqCtrl, getAllBookmarksByUserCtrl };
+module.exports = { bookmarkReqCtrl, getBookmarksByTypeCtrl };

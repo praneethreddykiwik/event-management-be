@@ -10,9 +10,9 @@ bookmarkRouter.post(
 );
 
 bookmarkRouter.get(
-  "/user-bookmarks",
-  validations.getAllBookmarksByUserVal,
-  controllers.getAllBookmarksByUserCtrl,
+  "/user-bookmarks/:entityType",
+  validations.getBookmarksByTypeVal,
+  controllers.getBookmarksByTypeCtrl,
 );
 
 module.exports = bookmarkRouter;
