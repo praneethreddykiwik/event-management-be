@@ -185,6 +185,13 @@ const getEventsVal = (req, res, next) => {
   next();
 };
 
+const getFilteredEvents=(req,res,next)=>{
+   if(!req.query.searchText){
+    return res.status(400).json(errorRes("Missing search text", {}))
+   }
+   next();
+}
+
 const getTasksByEventUidVal = (req, res, next) => {
   const eventUid = req.query.eventUid;
   const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
@@ -526,4 +533,5 @@ module.exports = {
   deleteTaskCommentsVal,
   bookmarkReqVal,
   getBookmarksByTypeVal,
+  getFilteredEvents
 };

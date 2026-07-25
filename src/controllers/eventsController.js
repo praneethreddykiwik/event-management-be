@@ -120,7 +120,6 @@ const assignEventCtrl = async (req, res) => {
     return res.status(400).json(erorRes);
   }
 };
-
 module.exports = {
   createEventCtrl,
   getEventsCtrl,

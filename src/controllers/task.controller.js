@@ -168,7 +168,7 @@ const qaEventsAndTasksCtrl = async (req, res) => {
       .filter((fl, i, arr) => i === arr.findIndex((fi) => fi === fl));
 
     const countObj = {
-      totalTaskCount: 0,
+      total: 0,
       notStarted: 0,
       assigned: 0,
       inProgress: 0,
@@ -243,7 +243,7 @@ const qaEventsAndTasksCtrl = async (req, res) => {
           };
         });
 
-      countObj.totalTaskCount += tasks.length;
+      countObj.total += tasks.length;
       kpiCounts.assignedToMe += tasks.length;
 
       return {

@@ -14,7 +14,8 @@ const createEventService = async (payload) => {
     comments,
     assigned_to_uid,
     assigned_at,
-    created_by_uid
+    created_by_uid,
+    ending_at
   )
   VALUES (
     $(tenant_uid),
@@ -27,7 +28,8 @@ const createEventService = async (payload) => {
     $(comments),
     $(assigned_to_uid),
     now(),
-    $(created_by_uid)
+    $(created_by_uid),
+    $(ending_at)
   )
   RETURNING *;
 `;
@@ -109,13 +111,18 @@ async function getEventsService(query) {
   const params = {
     tenant_uid: query.tenantUid, // required
   };
-
   const queries = [
     // {
     //   query: "tenantUid",
     //   condition: "t.tenant_uid = $(tenantUid)",
     //   value: query.tenantUid,
     // },
+    {
+      query: "searchText",
+      condition:
+        "((LOWER(e.event_name) LIKE LOWER($(searchText))) OR (LOWER(e.venue) LIKE LOWER($(searchText))) OR (LOWER(e.status) LIKE LOWER($(searchText))) OR (LOWER(u.username) LIKE LOWER($(searchText))) OR (TO_CHAR(e.scheduled_at, 'DD Mon YYYY HH12:MIAM') ILIKE $(searchText)))",
+      value: `%${query.searchText}%`,
+    },
     {
       query: "eventUid",
       condition: "e.uid = $(eventUid)",
@@ -132,7 +139,6 @@ async function getEventsService(query) {
       value: convertQueryParams(query.status),
     },
   ];
-
   queries.forEach((el) => {
     if (query[el.query]) {
       conditions.push(el.condition);
@@ -147,7 +153,7 @@ async function getEventsService(query) {
   const db = getDb();
   const eventsSQLQuery = db.any(
     `
-      select
+        select
         e.uid,
         e.tenant_uid as "tenantUid",
         e.event_name as "eventName",
@@ -168,6 +174,7 @@ async function getEventsService(query) {
         e.updated_by_uid as "updatedByUid",
         e.deleted_at as "deletedAt",
         e.delete_reason as "deleteReason",
+        e.ending_at as "endingAt",
         u.first_name as "firstName",
         u.username as "userName"
         from events e
