@@ -185,6 +185,13 @@ const getEventsVal = (req, res, next) => {
   next();
 };
 
+const getFilteredEvents=(req,res,next)=>{
+   if(!req.query.searchText){
+    return res.status(400).json(errorRes("Missing search text", {}))
+   }
+   next();
+}
+
 const getTasksByEventUidVal = (req, res, next) => {
   const eventUid = req.query.eventUid;
   const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
@@ -199,7 +206,7 @@ const getTasksByEventUidVal = (req, res, next) => {
   next();
 };
 
-const assignEventVal = (req, res, next) => {
+const assignEventVal = (req, res) => {
   const eventUid = req.body.eventUid;
   const assignedToUid = req.body.assignedToUid;
   const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
@@ -484,4 +491,5 @@ module.exports = {
   createTaskCommentsVal,
   updateTaskCommentsVal,
   deleteTaskCommentsVal,
+  getFilteredEvents
 };

@@ -8,9 +8,9 @@ const generateGetEventReq = (query, session) => {
     eventUid: query.eventUid,
     assignedToUid: query.assignedToUid,
     status: query.status,
+    searchText: query.searchText,
   };
 };
-
 const generatecreateEventReq = (req) => {
   return {
     tenant_uid: req.body.tenantUid || req.session?.user?.tenantUid,

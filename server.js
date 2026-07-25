@@ -25,6 +25,7 @@ const startServer = async () => {
     app.use("/health", mainHealth);
     app.use(version, middlewares.logRoute, validateSession, router);
     console.log("Routes mounted");
+   
 
     // Mount swagger
     await utils.swaggerHandler(app);
