@@ -178,9 +178,9 @@ const declineEventVal = (req, res, next) => {
 };
 
 const getEventsVal = (req, res, next) => {
-  if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
-    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
-  }
+    if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
+      return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+    }
 
   next();
 };
@@ -206,7 +206,7 @@ const getTasksByEventUidVal = (req, res, next) => {
   next();
 };
 
-const assignEventVal = (req, res) => {
+const assignEventVal = (req, res, next) => {
   const eventUid = req.body.eventUid;
   const assignedToUid = req.body.assignedToUid;
   const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
@@ -463,6 +463,46 @@ const deleteTaskCommentsVal = (req, res, next) => {
   next();
 };
 
+const bookmarkReqVal = (req, res, next) => {
+  const { entityId, entityType, bookmarkName } = req.body;
+  const user_uid = req.session?.user?.uid;
+ 
+  if (!user_uid) {
+    return res
+      .status(401)
+      .json(errorRes("Unauthorized - user session not found"));
+  }
+  if (!entityId) {
+    return res.status(400).json(errorRes("Event uid or Task uid is required"));
+  }
+  if (!entityType) {
+    return res
+      .status(400)
+      .json(errorRes("Event type or Task type is required"));
+  }
+  if (!bookmarkName) {
+    return res.status(400).json(errorRes("bookmark is required"));
+  }
+ 
+  next();
+};
+ 
+const getBookmarksByTypeVal = (req, res, next) => {
+  const user_uid = req.session?.user?.uid;
+  const { entityType } = req.params;
+ 
+  if (!user_uid) {
+    return res
+      .status(401)
+      .json(errorRes("Unauthorized - user session not found"));
+  }
+  if (!["event", "task"].includes(entityType)) {
+    return res.status(400).json(errorRes("entityType must be 'event' or 'task'"));
+  }
+ 
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -491,5 +531,7 @@ module.exports = {
   createTaskCommentsVal,
   updateTaskCommentsVal,
   deleteTaskCommentsVal,
+  bookmarkReqVal,
+  getBookmarksByTypeVal,
   getFilteredEvents
 };
