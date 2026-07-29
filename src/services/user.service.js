@@ -211,7 +211,6 @@ const userEventsTasksService = async (tenantUid, assignedToUid, status) => {
 
     ${taskJoinType} tasks t
       ON t.event_uid = e.uid
-      AND t.status <> 'deleted'
       ${statusCondition}
 
     LEFT JOIN users taskAssigned
