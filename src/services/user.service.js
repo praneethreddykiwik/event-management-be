@@ -124,9 +124,9 @@ const getEventManagersService = async (query, providePasswordHash) => {
         t.uid as "tenantUid"
       from users u
       join tenants t on t.uid = u.tenant_uid
-      where t.tenant_id = $(tenantId) and u.role in ('event_manager', 'admin')
+      ${whereClause}
     `,
-    { tenantId: query.tenantId },
+    params,
   );
 
   return users;
