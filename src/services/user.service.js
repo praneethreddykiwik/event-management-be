@@ -40,7 +40,7 @@ const getUsersService = async (query, providePasswordHash) => {
   const params = {};
 
   const queries = [
-    { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
+    { query: "tenantUid", condition: "u.tenant_uid = $(tenantUid)" },
     { query: "username", condition: "u.username = $(username)" },
     { query: "email", condition: "lower(u.email) = lower($(email))" },
     { query: "status", condition: "u.status IN ($(status:csv))" },
@@ -59,7 +59,7 @@ const getUsersService = async (query, providePasswordHash) => {
     : "";
 
   const db = getDb();
-  const users = await db.any(
+  const usersSQLQuery = await db.any(
     `
       select
         u.uid,
@@ -81,8 +81,51 @@ const getUsersService = async (query, providePasswordHash) => {
     { ...params, limit },
   );
 
-  return users;
+  const users = await usersSQLQuery;
+
+  if (!params.tenantUid) {
+    return users;
+  }
+
+  const roleCounts = await getUserRoleCounts(db, params);
+
+  return {
+    users,
+    roleCounts,
+  };
 };
+
+async function getUserRoleCounts(db, params) {
+  const countResponse = await db.any(
+    `
+      SELECT
+        u.role,
+        COUNT(*) AS count
+      FROM users u
+      WHERE u.tenant_uid = $(tenantUid)
+      GROUP BY u.role
+    `,
+    params,
+  );
+
+  const allRoles = ["admin", "event_manager", "vendor", "supervisor", "qa"];
+
+  const obj = allRoles.reduce(
+    (acu, cur) => {
+      const groupObj = countResponse.find((el) => el.role === cur) || {};
+      const numberMod = Number(groupObj.count) || 0;
+
+      const restObj = { ...acu };
+      restObj[cur] = numberMod;
+      restObj.total += numberMod;
+
+      return restObj;
+    },
+    { total: 0 },
+  );
+
+  return obj;
+}
 
 const getEventManagersService = async (query, providePasswordHash) => {
   const conditions = [];

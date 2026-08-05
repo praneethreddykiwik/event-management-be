@@ -1,10 +1,10 @@
-const generateGetUsersReq = (query) => {
-  if (!query) {
-    console.error("[generateGetUsersReq]", "Missing query");
+const generateGetUsersReq = (query, session) => {
+  if (!query || !session) {
+    console.error("[generateGetUsersReq]", "Missing query or session");
   }
 
   return {
-    tenantUid: query.tenantUid,
+    tenantUid: query.tenantUid || session?.user?.tenantUid,
     uid: query.uid,
     username: query.username,
     email: query.email,
