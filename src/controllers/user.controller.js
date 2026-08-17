@@ -15,10 +15,10 @@ const {
 
 const getUsersCtrl = async (req, res) => {
   try {
-    const payload = generateGetUsersReq(req.query);
+    const payload = generateGetUsersReq(req.query, req.session);
 
     const users = await userServices.getUsersService(payload);
-    res.status(200).json(successRes("Success", users));
+    return res.status(200).json(successRes("Success", users, "0000"));
   } catch (error) {
     console.error("getUsersCtrl", error);
     const erorRes = errorRes("getUsers Failed", {}, error.code, error);
