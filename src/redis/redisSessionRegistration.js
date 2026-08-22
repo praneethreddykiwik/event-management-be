@@ -13,8 +13,7 @@ const registerRedis = async (app) => {
     app.use(sessionMw);
     console.log("Redis connection Success");
   } catch (e) {
-    console.error("Redis connection Failed", e);
-    process.exit(1);
+    console.warn("Redis connection Failed, sessions running in fallback mode:", e.message);
   }
 };
 

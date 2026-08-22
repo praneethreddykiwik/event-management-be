@@ -26,6 +26,7 @@ const pgp = pgPromise({
 let db;
 
 const initializeDb = async () => {
+  if (db) return db;
   console.log("Initializing DB...");
   try {
     const secrets = loadEnvSecrets();

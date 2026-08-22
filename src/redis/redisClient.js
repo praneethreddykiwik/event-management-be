@@ -32,8 +32,7 @@ function getRedisClient() {
   });
 
   client.on("error", (err) => {
-    console.error("Redis error:", err);
-    process.exit(1);
+    console.error("Redis error:", err.message);
   });
 
   return client;
