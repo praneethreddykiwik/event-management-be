@@ -17,6 +17,16 @@ async function setupApp() {
   try {
     await registerRedis(app);
 
+    // Mount root route endpoint
+    app.get("/", (req, res) => {
+      res.status(200).json({
+        message: "Event Management API is running",
+        status: "ok",
+        health: "/health",
+        docs: "/api-docs",
+      });
+    });
+
     // Mount health check endpoint
     app.use("/health", (req, res) => {
       res.status(200).json({ status: "working", env: process.env.NODE_ENV || "development" });
