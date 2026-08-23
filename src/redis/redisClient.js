@@ -14,7 +14,34 @@ function getRedisClient() {
   console.log("Redis Configuration:", {
     REDIS_HOST: process.env.REDIS_HOST,
     REDIS_PORT: process.env.REDIS_PORT,
+    REDIS_URL: process.env.REDIS_URL ? "(set)" : "(not set)",
   });
+
+  // REDIS_URL takes precedence when set (rediss:// enables TLS automatically,
+  // required by managed providers like Upstash)
+  if (process.env.REDIS_URL) {
+    client = createClient({
+      url: process.env.REDIS_URL,
+      socket: {
+        connectTimeout: 10000,
+      },
+    });
+
+    client.on("error", (err) => {
+      console.error("Redis Client Error:", err);
+      process.exit(1);
+    });
+
+    client.on("connect", () => {
+      console.log("Redis connection Starting");
+    });
+
+    client.on("ready", () => {
+      console.log("Redis connection Success");
+    });
+
+    return client;
+  }
 
   // Use host/port configuration (recommended for ElastiCache)
   client = createClient({
