@@ -1,4 +1,5 @@
 const { getDb } = require("../db/db");
+const { convertQueryParams } = require("../utils/pg.utils");
 
 const createEventService = async (payload) => {
   const sql = `
@@ -13,7 +14,8 @@ const createEventService = async (payload) => {
     comments,
     assigned_to_uid,
     assigned_at,
-    created_by_uid
+    created_by_uid,
+    ending_at
   )
   VALUES (
     $(tenant_uid),
@@ -26,7 +28,8 @@ const createEventService = async (payload) => {
     $(comments),
     $(assigned_to_uid),
     now(),
-    $(created_by_uid)
+    $(created_by_uid),
+    $(ending_at)
   )
   RETURNING *;
 `;
@@ -103,38 +106,54 @@ async function listEvents(tenantUid, role, userUid, filters) {
   return db.any(sql, params);
 }
 
-// aadil
-async function getEventsService(query, includeDeleted = false) {
+async function getEventsService(query) {
   const conditions = [];
-  const params = {};
-
+  const params = {
+    tenant_uid: query.tenantUid, // required
+  };
   const queries = [
-    // { query: "tenantId", condition: "t.tenant_id = $(tenantId)" },
-    { query: "eventUid", condition: "e.uid = $(eventUid)" },
+    // {
+    //   query: "tenantUid",
+    //   condition: "t.tenant_uid = $(tenantUid)",
+    //   value: query.tenantUid,
+    // },
+    {
+      query: "searchText",
+      condition:
+        "((LOWER(e.event_name) LIKE LOWER($(searchText))) OR (LOWER(e.venue) LIKE LOWER($(searchText))) OR (LOWER(e.status) LIKE LOWER($(searchText))) OR (LOWER(u.username) LIKE LOWER($(searchText))) OR (TO_CHAR(e.scheduled_at, 'DD Mon YYYY HH12:MIAM') ILIKE $(searchText)))",
+      value: `%${query.searchText}%`,
+    },
+    {
+      query: "eventUid",
+      condition: "e.uid = $(eventUid)",
+      value: query.eventUid,
+    },
     {
       query: "assignedToUid",
       condition: "e.assigned_to_uid = $(assignedToUid)",
+      value: query.assignedToUid,
+    },
+    {
+      query: "status",
+      condition: "e.status IN ($(status:csv))",
+      value: convertQueryParams(query.status),
     },
   ];
-
   queries.forEach((el) => {
     if (query[el.query]) {
       conditions.push(el.condition);
-      params[el.query] = query[el.query];
+      params[el.query] = el.value;
     }
   });
-  // conditions.push(
-  //   "($(events_status_check)::boolean = true OR status <> 'deleted')"
-  // );
 
   const whereClause = conditions.length
     ? `where ${conditions.join(" and ")}`
     : "";
 
   const db = getDb();
-  const events = await db.any(
+  const eventsSQLQuery = db.any(
     `
-      select
+        select
         e.uid,
         e.tenant_uid as "tenantUid",
         e.event_name as "eventName",
@@ -155,37 +174,87 @@ async function getEventsService(query, includeDeleted = false) {
         e.updated_by_uid as "updatedByUid",
         e.deleted_at as "deletedAt",
         e.delete_reason as "deleteReason",
-        u.first_name as "firstName"
+        e.ending_at as "endingAt",
+        u.first_name as "firstName",
+        u.username as "userName"
         from events e
         left join users u on u.uid = e.assigned_to_uid
         ${whereClause}
-        `,
-    {
-      tenant_uid: query.tenantUid,
-      eventUid: query.eventUid,
-      assignedToUid: query.assignedToUid,
-      include_deleted: includeDeleted,
-    }
+        ORDER BY e.created_at DESC;
+      `,
+    params,
   );
 
-  return events;
+  const statusCountsSQLQuery = getEventStatusCount(db, params);
+
+  const responses = await Promise.all([eventsSQLQuery, statusCountsSQLQuery]);
+
+  const events = responses[0];
+  const statusCounts = responses[1];
+
+  return { events, statusCounts };
 }
 
-async function updateEvent(tenantUid, eventUid, patch, actorUid) {
+async function getEventStatusCount(db, params) {
+  const countResponse = await db.any(
+    `
+      SELECT 
+        e.status,
+        COUNT(*) as count
+      FROM events e
+      WHERE e.tenant_uid = $(tenant_uid)
+      GROUP BY e.status
+      `,
+    params,
+  );
+
+  const allStatuses = [
+    "pending",
+    "assigned",
+    "accepted",
+    "ready",
+    "in_progress",
+    "completed",
+    "declined",
+    "cancelled",
+    "deleted",
+  ];
+
+  const obj = allStatuses.reduce(
+    (acu, cur) => {
+      const groupObj = countResponse.find((el) => el.status === cur) || {};
+      const numberMod = Number(groupObj.count) || 0;
+
+      const restObj = { ...acu };
+      restObj[cur] = numberMod;
+
+      restObj.total = restObj.total + numberMod;
+      return restObj;
+    },
+    { total: 0 },
+  );
+
+  return obj;
+}
+
+async function updateEventService(updatePayload) {
+  const { tenantUid, eventUid, updatedByUid: actorUid } = updatePayload;
+
   const sql = `
     UPDATE events
     SET
       event_name = COALESCE($(event_name), event_name),
+      comments = COALESCE($(comments), comments),
       event_type = COALESCE($(event_type), event_type),
       scheduled_at = COALESCE($(scheduled_at), scheduled_at),
-      venue = COALESCE($(venue), venue),
       expected_attendees = COALESCE($(expected_attendees), expected_attendees),
-      comments = COALESCE($(comments), comments),
+      assigned_to_uid = COALESCE($(assigned_to_uid), assigned_to_uid),
+      status = COALESCE($(status), status),
+      venue = COALESCE($(venue), venue),
       updated_at = now(),
       updated_by_uid = $(actor_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND status <> 'deleted'
     RETURNING *;
   `;
 
@@ -194,42 +263,25 @@ async function updateEvent(tenantUid, eventUid, patch, actorUid) {
     tenant_uid: tenantUid,
     event_uid: eventUid,
     actor_uid: actorUid,
-    event_name: patch.event_name ?? null,
-    event_type: patch.event_type ?? null,
-    scheduled_at: patch.scheduled_at ?? null,
-    venue: patch.venue ?? null,
+    event_name: updatePayload.event_name ?? null,
+    event_type: updatePayload.event_type ?? null,
+    scheduled_at: updatePayload.scheduled_at ?? null,
+    venue: updatePayload.venue ?? null,
+    status: updatePayload.status,
     expected_attendees:
-      patch.expected_attendees !== undefined
-        ? Number(patch.expected_attendees)
+      updatePayload.expected_attendees !== undefined
+        ? Number(updatePayload.expected_attendees)
         : null,
-    comments: patch.comments ?? null,
+    comments: updatePayload.comments ?? null,
+    assigned_to_uid: updatePayload.assigned_to_uid,
   });
-}
-
-async function updateEventService({
-  tenantUid,
-  eventUid,
-  updatedByUid,
-  updateFields,
-}) {
-  // whitelist + map camelCase → snake_case
-  const patch = {
-    event_name: updateFields.eventName,
-    event_type: updateFields.eventType,
-    scheduled_at: updateFields.scheduledAt,
-    venue: updateFields.venue,
-    expected_attendees: updateFields.expectedAttendees,
-    comments: updateFields.comments,
-  };
-
-  return updateEvent(tenantUid, eventUid, patch, updatedByUid);
 }
 
 async function assignEventService(
   tenantUid,
   eventUid,
   assignedToUid,
-  updatedByUid
+  updatedByUid,
 ) {
   const sql = `
     UPDATE events
@@ -241,7 +293,6 @@ async function assignEventService(
       updated_by_uid = $(updated_by_uid)
     WHERE tenant_uid = $(tenant_uid)
       AND uid = $(event_uid)
-      AND status <> 'deleted'
     RETURNING *;
   `;
 
@@ -341,7 +392,7 @@ const deleteEvent = async (
   tenantUid,
   eventUid,
   actorUid,
-  deleteReason = null
+  deleteReason = null,
 ) => {
   const sql = `
     UPDATE events
@@ -379,7 +430,6 @@ module.exports = {
   createEventService,
   listEvents,
   getEventsService,
-  updateEvent,
   updateEventService,
   assignEventService,
   acceptEvent,
@@ -387,4 +437,4 @@ module.exports = {
   getAllEvents,
   eventsAssignedToMe,
   deleteEvent,
- };
+};

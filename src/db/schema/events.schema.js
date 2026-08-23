@@ -86,3 +86,78 @@ const addColumns = `
 
 const changeColName = `ALTER TABLE events
 RENAME COLUMN assigned_to_uid TO assigned_to_uid;`;
+
+//  phase 2
+const createTable = `
+-- EVENTS TABLE (final version)
+
+CREATE TABLE IF NOT EXISTS "emdb-schema".events (
+  uid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  tenant_uid UUID NOT NULL,
+  event_name TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+
+  scheduled_at TIMESTAMPTZ NOT NULL,
+  venue TEXT,
+  expected_attendees INTEGER NOT NULL DEFAULT 0,
+  CONSTRAINT events_expected_attendees_check
+    CHECK (expected_attendees >= 0),
+
+  status TEXT NOT NULL DEFAULT 'pending',
+  CONSTRAINT events_status_check
+    CHECK (
+      status IN (
+        'pending',
+        'assigned',
+        'accepted',
+        'ready',
+        'in_progress',
+        'completed',
+        'declined',
+        'cancelled',
+        'deleted'
+      )
+    ),
+
+  assigned_to_uid UUID NULL,
+  assigned_at TIMESTAMPTZ NULL,
+  accepted_at TIMESTAMPTZ NULL,
+  declined_at TIMESTAMPTZ NULL,
+  decline_reason TEXT NULL,
+
+  comments TEXT NULL,
+
+  deleted_at TIMESTAMPTZ NULL,
+  deleted_by_uid UUID NULL,
+  delete_reason TEXT NULL,
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  created_by_uid UUID NULL,
+  updated_by_uid UUID NULL,
+
+  -- Foreign Keys
+  CONSTRAINT fk_events_tenant_uid
+    FOREIGN KEY (tenant_uid)
+    REFERENCES "emdb-schema".tenants(uid)
+    ON DELETE CASCADE,
+
+  CONSTRAINT fk_events_assigned_event_manager_uid
+    FOREIGN KEY (assigned_to_uid)
+    REFERENCES "emdb-schema".users(uid),
+
+  CONSTRAINT fk_events_created_by_uid
+    FOREIGN KEY (created_by_uid)
+    REFERENCES "emdb-schema".users(uid),
+
+  CONSTRAINT fk_events_updated_by_uid
+    FOREIGN KEY (updated_by_uid)
+    REFERENCES "emdb-schema".users(uid),
+
+  CONSTRAINT fk_events_deleted_by_uid
+    FOREIGN KEY (deleted_by_uid)
+    REFERENCES "emdb-schema".users(uid)
+);
+`;

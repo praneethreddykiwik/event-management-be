@@ -9,36 +9,35 @@ router.get("/", validations.getEventsVal, eventController.getEventsCtrl);
 router.post(
   "/create-event",
   validations.createEventValidation,
-  eventController.createEventCtrl
+  eventController.createEventCtrl,
 );
 router.post(
   "/assign-event",
   validations.assignEventVal,
-  eventController.assignEventCtrl
+  eventController.assignEventCtrl,
 );
 
 router.put(
   "/accept-event",
   validations.acceptEventVal,
-  eventController.acceptEventCtrl
+  eventController.acceptEventCtrl,
 );
 
 router.put(
   "/decline-event",
   validations.declineEventVal,
-  eventController.deleteEventCtrl
+  eventController.deleteEventCtrl,
 );
 
 router.put(
   "/update-event",
   validations.updateEventVal,
-  eventController.updateEventCtrl
+  eventController.updateEventCtrl,
 );
 
 router.delete(
   "/delete-event",
   validations.deleteEventVal,
-  eventController.deleteEventCtrl
+  eventController.deleteEventCtrl,
 );
-
 module.exports = router;

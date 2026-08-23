@@ -82,7 +82,6 @@ const deleteEventVal = (req, res, next) => {
   next();
 };
 
-
 const loginValidation = (req, res, next) => {
   if (!req.body.tenantId) {
     return res.status(400).json(errorRes("Missing Tenant ID", {}));
@@ -179,12 +178,19 @@ const declineEventVal = (req, res, next) => {
 };
 
 const getEventsVal = (req, res, next) => {
-  if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
-    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
-  }
+    if (!req.query.tenantUid && !req.session?.user?.tenantUid) {
+      return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+    }
 
   next();
 };
+
+const getFilteredEvents=(req,res,next)=>{
+   if(!req.query.searchText){
+    return res.status(400).json(errorRes("Missing search text", {}))
+   }
+   next();
+}
 
 const getTasksByEventUidVal = (req, res, next) => {
   const eventUid = req.query.eventUid;
@@ -204,11 +210,12 @@ const assignEventVal = (req, res, next) => {
   const eventUid = req.body.eventUid;
   const assignedToUid = req.body.assignedToUid;
   const tenantUid = req.body.tenantUid || req.session?.user?.tenantUid;
-  const updatedByUid = req.body.updatedByUid || req.session?.user?.updatedByUid;
+  const updatedByUid = req.body.updatedByUid || req.session?.user?.uid;
 
   if (!assignedToUid) {
     return res.status(400).json(errorRes("Missing assignedToUid", {}));
   }
+  // updatedByUid
   if (!eventUid) {
     return res.status(400).json(errorRes("Missing Tenant Uid", {}));
   }
@@ -251,7 +258,7 @@ const updateEventVal = (req, res, next) => {
   ];
 
   const hasUpdatableField = updatableFields.some(
-    (field) => req.body?.[field] !== undefined
+    (field) => req.body?.[field] !== undefined,
   );
 
   if (!hasUpdatableField) {
@@ -341,6 +348,161 @@ const editTaskVal = (req, res, next) => {
   next();
 };
 
+const deleteTaskVal = (req, res, next) => {
+  const taskUid = req.body.taskUid;
+  const declinedByUid = req.body.declinedByUid || req.session?.user?.uid;
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Missing Task Uid", {}));
+  }
+  if (!declinedByUid) {
+    return res.status(400).json(errorRes("Missing User Uid", {}));
+  }
+
+  next();
+};
+
+const qaEventsAndTasksVal = (req, res, next) => {
+  const tenantUid = req.query.tenantUid || req.session?.user?.tenantUid;
+  const assignedToUid = req.query.assignedToUid;
+
+  if (!tenantUid) {
+    return res.status(400).json(errorRes("Missing Tenant Uid", {}));
+  }
+  if (!assignedToUid) {
+    return res.status(400).json(errorRes("Missing User Uid", {}));
+  }
+
+  next();
+};
+
+const getTaskByIdVal = (req, res, next) => {
+  // checkHere
+  next();
+};
+
+const getTaskCommentsVal = (req, res, next) => {
+  const { taskUid } = req.params;
+
+  const tenantUid = req.session?.user?.tenantUid;
+
+  if (!tenantUid) {
+    return res.status(401).json(errorRes("Tenant uid is required", {}));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  next();
+};
+
+const createTaskCommentsVal = (req, res, next) => {
+  const { taskUid, commentText } = req.body;
+
+  // Change sessionData to sessiondata if your app uses lowercase
+  const tenantUid = req.session?.user?.tenantUid;
+  const createdByUid = req.session?.user?.uid;
+
+  if (!tenantUid || !createdByUid) {
+    return res.status(401).json(errorRes("Tenant uid is missing"));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  if (!commentText || !commentText.trim()) {
+    return res.status(400).json(errorRes("Comment text is required"));
+  }
+  next();
+};
+
+const updateTaskCommentsVal = (req, res, next) => {
+  const { taskUid, commentUid, commentText } = req.body;
+
+  const tenantUid = req.session?.user.tenantUid;
+  const updatedByUid = req.session?.user.userUid;
+
+  if (!tenantUid || !updatedByUid) {
+    return res.status(401).json(errorRes("Tenant uid required"));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  if (!commentUid) {
+    return res.status(400).json(errorRes("Comment uid is required"));
+  }
+
+  if (!commentText || !commentText.trim()) {
+    return res.status(400).json(errorRes("Comment text is required"));
+  }
+
+  next();
+};
+
+const deleteTaskCommentsVal = (req, res, next) => {
+  const { taskUid, commentUid } = req.body;
+
+  const tenantUid = req.session?.user.tenantUid;
+  const deletedByUid = req.session?.user.userUid;
+
+  if (!tenantUid || !deletedByUid) {
+    return res.status(401).json(errorRes("Tenant uid required"));
+  }
+
+  if (!taskUid) {
+    return res.status(400).json(errorRes("Task uid is required"));
+  }
+
+  if (!commentUid) {
+    return res.status(400).json(errorRes("Comment uid is required"));
+  }
+  next();
+};
+
+const bookmarkReqVal = (req, res, next) => {
+  const { entityId, entityType, bookmarkName } = req.body;
+  const user_uid = req.session?.user?.uid;
+ 
+  if (!user_uid) {
+    return res
+      .status(401)
+      .json(errorRes("Unauthorized - user session not found"));
+  }
+  if (!entityId) {
+    return res.status(400).json(errorRes("Event uid or Task uid is required"));
+  }
+  if (!entityType) {
+    return res
+      .status(400)
+      .json(errorRes("Event type or Task type is required"));
+  }
+  if (!bookmarkName) {
+    return res.status(400).json(errorRes("bookmark is required"));
+  }
+ 
+  next();
+};
+ 
+const getBookmarksByTypeVal = (req, res, next) => {
+  const user_uid = req.session?.user?.uid;
+  const { entityType } = req.params;
+ 
+  if (!user_uid) {
+    return res
+      .status(401)
+      .json(errorRes("Unauthorized - user session not found"));
+  }
+  if (!["event", "task"].includes(entityType)) {
+    return res.status(400).json(errorRes("entityType must be 'event' or 'task'"));
+  }
+ 
+  next();
+};
+
 module.exports = {
   createTenantVal,
   getTenantByIdVal,
@@ -362,4 +524,14 @@ module.exports = {
   acceptTaskVal,
   declineTaskVal,
   editTaskVal,
+  deleteTaskVal,
+  qaEventsAndTasksVal,
+  getTaskByIdVal,
+  getTaskCommentsVal,
+  createTaskCommentsVal,
+  updateTaskCommentsVal,
+  deleteTaskCommentsVal,
+  bookmarkReqVal,
+  getBookmarksByTypeVal,
+  getFilteredEvents
 };

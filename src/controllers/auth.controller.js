@@ -1,16 +1,17 @@
 const errorCodes = require("../constants/errorCodes.constants");
+const {
+  generateLoadUserReq,
+} = require("../models/requestModels/auth.req.model");
 const { successRes, errorRes } = require("../models/response.model");
 const userServices = require("../services/user.service");
 const utils = require("../utils/utils");
 
 const loadUser = async (req, res, next) => {
   try {
-    const { tenantId, username, password } = req.body;
-    const query = { tenantId, username, password };
-
+    const query = generateLoadUserReq(req.body);
     const users = await userServices.getUsersService(
       query,
-      "providePasswordHash"
+      "providePasswordHash",
     );
 
     if (!users || !users.length) {
@@ -35,7 +36,7 @@ const authenticateUserCtrl = async (req, res, next) => {
 
     const isValidPassword = await utils.comparePassword(
       req.body.password,
-      user.password_hash
+      user.password_hash,
     );
     console.log("authenticateUserCtrl isValidPassword", isValidPassword);
 
@@ -52,18 +53,32 @@ const authenticateUserCtrl = async (req, res, next) => {
       status: user.status,
       tenantId: user.tenant_id,
       tenantUid: user.tenantUid,
+      firstName: user.firstName,
+      lastName: user.lastName,
     };
 
     console.log("authenticateUserCtrl success", {
       sessionData: req.session,
       user,
     });
-    res.status(200).json(
-      successRes("Login successful", {
-        sessionID: req.sessionID,
-      })
-    );
-    next();
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json(errorRes("Session save error", err));
+      }
+
+      console.log("authenticateUserCtrl success", {
+        sessionData: req.session,
+        user,
+      });
+
+      res.status(200).json(
+        successRes("Login successful", {
+          sessionID: req.sessionID,
+        }),
+      );
+      next();
+    });
   } catch (error) {
     console.error("authenticateUserCtrl", error);
     res.status(401).json(errorRes("Authentication failed", error));
@@ -83,15 +98,23 @@ const logoutCtrl = (req, res) => {
 
 const loadUserFromSessionCtrl = (req, res) => {
   try {
+    console.log("loadUserFromSessionCtrl", {
+      session: req.session,
+      sessionUser: req.session.user,
+    });
+
     if (!req.session || !req.session.user) {
       return res
         .status(401)
         .json(errorRes("Unauthorized", "Please login", errorCodes.UN_AUTH));
     }
 
-    return res
-      .status(200)
-      .json({ ...req.session.user, sessionID: req.sessionID });
+    return res.status(200).json(
+      successRes("Success", {
+        ...req.session.user,
+        sessionID: req.sessionID,
+      }),
+    );
   } catch (error) {
     return res
       .status(401)

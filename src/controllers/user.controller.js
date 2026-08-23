@@ -1,18 +1,40 @@
 /** @format */
 
-const tenantServices = require('../services/tenant.service');
-const { successRes, errorRes } = require('../models/response.model');
-const userServices = require('../services/user.service');
-const reqModels = require('../models/request.model');
-const utils = require('../utils/utils');
+const tenantServices = require("../services/tenant.service");
+const { successRes, errorRes } = require("../models/response.model");
+const userServices = require("../services/user.service");
+const utils = require("../utils/utils");
+const {
+  generateGetUsersReq,
+  generateGetEventManagersReq,
+  generateUpdateUserReq,
+  generateUserEventsTasksReq,
+  generateDeleteUserReq,
+  generateCreateUserReq,
+} = require("../models/requestModels/user.req.model");
 
 const getUsersCtrl = async (req, res) => {
   try {
-    const users = await userServices.getUsersService(req.query);
-    res.status(200).json(successRes('Success', users));
+    const payload = generateGetUsersReq(req.query, req.session);
+
+    const users = await userServices.getUsersService(payload);
+    return res.status(200).json(successRes("Success", users, "0000"));
   } catch (error) {
-    console.error('getUsersCtrl', error);
-    const erorRes = errorRes('getUsers Failed', {}, error.code, error);
+    console.error("getUsersCtrl", error);
+    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
+    return res.status(400).json(erorRes);
+  }
+};
+
+const getEventManagersCtrl = async (req, res) => {
+  try {
+    const payload = generateGetEventManagersReq(req.query);
+
+    const users = await userServices.getEventManagersService(payload);
+    res.status(200).json(successRes("Success", users));
+  } catch (error) {
+    console.error("getEventManagersCtrl", error);
+    const erorRes = errorRes("getUsers Failed", {}, error.code, error);
     return res.status(400).json(erorRes);
   }
 };
@@ -22,7 +44,7 @@ const getUserById = (req, res) => {
 
   res.status(200).json({
     success: true,
-    data: { id, name: 'Dummy User', role: 'worker' },
+    data: { id, name: "Dummy User", role: "worker" },
   });
 };
 
@@ -31,7 +53,7 @@ const createUser = (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: 'User created successfully',
+    message: "User created successfully",
     data: {
       id: 3,
       name,
@@ -44,59 +66,44 @@ const createUser = (req, res) => {
 const loginUser = (req, res) => {
   const { email, password } = req.body;
 
-  if (email === 'test@example.com' && password === 'password') {
+  if (email === "test@example.com" && password === "password") {
     return res.status(200).json({
       success: true,
-      message: 'Login successful',
-      token: 'fake-jwt-token',
+      message: "Login successful",
+      token: "fake-jwt-token",
     });
   }
 
   res.status(401).json({
     success: false,
-    message: 'Invalid credentials',
+    message: "Invalid credentials",
   });
-};
-
-const getMeCtrl = (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json(errorRes('Not authenticated'));
-  }
-  return res.status(200).json(successRes('Current user', req.session.user));
 };
 
 const updateUserCtrl = async (req, res) => {
   try {
-    const { uid, mobile, status, role, username, email, firstName, lastName } =
-      req.body;
+    const payload = generateUpdateUserReq(req.body);
+
+    const { uid } = payload;
 
     if (!uid) {
-      return res.status(400).json(errorRes('uid is required'));
+      return res.status(400).json(errorRes("uid is required"));
     }
 
-    const updatedUser = await userServices.updateUserService({
-      uid,
-      mobile,
-      status,
-      role,
-      username,
-      email,
-      firstName,
-      lastName,
-    });
+    const updatedUser = await userServices.updateUserService(payload);
 
     if (!updatedUser) {
-      return res.status(404).json(errorRes('User not found'));
+      return res.status(404).json(errorRes("User not found"));
     }
 
     return res
       .status(200)
-      .json(successRes('User updated successfully', updatedUser));
+      .json(successRes("User updated successfully", updatedUser));
   } catch (error) {
-    console.error('updateUserCtrl', error);
+    console.error("updateUserCtrl", error);
     return res
       .status(400)
-      .json(errorRes(error.message || 'Update failed', {}, error.code, error));
+      .json(errorRes(error.message || "Update failed", {}, error.code, error));
   }
 };
 
@@ -114,14 +121,14 @@ const createUserCtrl = async (req, res) => {
   try {
     const tenant = await tenantServices.getTenantByIdService(tenantId);
     if (!tenant) {
-      const invalidTenantRes = errorRes('Tenant not found');
+      const invalidTenantRes = errorRes("Tenant not found");
       return res.status(404).json(invalidTenantRes);
     }
 
     const tenantUid = tenant.uid;
     const passwordHash = await utils.hashPassword(password);
 
-    const payload = reqModels.createUserReqModel(
+    const payload = generateCreateUserReq(
       tenantUid,
       username,
       email,
@@ -129,29 +136,32 @@ const createUserCtrl = async (req, res) => {
       role,
       firstName,
       lastName,
-      mobile
+      mobile,
     );
     const createUserRes = await userServices.createUserService(payload);
-    console.log('createUserCtrl; createUserRes;', createUserRes);
+    console.log("createUserCtrl; createUserRes;", createUserRes);
     return res
       .status(201)
-      .json(successRes('User Created Success', createUserRes));
+      .json(successRes("User Created Success", createUserRes));
   } catch (error) {
-    console.error('createUserCtrl', error);
-    const erorRes = errorRes('User Creation Failed', {}, error.code, error);
+    console.error("createUserCtrl", error);
+    const erorRes = errorRes("User Creation Failed", {}, error.code, error);
     return res.status(400).json(erorRes);
   }
 };
 
 const userEventsTasksCtrl = async (req, res) => {
   try {
-    const tenantUid = req.query.tenantUid;
-    const assignedToUid = req.query.assignedToUid;
+    const payload = generateUserEventsTasksReq(req.query);
 
-    const data = await userServices.userEventsTasksService(
-      tenantUid,
-      assignedToUid
+    const response = await userServices.userEventsTasksService(
+      payload.tenantUid,
+      payload.assignedToUid,
+      payload.status,
     );
+
+    const data = response.rows;
+    const countObj = response.countObj;
 
     const eventIds = data
       .map((el) => el.eventUid)
@@ -161,17 +171,28 @@ const userEventsTasksCtrl = async (req, res) => {
       const eventObj = data.find((fn) => fn.eventUid === eventId);
       const tasks = data
         .filter((fl) => fl.eventUid === eventId && fl.taskUid)
-        .map((m) => ({
-          taskUid: m.taskUid,
-          taskTitle: m.taskTitle,
-          taskStatus: m.taskStatus,
-          taskDescription: m.taskDescription,
-          taskDueAt: m.taskDueAt,
-          taskAssignedToUid: m.taskAssignedToUid,
-          taskCreatedAt: m.taskCreatedAt,
-          eventVenue: m.eventVenue,
-          taskPriority: m.taskPriority,
-        }));
+        .map((m) => {
+          return {
+            taskUid: m.taskUid,
+            taskTitle: m.taskTitle,
+            taskStatus: m.taskStatus,
+            taskDescription: m.taskDescription,
+            taskDueAt: m.taskDueAt,
+            taskAssignedToUid: m.taskAssignedToUid,
+            taskAssignedToFirstName: m.taskAssignedToFirstName,
+            taskAssignedToLastName: m.taskAssignedToLastName,
+            taskAssignedTo: m.taskAssignedTo,
+            taskCreatedAt: m.taskCreatedAt,
+            eventVenue: m.eventVenue,
+            taskPriority: m.taskPriority,
+
+            qaAssignedToUid: m.qaAssignedToUid,
+            qaAssignedToFirstName: m.qaAssignedToFirstName,
+            qaAssignedToLastName: m.qaAssignedToLastName,
+            qaAssignedTo: m.qaAssignedTo,
+            isQaApproved: m.isQaApproved,
+          };
+        });
 
       return {
         eventUid: eventObj.eventUid,
@@ -191,27 +212,34 @@ const userEventsTasksCtrl = async (req, res) => {
       };
     });
 
-    res.status(200).json(successRes('Success', userEventsAndTasks));
+    res
+      .status(200)
+      .json(successRes("Success", { countObj, data: userEventsAndTasks }));
   } catch (error) {
-    console.error('userEventsTasksCtrl', error);
-    const erorRes = errorRes('getUsers Failed', {}, error.code, error);
+    console.error("userEventsTasksCtrl", error);
+    const erorRes = errorRes(
+      "userEventsTasksCtrl Failed",
+      {},
+      error.code,
+      error,
+    );
     return res.status(400).json(erorRes);
   }
 };
 
 const deleteUserCtrl = async (req, res) => {
   try {
-    const { uid } = req.query;
+    const payload = generateDeleteUserReq(req.query);
 
-    if (!uid) {
-      return res.status(400).json(errorRes('uid is required'));
+    if (!payload.uid) {
+      return res.status(400).json(errorRes("uid is required"));
     }
 
-    const deletedUser = await userServices.deleteUserService(uid);
+    const deletedUser = await userServices.deleteUserService(payload.uid);
 
     return res
       .status(200)
-      .json(successRes('User deleted successfully', deletedUser));
+      .json(successRes("User deleted successfully", deletedUser));
   } catch (error) {
     console.error("deleteUserCtrl", error);
 
@@ -231,9 +259,9 @@ module.exports = {
   getUserById,
   createUser,
   loginUser,
-  getMeCtrl,
   updateUserCtrl,
   createUserCtrl,
   userEventsTasksCtrl,
   deleteUserCtrl,
+  getEventManagersCtrl,
 };

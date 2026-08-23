@@ -1,160 +1,1216 @@
 {
-	"info": {
-		"_postman_id": "c00142bf-dffc-4ff3-933e-fc10aee22e06",
-		"name": "Event-Mgt-be Copy",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "49464830",
-		"_collection_link": "https://prassi-y2003-5735701.postman.co/workspace/Prasanna-Yanamala's-Workspace~fb400db8-4e9a-4960-8b3f-1847565029e4/collection/49464830-c00142bf-dffc-4ff3-933e-fc10aee22e06?action=share&source=collection_link&creator=49464830"
-	},
-	"item": [
-		{
-			"name": "Local",
-			"item": [
-				{
-					"name": "user",
-					"item": [
-						{
-							"name": "USER - registration",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/user/registration",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"user",
-										"registration"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "USER - login",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"password\": \"Ashai@k212\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/user/login",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"user",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "User-me",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}"
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/users/me",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"users",
-										"me"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "health",
-					"item": [
-						{
-							"name": "health",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"user\": \"Adnan\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:4001/v1/health",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"health"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "health",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:4001/v1/health",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "4001",
-									"path": [
-										"v1",
-										"health"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "91df90e7-8079-4489-9374-50e95d9b8cfb",
+    "name": "Event-Mgt-be Copy 2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53195113",
+    "_collection_link": "https://go.postman.co/collection/53195113-91df90e7-8079-4489-9374-50e95d9b8cfb?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Local",
+      "item": [
+        {
+          "name": "user",
+          "item": [
+            {
+              "name": "USER - registration",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/user/registration",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "user", "registration"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "USER - login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"password\": \"Ashai@k212\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/user/login",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "user", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User-me",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"Adnan\",\n    \"firstName\": \"shaik\",\n    \"lastNamename\": \"yousuf\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/users/me",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "users", "me"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "health",
+          "item": [
+            {
+              "name": "health",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"user\": \"Adnan\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4001/v1/health",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "health"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "health",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4001/v1/health",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4001",
+                  "path": ["v1", "health"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "event",
+          "item": [
+            {
+              "name": "event-get",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/events?tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "events"],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-create",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"eventName\":\"Rohith's Bike Test\",\r\n     \"eventType\":\"private\",\r\n      \"scheduledAt\":\"2026-05-05 17:25:00.000 +0530\",\r\n      \"status\":\"pending\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/create-event",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "events", "create-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-assign",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"assignedToUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/assign-event",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "events", "assign-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "accept-event",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\", \r\n  \"eventUid\": \"ef1319e8-df42-4694-b06d-b043b2302566\",\r\n  \"eventManagerUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/accept-event",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "events", "accept-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "decline-event",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n     \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n            \"eventUid\":\"c81e79f4-bb5f-45af-a606-bd984703ccff\",\r\n            \"eventManagerUid\":\"e3c49c84-62b3-415b-b34e-eb06fa780051\",\r\n            \"declineReason\":\"due to rain\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/decline-event",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "events", "decline-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update-event",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"994557f9-bdf6-4521-b591-b69528306f28\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\",\r\n    \"status\":\"pending\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/update-event",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "events", "update-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete-event",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"deletedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/events/delete-event",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "events", "delete-event"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "tasks",
+          "item": [
+            {
+              "name": "get - tasks",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks?eventUid=994557f9-bdf6-4521-b591-b69528306f28&tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "tasks"],
+                  "query": [
+                    {
+                      "key": "eventUid",
+                      "value": "994557f9-bdf6-4521-b591-b69528306f28",
+                      "type": "text"
+                    },
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign - Task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"taskUid\": \"10238c66-641b-42b8-b84c-636d462f1113\",\r\n  \"assignedToUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n  \"updatedByUid\": \"c6d1cfdd-2b6e-4fd0-8a8e-b6d13427233a\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/assign-task",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "tasks", "assign-task"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Accept - Task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"taskUid\": \"b508aa69-8c4d-4fda-873b-8ba9bb6d4d8c\",\r\n  \"assignedToUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/accept-task",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "tasks", "accept-task"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create - task",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n  \"eventUid\": \"994557f9-bdf6-4521-b591-b69528306f28\",\r\n  \"title\": \"decoration\",\r\n  \"createdByUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n  \"status\": \"assigned\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "tasks"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "decline - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"declinedByUid\":\"2e41f6f9-a284-4c3c-a249-6dfac2031566\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/decline-task",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "tasks", "decline-task"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"declinedByUid\":\"45f9662d-5368-4cb7-9b0f-f1021cc58bb9\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/delete-task",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "tasks", "delete-task"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"f12b1553-5f01-4212-bb8c-48de5c26b6be\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/tasks/edit",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "tasks", "edit"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "auth_api's",
+          "item": [
+            {
+              "name": "auth_login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"mukheshreddy\",\r\n    \"password\":\"mukhesh@123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/auth/login",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/auth/logout",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "auth", "logout"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_me",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/auth/me",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "auth", "me"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "users_api's",
+          "item": [
+            {
+              "name": "get_users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get_events_managers",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/event-managers",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", "event-managers"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create_user",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"rothit1\",\r\n    \"email\":\"rohit@420\",\r\n    \"password\":\"rothit123\",\r\n    \"role\":\"event_manager\",\r\n    \"firstName\":\"rohit\",\r\n    \"mobile\":\"1234657890\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update_user",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uid\":\"10b3f6de-91cf-4d80-aefb-b47a16aac0f4\",\r\n      \"mobile\":\"7995840745\",\r\n      \"status\":\"ACTIVE\",\r\n      \"role\":\"event_manager\",\r\n      \"username\":\"tharunreddy\",\r\n      \"email\":\"tharu@143\",\r\n      \"firstName\":\"tharun\",\r\n      \"lastName\":\"reddy\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user_events_tasks",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"tharunreddy\",\r\n    \"email\":\"tharun@123\",\r\n    \"password\":\"tharun123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"tharun\",\r\n    \"mobile\":\"7995840745\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/user-events-tasks?tenantUid=10b3f6de-91cf-4d80-aefb-b47a16aac0f4&assignedToUid=0502d8af-f552-4895-aec0-2b18a910e324",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", "user-events-tasks"],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "10b3f6de-91cf-4d80-aefb-b47a16aac0f4"
+                    },
+                    {
+                      "key": "assignedToUid",
+                      "value": "0502d8af-f552-4895-aec0-2b18a910e324"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "dele_user",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/v1/users/delete-user?uid=27d17935-8128-4580-a27b-1afd791a192c",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["v1", "users", "delete-user"],
+                  "query": [
+                    {
+                      "key": "uid",
+                      "value": "27d17935-8128-4580-a27b-1afd791a192c"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Prod",
+      "item": [
+        {
+          "name": "event",
+          "item": [
+            {
+              "name": "event-get",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"assignedToUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://api.helm.events/v1/events?tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "http",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events"],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-create",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"eventName\":\"Rohith Car Test\",\r\n     \"eventType\":\"public\",\r\n      \"scheduledAt\":\"2026-05-05 17:25:00.000 +0530\",\r\n      \"status\": \"assigned\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://api.helm.events/v1/events/create-event",
+                  "protocol": "http",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "create-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-assign",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"assignedToUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/assign-event",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "assign-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-accept",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\", \r\n  \"eventUid\": \"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n  \"eventManagerUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/accept-event",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "accept-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-decline",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n     \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n            \"eventUid\":\"900486fb-30c7-498b-965b-479ecdc2ee9f\",\r\n            \"eventManagerUid\":\"0fcbe815-6d22-4a62-918b-8b2de3f3613\",\r\n            \"declineReason\":\"due to rain\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/decline-event",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "decline-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-update",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"994557f9-bdf6-4521-b591-b69528306f28\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\",\r\n    \"status\":\"assigned\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/update-event",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "update-event"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "event-delete",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"eventUid\":\"994557f9-bdf6-4521-b591-b69528306f28\",\r\n    \"tenantUid\":\"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"deletedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/events/delete-event",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "events", "delete-event"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "tasks",
+          "item": [
+            {
+              "name": "get - tasks",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks?eventUid=994557f9-bdf6-4521-b591-b69528306f28&tenantUid=c5b0b728-8dd1-414b-9e69-fa1ee00d13aa",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks"],
+                  "query": [
+                    {
+                      "key": "eventUid",
+                      "value": "994557f9-bdf6-4521-b591-b69528306f28"
+                    },
+                    {
+                      "key": "tenantUid",
+                      "value": "c5b0b728-8dd1-414b-9e69-fa1ee00d13aa"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"taskUid\": \"33298c85-31d2-4934-aa38-d4ca3e222fae\",\r\n  \"updatedByUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\",\r\n  \"assignedToUid\": \"ae41bc9b-5ebb-415b-883c-6ea4ca447445\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/assign-task",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "assign-task"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Accept - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\": \"10238c66-641b-42b8-b84c-636d462f1113\",\r\n  \"assignedToUid\": \"0fcbe815-6d22-4a62-918b-8b2de3f36133\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/accept-task",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "accept-task"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n  \"eventUid\": \"d817b254-95ae-419b-a3a5-904f9fed4f5e\",\r\n  \"title\": \"decoration chairs\",\r\n  \"createdByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\",\r\n  \"updatedByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\", \r\n  \"status\": \"assigned\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "decline - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n  \"eventUid\": \"d817b254-95ae-419b-a3a5-904f9fed4f5e\",\r\n  \"title\": \"decoration chairs\",\r\n  \"createdByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\",\r\n  \"updatedByUid\": \"eef6e3ee-8b2c-4817-8d0a-4c5a58d7396b\", \r\n  \"status\": \"assigned\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"987d19d9-73ad-4997-84e7-bdc18d51bb85\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"declinedByUid\":\"7c6e59f1-15a3-456c-a387-e57f98e722aa\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/delete-task",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "delete-task"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit - task",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"taskUid\" : \"c74404cf-bec3-4cd5-ba60-73954a4c48c6\",\r\n    \"tenantUid\": \"c5b0b728-8dd1-414b-9e69-fa1ee00d13aa\",\r\n    \"updatedByUid\":\"f12b1553-5f01-4212-bb8c-48de5c26b6be\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/tasks/edit",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "tasks", "edit"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "auth_api's",
+          "item": [
+            {
+              "name": "auth_login",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\": \"helm\",\r\n    \"username\": \"tharunreddy\",\r\n    \"password\": \"tharun123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/auth/login",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/auth/logout",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "auth", "logout"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "auth_me",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/auth/me",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "auth", "me"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "users_api's",
+          "item": [
+            {
+              "name": "get_users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get_events_managers",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/event-managers",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", "event-managers"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create_user",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"tenantId\":\"helm\",\r\n    \"username\":\"rohit\",\r\n    \"email\":\"rohit@123\",\r\n    \"password\":\"rohit123\",\r\n    \"role\":\"vendor\",\r\n    \"firstName\":\"rohit\",\r\n    \"mobile\":\"7989124470\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/users",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update_user",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uid\":\"10b3f6de-91cf-4d80-aefb-b47a16aac0f4\",\r\n      \"mobile\":\"7989124470\",\r\n      \"status\":\"ACTIVE\",\r\n      \"role\":\"event_manager\",\r\n      \"username\":\"rothi\",\r\n      \"email\":\"trohit@143\",\r\n      \"firstName\":\"rohit\",\r\n      \"lastName\":\"ro\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user_events_tasks",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/user-events-tasks?tenantUid=10b3f6de-91cf-4d80-aefb-b47a16aac0f4&assignedToUid=0502d8af-f552-4895-aec0-2b18a910e324",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", "user-events-tasks"],
+                  "query": [
+                    {
+                      "key": "tenantUid",
+                      "value": "10b3f6de-91cf-4d80-aefb-b47a16aac0f4"
+                    },
+                    {
+                      "key": "assignedToUid",
+                      "value": "0502d8af-f552-4895-aec0-2b18a910e324"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "dele_user",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "https://api.helm.events/v1/users/delete-user?uid=10b3f6de-91cf-4d80-aefb-b47a16aac0f4",
+                  "protocol": "https",
+                  "host": ["api", "helm", "events"],
+                  "path": ["v1", "users", "delete-user"],
+                  "query": [
+                    {
+                      "key": "uid",
+                      "value": "10b3f6de-91cf-4d80-aefb-b47a16aac0f4"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

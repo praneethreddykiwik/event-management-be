@@ -7,28 +7,41 @@ const taskRouter = express.Router();
 taskRouter.get(
   "/",
   validations.getTasksByEventUidVal,
-  controllers.getTasksByEventUidCtrl
+  controllers.getTasksByEventUidCtrl,
 );
 // taskRouter.get('/getByQuery', )
-// taskRouter.get("/:taskId", validations.getTaskByIdVal, controllers.getTaskById);
+taskRouter.get("/task", validations.getTaskByIdVal, controllers.getTaskCtrl);
 taskRouter.post("/", validations.createTaskVal, controllers.createTaskCtrl);
 taskRouter.post(
   "/assign-task",
   validations.assignTaskVal,
-  controllers.assignTaskCtrl
+  controllers.assignTaskCtrl,
 );
 taskRouter.post(
   "/accept-task",
   validations.acceptTaskVal,
-  controllers.acceptTaskCtrl
+  controllers.acceptTaskCtrl,
 );
 
 taskRouter.post(
   "/decline-task",
   validations.declineTaskVal,
-  controllers.declineTaskCtrl
+  controllers.declineTaskCtrl,
+);
+
+taskRouter.post(
+  "/delete-task",
+  validations.deleteTaskVal,
+  controllers.deleteTaskCtrl,
 );
 
 // swagger not added
 taskRouter.post("/edit", validations.editTaskVal, controllers.updateTaskCtrl);
+
+taskRouter.get(
+  "/qa-events-tasks",
+  validations.qaEventsAndTasksVal,
+  controllers.qaEventsAndTasksCtrl,
+);
+
 module.exports = taskRouter;

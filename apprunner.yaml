@@ -1,21 +1,27 @@
 version: 1.0
-runtime: docker
+runtime: nodejs22
+
 build:
   commands:
     build:
-      - echo "Build started on `date`"
-      - echo "Using Docker build process"
-    post_build:
-      - echo "Build completed on `date`"
+      - echo "Installing dependencies"
+      - npm install
+      - echo "Building application"
+      - npm run build
+
 run:
-  runtime-version: latest
+  runtime-version: 22.14.0
   command: npm start
+
   network:
     port: 8080
     env: PORT
+
   env:
     - name: NODE_ENV
       value: production
+
+    # Database
     - name: DB_HOST
       value: my-postgres-db.cny4we0u4x0v.ap-south-1.rds.amazonaws.com
     - name: DB_USER
@@ -26,7 +32,25 @@ run:
       value: postgres
     - name: DB_PORT
       value: "5432"
+
+    # Redis
     - name: REDIS_HOST
       value: my-redis-cluster.y9cnnb.0001.aps1.cache.amazonaws.com
     - name: REDIS_PORT
       value: "6379"
+    - name: REDIS_TLS
+      value: "false"
+
+    # Session
+    - name: SESSION_SECRET
+      value: "super-secret-key-change-in-production"
+    - name: SESSION_COOKIE_NAME
+      value: "emdb.sid"
+    - name: SESSION_SAMESITE
+      value: "lax"
+    - name: SESSION_SECURE
+      value: "true"
+    - name: SESSION_HTTP_ONLY
+      value: "true"
+    - name: SESSION_MAX_AGE
+      value: "86400000"

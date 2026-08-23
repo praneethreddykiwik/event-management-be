@@ -8,3 +8,11 @@ const deleteTable = `DROP TABLE IF EXISTS tenants CASCADE;`;
 const clearTable = `TRUNCATE TABLE tenants;`;
 
 const show_search_path = `show search_path;`;
+
+const checkCurrentDB = `
+  select
+    current_database() as db,
+    current_user as usr,
+    current_schema() as schema,
+    current_setting('search_path') as search_path;
+`;

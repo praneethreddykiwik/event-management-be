@@ -2,29 +2,41 @@ const http = require("http");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { setupApp } = require("./src/setupApp");
+const app = require("./src/app");
 const { testDbConnection } = require("./src/db/testDb");
+const { initializeDb } = require("./src/db/db");
+const { registerRedis } = require("./src/redis/redisSessionRegistration");
+const router = require("./src/routes/routes");
+const middlewares = require("./src/middlewares/middlewares");
+const utils = require("./src/utils/server.utils");
+const { mainHealth } = require("./src/controllers/health.controller");
+const { validateSession } = require("./src/middlewares/session.middleware");
 
 const port = process.env.PORT || 8080;
-
-console.log("App Starting...");
+const version = "/v1";
 
 const startServer = async () => {
   console.log("Starting server...");
 
   try {
-    const app = await setupApp();
+    await registerRedis(app);
 
-    console.log("Creating HTTP server...");
+    // Mount routes AFTER session middleware
+    app.use("/health", mainHealth);
+    app.use(version, middlewares.logRoute, validateSession, router);
+    console.log("Routes mounted");
+   
+
+    // Mount swagger
+    await utils.swaggerHandler(app);
+
+    // Create HTTP server and initialize DB
+    console.log("Creating HTTP server");
     const server = http.createServer(app);
+    server.on("error", utils.serverErrorHandler);
+    app.on("error", utils.appOnError);
 
-    server.on("error", (err) => {
-      console.error("Server error:", err);
-    });
-
-    app.on("error", (err) => {
-      console.error("App error:", err);
-    });
+    await initializeDb();
 
     console.log(`Starting server on port ${port}...`);
     server.listen(port, "0.0.0.0", async () => {
@@ -38,3 +50,6 @@ const startServer = async () => {
 };
 
 startServer();
+
+// update swagger
+// make the image sizes low

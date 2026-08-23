@@ -1,6 +1,8 @@
+const {
+  generateCreateTenantReq,
+} = require("../models/requestModels/tenant.req.model");
 const { errorRes, successRes } = require("../models/response.model");
 const services = require("../services/tenant.service");
-
 
 async function getAllTenants(req, res) {
   try {
@@ -13,7 +15,6 @@ async function getAllTenants(req, res) {
     return res.status(400).json(erorRes);
   }
 }
-
 
 async function getTenantById(req, res) {
   const { tenantId } = req.params;
@@ -31,10 +32,11 @@ async function getTenantById(req, res) {
   }
 }
 
-
 async function createTenantCtrl(req, res) {
   try {
-    const response = await services.createTenantService(req);
+    const payload = generateCreateTenantReq(req.body);
+
+    const response = await services.createTenantService(payload);
     console.log("Success: createTenantCtrl response", response);
     return res.status(201).json(successRes("Tenant created", response));
   } catch (error) {
@@ -44,19 +46,19 @@ async function createTenantCtrl(req, res) {
   }
 }
 
-
 async function createManager(req, res) {
   try {
     const { email } = req.body;
 
-    return res.status(200).json(successRes("Manager created successfully",email
-    ));
-
+    return res
+      .status(200)
+      .json(successRes("Manager created successfully", email));
   } catch (err) {
-    return res.status(400).json(errorRes( err.message|| "internal server error",err ));
+    return res
+      .status(400)
+      .json(errorRes(err.message || "internal server error", err));
   }
 }
-                                                                                                                                                                                                                                            
 
 module.exports = {
   getAllTenants,
