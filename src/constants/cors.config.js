@@ -7,6 +7,7 @@ const allowedCorsOrigins = [
   "http://192.168.0.135",
   "http://localhost:5173",
   "https://event-management-fe-green.vercel.app",
+  "https://helm-event.vercel.app",
 ];
 
 module.exports = {
