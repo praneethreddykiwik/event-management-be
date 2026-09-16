@@ -21,6 +21,14 @@ const startServer = async () => {
   try {
     await registerRedis(app);
 
+    app.get("/", (req, res) => {
+      res.status(200).json({
+        message: "Event Management API is running",
+        status: "ok",
+        health: "/health",
+        docs: "/api-docs",
+      });
+    });
     // Mount routes AFTER session middleware
     app.use("/health", mainHealth);
     app.use(version, middlewares.logRoute, validateSession, router);

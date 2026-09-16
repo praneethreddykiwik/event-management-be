@@ -19,6 +19,14 @@ let initPromise;
 async function init() {
   await registerRedis(app);
 
+  app.get("/", (req, res) => {
+    res.status(200).json({
+      message: "Event Management API is running",
+      status: "ok",
+      health: "/health",
+      docs: "/api-docs",
+    });
+  });
   app.use("/health", mainHealth);
   app.use(version, middlewares.logRoute, validateSession, router);
 
